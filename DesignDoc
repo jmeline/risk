@@ -1,0 +1,60 @@
+
+    
+    
+Strategy Interface
+    Init(GameMap): GameState
+    Claim(GameState)
+    Place(GameState, NumTroops)
+    Attack(GameState)
+        Battle()?
+        occupy()?
+    Reinforce(GameState)
+    Defend(GameState, int CountryAttacked, int CountryAttacking)
+    (no cards, for now)
+
+Game State
+    For each country, an allegance, and number of armies
+    
+Game map:
+    List of edges (bordering countries)
+    Continents:
+          List of nodes
+          value ( how many players get if conquer)
+          
+Game Flow:
+    Loop through players and claim
+    loop through players and
+        place
+        attack
+        reinforce
+    check for endgame
+    
+Game Report:
+    List of Strategies involved
+    how many rounds it took to win
+    list ranking strategies (index of winner first, then subsequent losers)
+
+Goals:
+    (1)Make Strategy Interface, UI, gameFlow, gameState, gameMap, gameReport 
+    (2)Make specific human-controlled strategies
+    (3)Organize Dominion Graph
+    (4)Analysis Program
+    (5)Make it run on UberComputer
+    (6)Crossover( Mixing and matching strategies to determine improvement)
+    (7)Research and add strategies
+    (8)Make Prez
+    (9)Make Report
+
+Timeline:
+    Week 3/24 - (1), (2)
+    Week 3/31 - (3), (4), (7)
+    Week 4/7  - (5), (6)
+    Week 4/14 - (8), (9) 
+    Week 4/21 - 
+    Due 4/26!
+    
+    
+    
+        
+    
+    
