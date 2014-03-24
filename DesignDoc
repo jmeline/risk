@@ -1,29 +1,30 @@
+-----------------------------------------------------------------------
 
-    
-    
+  		       RISK
+
+	  	MATT JOSEPH JACOB
+-----------------------------------------------------------------------
+
 Strategy Interface
-    Init(GameMap): GameState
-    Claim(GameState)
-    Place(GameState, NumTroops)
-    Attack(GameState)
-        Battle()?
-        occupy()?
-    Reinforce(GameState)
-    Defend(GameState, int CountryAttacked, int CountryAttacking)
-    (no cards, for now)
+    Init(GameMap): Strategy
+    Claim(GameState): int Country
+    Place(GameState, NumTroops): list of pairs (countries, peopleToPlace)
+    Attack(GameState): std::pair(AttackingCountry, DefendingCountry)
+    Defend(GameState, int CountryAttacked, int CountryAttacking): NumTroopsNeededToDefend
 
 Game State
     For each country, an allegance, and number of armies
     
-Game map:
-    List of edges (bordering countries)
+Game Map:
+    List of bordering countries (std::List of std::pair(int, int))
     Continents:
-          List of nodes
-          value ( how many players get if conquer)
+          Struct of Continents
+	          value (how many players get if conquer)
+		  list<int> of country
           
-Game Flow:
+Game Flow(Inside Class Game):
     Loop through players and claim
-    loop through players and
+    Loop through players and
         place
         attack
         reinforce
