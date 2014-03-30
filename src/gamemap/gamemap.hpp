@@ -3,36 +3,53 @@
  *
  *       Filename:  gamemap.hpp
  *
- *    Description: Represents a country
- *                 
+ *    Description:  Contains a list of continents and their respective bordering regions
+ *                  
  *
  *        Version:  1.0
- *        Created:  03/28/2014 08:59:46 PM
+ *        Created:  03/29/2014 01:32:59 AM
  *       Revision:  none
  *       Compiler:  g++
  *
- *         Author:  Jacob Meline  
+ *         Author:  Jacob Meline
  *
  * =====================================================================================
  */
 
+
 #ifndef  gamemap_INC
 #define  gamemap_INC
 
-#include <string>
-#include <vector>
+#include    "continent.hpp"
+#include    <vector>
+#include    <utility>
 
-class Country
+/*
+ * =====================================================================================
+ *        Class:  GameMap
+ *  Description:  Handles the functionality of the game map 
+ * =====================================================================================
+ */
+class GameMap
 {
     public:
-        Country(std::string name, int v){
-            this->countryName = name;
-            this->value = v;
-        }
+        /* ====================  LIFECYCLE     ======================================= */
+        GameMap ();                             /* constructor */
 
+        /* ====================  ACCESSORS     ======================================= */
+        
     private:
-        int value;
-        std::string countryName;
-};
+        /* ====================  METHODS       ======================================= */
+        void constructContinents();             /* builds each continent */
+        void constructRegions();                /* builds each region */
+        void constructBorders();                /* builds each border relationship with each region */
+        Continent getContinent(std::string);
+
+        /* ====================  DATA MEMBERS  ======================================= */
+        std::vector<Continent> continentList;   /* list of continents */
+        std::vector<std::pair<int, int>> borderList; /*  list of borders */
+
+}; /* -----  end of class GameMap  ----- */
 
 #endif   /* ----- #ifndef gamemap_INC  ----- */
+

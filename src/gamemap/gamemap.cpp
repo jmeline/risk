@@ -1,32 +1,47 @@
 /*
- * =====================================================================================
- *
- *       Filename:  gamemap.cpp
- *
- *    Description:  gamemap represents the list of bordering countries
- *                  represents the game of Risk
- *
- *        Version:  1.0
- *        Created:  03/28/2014 08:22:50 PM
- *       Revision:  none
- *       Compiler:  g++
- *
- *         Author:  Jacob Meline  
- *
- * =====================================================================================
+* =====================================================================================
+*
+*       Filename:  gamemap.cpp
+*
+*    Description:  handles the game map
+*
+*        Version:  1.0
+*        Created:  03/29/2014 11:08:28 PM
+*       Revision:  none
+*       Compiler:  gcc
+*
+*         Author:  Jacob Meline 
+* =====================================================================================
+*/
+
+#include    <vector>
+#include    <utility>
+#include    <unordered_map> // stl hash table
+#include    "gamemap.hpp"
+#include    "continent.hpp"
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  GameMap
+ *      Method:  GameMap :: GameMap
+ * Description:  Constructor
+ *--------------------------------------------------------------------------------------
  */
-
-#include    <iostream>
-
-
-/* 
- * ===  FUNCTION  ======================================================================
- *         Name:  main
- *  Description:  
- * =====================================================================================
- */
-int main ( int argc, char *argv[] )
+GameMap::GameMap()
 {
-    std::cout << "Hello World" << std::endl;
-    return 0;
-}				/* ----------  end of function main  ---------- */
+
+}
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  GameMap
+ *      Method:  GameMap :: constructContinents
+ * Description:  Builds each Continent
+ *--------------------------------------------------------------------------------------
+ */
+GameMap::constructContinents()
+{
+    
+
+}
