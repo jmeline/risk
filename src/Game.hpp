@@ -12,35 +12,41 @@
 #include "GameState.hpp"
 #include "Strategy.hpp"
 
-class Game
-{
+class Game {
 private:
-	gamemap map;
+	GameMap map;
 	GameState state;
 	int numberOfPlayers = 0;
-	Strategy** players;
+	Strategy** player;
 
 public:
-	Game(gamemap gMap) {
-		map = gMap;
-		players = new (Strategy*)[4];
-		players[0] = null;
-		players[1] = null;
-		players[2] = null;
-		players[3] = null;
-		state = State.createInitialStateFromMap(map);
-	}
+	Game(GameMap gMap);
 
-	/* Adds a strategy for the next player, up to 4 */
-	void addPlayer(Strategy s) {
-		if (numberOfPlayers < 4) {
-			strategies[numberOfPlayers] = s;
-			numberOfPlayers++;
-		}
-	}
+	/* Adds a strategy for the next player, up to 6 */
+	void addPlayer(Strategy* s);
 
-	/* Uses the strategies to run the game through */
-	void runGame();
+	/* Uses the strategies to run the game through.
+	 * Returns a vector of winners: the first came in first, the second came in second, etc */
+	std::vector<int> runGame();
+
+private:
+	/* Lets the players take turns choosing countries to claim until all are claimed */
+	void claimCountries();
+
+	/* Gives out initial troops and lets the players place them */
+	void placeFirstTroops();
+
+	/* Gives out the troops for a round and lets the current player place them */
+	void getAndPlaceTroops(int whoseTurn);
+
+	/* Lets the current player do battle as much as desired for a turn
+	 * Returns a vector of all players defeated during these battles (if any), given in order of death */
+	std::vector<int> doATurnOfBattles(int whoseTurn);
+	
+	/* Gives the current player a chance to fortify by moving troops around */
+	void fortify(int whoseTurn);
+	//int numTroops = getNumTroopsToAdd(whoseTurn);
+	//std::vector<std::pair<int,int>> troopsToPlace
 };
 
 #endif   /* ----- #ifndef game_INC  ----- */

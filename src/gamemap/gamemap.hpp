@@ -22,17 +22,32 @@
 #include <string>
 #include <vector>
 
-class Country
+class Contenent
 {
     public:
-        Country(std::string name, int v){
-            this->countryName = name;
+        Contenent(std::string name, int v){
+            this->contenentName = name;
             this->value = v;
         }
 
+		int getTroopValue() { return value; }
+
+		std::vector<int> getRegionList();
+
     private:
         int value;
-        std::string countryName;
+        std::string contenentName;
+};
+
+class GameMap {
+	/* Returns the number of regions on the map */
+	int getNumberOfRegions();
+
+	/* Returns a list of all regions bordering a given region */
+	std::vector<int> getNeighborsOfRegion(int region);
+
+	/* Returns the list of all Continents on the map */
+	std::vector<Contenent> getContinentList();
 };
 
 #endif   /* ----- #ifndef gamemap_INC  ----- */
