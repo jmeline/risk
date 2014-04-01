@@ -40,6 +40,7 @@ class Contenent
 };
 
 class GameMap {
+public:
 	/* Returns the number of regions on the map */
 	int getNumberOfRegions();
 
