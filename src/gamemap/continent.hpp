@@ -11,7 +11,7 @@
  *       Revision:  none
  *       Compiler:  g++
  *
- *         Author:  Jacob Meline  
+ *         Author:  Jacob Meline, Joseph Richardson  
  *
  * =====================================================================================
  */
@@ -19,47 +19,48 @@
 #ifndef  country_INC
 #define  country_INC
 
-#include <string>
-#include <vector>
-#include <utility> // std::pair, std::make_pair
+#include    <string>
+#include    <vector>
+#include    <utility> // std::pair, std::make_pair
 
+/*
+ * =====================================================================================
+ *        Class:  Continent
+ *  Description:  Handles the Continent
+ * =====================================================================================
+ */
 class Continent
 {
     public:
-        Continent(std::string, int);
+        /* ====================  LIFECYCLE     ======================================= */
+        Continent(std::string, int);            /* constructor */
 
+        /* ====================  ACCESSORS     ======================================= */
+        
         // getters
-        int getValue(){ 
-            return this->value; 
-        }
+        int getValue(){ return this->value; }
 
-        std::string getContinentName() {
-            return this->continentName; 
-        }
-        std::vector<std::pair<int, std::string> > getRegions() {
-            return this->regions;
-        }
+        std::string getContinentName() {return this->continentName; }
+
+        std::vector<std::pair<int, std::string>> getRegionList() { return this->regionList; }
 
         // setters
-        void setValue(int value) { 
-            this->value = value; 
-        }
-        void setContinentName( std::string name) { 
-            this->continentName = name; 
-        }
-        void setRegions(std::vector<std::pair<int, std::string> > region) { 
-            this->regions = region;
-        }
+        void setValue(int value) { this->value = value; }
+        
+        void setContinentName( std::string name) { this->continentName = name; }
 
-
+        int getTroopValue() { return value; }
 
     private:
-        // Country value
+        /* ====================  DATA MEMBERS  ======================================= */
+        
+        // Country's troop value
         int value;
         // Country's name
         std::string continentName;
-        // list of regions within the continent
-        std::vector<std::pair<int, std::string> > regions;
-};
+        // region list
+        std::vector<std::pair<int, std::string>> regionList;
+
+}; /* -----  end of class Continent  ----- */
 
 #endif   /* ----- #ifndef country_INC  ----- */

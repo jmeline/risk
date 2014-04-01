@@ -11,7 +11,7 @@
  *       Revision:  none
  *       Compiler:  g++
  *
- *         Author:  Jacob Meline
+ *         Author:  Jacob Meline, Joseph Richardson
  *
  * =====================================================================================
  */
@@ -37,13 +37,22 @@ class GameMap
         GameMap ();                             /* constructor */
 
         /* ====================  ACCESSORS     ======================================= */
-        
+
     private:
         /* ====================  METHODS       ======================================= */
         void constructContinents();             /* builds each continent */
         void constructRegions();                /* builds each region */
         void constructBorders();                /* builds each border relationship with each region */
         Continent getContinent(std::string);
+        
+        /* Returns the list of all Continents on the map */
+        std::vector<Contenent> getContinentList();
+
+        /* Returns the number of regions on the map */
+        int getNumberOfRegions();
+        
+        /* Returns a list of all regions bordering a given region */
+        std::vector<int> getNeighborsOfRegion(int region);
 
         /* ====================  DATA MEMBERS  ======================================= */
         std::vector<Continent> continentList;   /* list of continents */

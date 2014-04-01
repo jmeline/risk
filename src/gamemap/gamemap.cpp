@@ -42,6 +42,6 @@ GameMap::GameMap()
  */
 GameMap::constructContinents()
 {
-    
+    std::vector<std::pair<int, std::string>> continents = 
 
 }
