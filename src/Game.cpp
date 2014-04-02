@@ -8,6 +8,8 @@
 #include "Game.hpp"
 #include <iostream>
 
+#ifdef  game_INC	//never hurts to be cautious
+
 extern std::default_random_engine rng;
 
 Game::Game(gamemap gMap) {
@@ -233,3 +235,5 @@ bool Game::isTotallyDefeated(int playerNumber) {
 	}
 	return true;
 }
+
+#endif //end ifdef

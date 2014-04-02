@@ -20,6 +20,8 @@
 #include    "gamemap.hpp"
 #include    "continent.hpp"
 
+#ifdef gamemap_INC
+
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  GameMap
@@ -269,3 +271,5 @@ GameMap::constructBorders() {
     makeBorder(Egypt, NorthAfrica);
 
 }
+
+#endif

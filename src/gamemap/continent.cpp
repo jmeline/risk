@@ -22,6 +22,9 @@
 #include    <utility>
 #include    <string>
 #include    "continent.hpp"
+
+#ifdef  country_INC
+
 /* 
  * ===  FUNCTION  ======================================================================
  *         Name:  continent
@@ -35,10 +38,4 @@ Continent::Continent ( std::string name, int value)
     setContinentName(name);
 }		/* -----  end of function continent  ----- */
 
-
-
-
-
-
-
-
+#endif	// end ifdef

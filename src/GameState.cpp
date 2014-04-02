@@ -6,3 +6,9 @@
  */
 
 #include "GameState.hpp"
+
+#ifdef  gamestate_INC
+
+//I feel empty
+
+#endif

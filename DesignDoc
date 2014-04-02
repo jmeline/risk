@@ -6,11 +6,12 @@
 -----------------------------------------------------------------------
 
 Strategy Interface
-    Init(GameMap): Strategy
+    Init(GameMap, playerNumber, nameOfStrategy): --
     Claim(GameState): int Country
     Place(GameState, NumTroops): list of pairs (countries, peopleToPlace)
     Attack(GameState): std::pair(AttackingCountry, DefendingCountry)
     Defend(GameState, int CountryAttacked, int CountryAttacking): NumTroopsNeededToDefend
+	Fortify(GameState): list of tuples (fromCountry, toCountry, numberOfTroops)
 
 Game State
     For each country, an allegance, and number of armies

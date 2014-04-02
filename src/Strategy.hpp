@@ -16,7 +16,8 @@
 class Strategy {
 public:
 	/* Called once to let the strategy understand the relationship between countries and Contenents */
-	void init(GameMap map, int myPlayerNumber);
+	//void init(GameMap map, int myPlayerNumber);
+	Strategy(GameMap map, int myPlayerNumber, string nameOfStrategy);
 
 	/* Returns the region to claim */
 	int claim(GameState state);
@@ -39,6 +40,12 @@ public:
 	 * The second int of each triplet is the country moving to
 	 * The third int of each triplet is the number of troops to move */
 	std::vector<std::tuple<int,int,int>> fortify(GameState state);
+	
+	std::string getName()
+		{ return name; }
+	
+private:
+		std::string name;
 };
 
 #endif   /* ----- #ifndef strategy_INC  ----- */
