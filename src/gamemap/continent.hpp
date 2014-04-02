@@ -29,37 +29,62 @@
  *  Description:  Handles the Continent
  * =====================================================================================
  */
-class Continent
-{
-    public:
-        /* ====================  LIFECYCLE     ======================================= */
-        Continent(std::string, int);            /* constructor */
 
-        /* ====================  ACCESSORS     ======================================= */
-        
-        // getters
-        int getValue(){ return this->value; }
+typedef std::pair<int, std::string> Region;
 
-        std::string getContinentName() {return this->continentName; }
+class Continent {
+public:
+    Continent(std::string, int); /* constructor */
 
-        std::vector<std::pair<int, std::string>> getRegionList() { return this->regionList; }
+    // getters
 
-        // setters
-        void setValue(int value) { this->value = value; }
-        
-        void setContinentName( std::string name) { this->continentName = name; }
+    int getValue() {
+        return this->value;
+    }
 
-        int getTroopValue() { return value; }
+    std::string getContinentName() {
+        return this->continentName;
+    }
 
-    private:
-        /* ====================  DATA MEMBERS  ======================================= */
-        
-        // Country's troop value
-        int value;
-        // Country's name
-        std::string continentName;
-        // region list
-        std::vector<std::pair<int, std::string>> regionList;
+    std::vector<Region> getRegionList() {
+        return this->regionList;
+    }
+
+    std::vector<Region> getBorderList() {
+        return this->borderList;
+    }
+
+    int getTroopValue() {
+        return this->value;
+    }
+
+    // setters
+
+    void setValue(int value) {
+        this->value = value;
+    }
+
+    void setContinentName(std::string name) {
+        this->continentName = name;
+    }
+
+    void setRegions(std::vector<Region> r) {
+        this->regionList = r;
+    }
+
+    void setBorderList(std::vector<Region> b) {
+        this->borderList = b;
+    }
+
+private:
+    /* ====================  DATA MEMBERS  ======================================= */
+
+    // Country's troop value
+    int value;
+    // Country's name
+    std::string continentName;
+    // region list
+    std::vector<Region> regionList;
 
 }; /* -----  end of class Continent  ----- */
 
