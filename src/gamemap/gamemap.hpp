@@ -44,9 +44,9 @@ public:
 
 private:
     /* ====================  METHODS       ======================================= */
-    void constructContinents(); /* builds each continent */
-    void constructRegions(); /* builds each region */
-    void constructBorders(); /* builds each border relationship with each region */
+    virtual void constructContinents() = 0; /* builds each continent */
+    virtual void constructRegions() = 0; /* builds each region */
+    virtual void constructBorders() = 0; /* builds each border relationship with each region */
     Continent getContinent(std::string);
 
     /* Returns the list of all Continents on the map */
