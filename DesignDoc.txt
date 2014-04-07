@@ -5,53 +5,38 @@
 	  	MATT JOSEPH JACOB
 -----------------------------------------------------------------------
 
-Strategy Interface
-    Init(GameMap, playerNumber, nameOfStrategy): --
-    Claim(GameState): int Country
-    Place(GameState, NumTroops): list of pairs (countries, peopleToPlace)
-    Attack(GameState): std::pair(AttackingCountry, DefendingCountry)
-    Defend(GameState, int CountryAttacked, int CountryAttacking): NumTroopsNeededToDefend
-	Fortify(GameState): list of tuples (fromCountry, toCountry, numberOfTroops)
-
-Game State
-    For each country, an allegance, and number of armies
-    
-Game Map:
-    List of bordering countries (std::List of std::pair(int, int))
-    Continents:
-          Struct of Continents
-	          value (how many players get if conquer)
-		  list<int> of country
-          
-Game Flow(Inside Class Game):
-    Loop through players and claim
-    Loop through players and
-        place
-        attack
-        reinforce
-    check for endgame
-    
-Game Report:
-    List of Strategies involved
-    how many rounds it took to win
-    list ranking strategies (index of winner first, then subsequent losers)
-
 Goals:
     (1)Make Strategy Interface, UI, gameFlow, gameState, gameMap, gameReport 
     (2)Make specific human-controlled strategies
     (3)Organize Dominion Graph
     (4)Analysis Program
     (5)Make it run on UberComputer
-    (6)Crossover( Mixing and matching strategies to determine improvement)
+    (6)Crossover( Mixing and matching strategies to determine improvement) -> NO!
     (7)Research and add strategies
     (8)Make Prez
     (9)Make Report
 
 Timeline:
-    Week 3/24 - (1), (2)
-    Week 3/31 - (3), (4), (7)
-    Week 4/7  - (5), (6)
-    Week 4/14 - (8), (9) 
-    Week 4/21 - 
+    Week 4/7  - 1,2 (by Tues night), 5 (by end of week)
+    Week 4/14 - 3,4,7,8
+    Week 4/21 - 9
     Due 4/26!
     
+
+In Results.txt goes one report per row, semicolon delimeated
+
+Game will be assessed later, and at first we just generate results
+
+Display of State
+	# name allegance occupancy	(align well)
+	# name allegance occupancy
+	# name allegance occupancy
+Display of Map
+	list of country names, in order of #
+	list of edges
+		Russia(#1) - Cuba(#16)
+		Cuba(#16) - China(#22)
+	list of continents
+		Antartica: Antargica (#9)
+		Europe: France (#2), Brittain (#5), ...
+
