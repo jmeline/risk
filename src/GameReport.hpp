@@ -14,9 +14,8 @@
 class GameReport
 {
 public:
-// Order is preserved in vectors.  
-// Why not order winning strategies first to represent rank information?
-std::vector<Strategy> participants;
+// Order is preserved in vectors.
+std::vector<Strategy> participants;	//participants[0] is the winner, participants[1] came in second, etc
 int rounds;
 };
 

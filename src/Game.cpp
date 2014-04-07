@@ -133,7 +133,7 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn) {
 			if (numberConquered > 0) {
 				attackedRegionInfo.second -= numberConquered;
 				if (attackedRegionInfo.second == 0) {	//conquered
-					if (isTotallyDefeated(attackedRegionInfo.first))
+					if (isPlayerTotallyDefeated(attackedRegionInfo.first))
 						fallenPlayers.push_back(attackedRegionInfo.first);
 					attackedRegionInfo.first = attackingRegionInfo.first;
 					attackedRegionInfo.second = numToAttackWith;
@@ -144,7 +144,7 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn) {
 				attackedRegionInfo.second -= 1;
 				attackingRegionInfo.second -= 1;
 				if (attackedRegionInfo.second == 0) {	//conquered
-					if (isTotallyDefeated(attackedRegionInfo.first))
+					if (isPlayerTotallyDefeated(attackedRegionInfo.first))
 						fallenPlayers.push_back(attackedRegionInfo.first);
 					attackedRegionInfo.first = attackingRegionInfo.first;
 					attackedRegionInfo.second = numToAttackWith-1;
@@ -228,7 +228,7 @@ int Game::rollToConquer(int numToAttackWith, int numToDefendWith) {
 }
 	
 /* Returns true is there are no countries left owned by a given player. */
-bool Game::isTotallyDefeated(int playerNumber) {
+bool Game::isPlayerTotallyDefeated(int playerNumber) {
 	for (int i=0; i<map.getNumberOfRegions(); i++) {
 		if (state.getRegionInfo(i).first == playerNumber)
 			return false;
