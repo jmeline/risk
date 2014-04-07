@@ -28,6 +28,16 @@ public:
 
 	/* Returns the number of regions occupied by a player */
 	int getNumberOccupiedBy(int player);
+	
+	void display();
+	
+private:
+	/*
+	The index gives the regions
+	The first int gives the allegance
+	The second int gives the number of troops
+	*/
+	std::vector<pair<int,int>> internalState;
 };
 
 #endif   /* ----- #ifndef gamestate_INC  ----- */

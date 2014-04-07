@@ -1,19 +1,4 @@
-Earth::Earth()
-{  
-    // initialize borderMatrix
-    for (int i = 0; i < 41; ++i)
-        for (int j = 0; j < 41; ++j) {
-            borderMatrix[i][j] = false;
-        }
-}
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  GameMap
- *      Method:  GameMap :: constructContinents
- * Description:  Builds each Continent
- *--------------------------------------------------------------------------------------
- */
 Earth::constructContinents() {
     // string countryName, int troopBonus
     this->continentList.push_back(new Continent("Australia", 2));
@@ -77,6 +62,7 @@ Earth::constructRegions() {
     regionList.push_back(std::make_pair(Ukraine, RegionStrings[Ukraine]));
     regionList.push_back(std::make_pair(WesternEurope, RegionStrings[WesternEurope]));
     europe.setRegions(regionList);
+	addContinent(europe);
     regionList.clear();
 
     // Asia
@@ -116,11 +102,6 @@ Earth::constructRegions() {
  * Description:  Assigns which region borders which
  *--------------------------------------------------------------------------------------
  */
-
-void Earth::makeBorder(int i, int j) {
-    this->borderMatrix[i][j] = true;
-    this->borderMatrix[j][i] = true;
-}
 
 Earth::constructBorders() {
 
@@ -238,5 +219,4 @@ Earth::constructBorders() {
 
     makeBorder(Egypt, MiddleEast);
     makeBorder(Egypt, NorthAfrica);
-
 }

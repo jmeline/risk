@@ -50,10 +50,6 @@ public:
         return this->regionList;
     }
 
-    std::vector<Region> getBorderList() {
-        return this->borderList;
-    }
-
     int getTroopValue() {
         return this->value;
     }
@@ -70,10 +66,6 @@ public:
 
     void setRegions(std::vector<Region> r) {
         this->regionList = r;
-    }
-
-    void setBorderList(std::vector<Region> b) {
-        this->borderList = b;
     }
 
 private:

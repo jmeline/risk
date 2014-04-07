@@ -29,7 +29,25 @@
  * Description:  Constructor
  *--------------------------------------------------------------------------------------
  */
-GameMap::GameMap() {
-
+GameMap::GameMap()
+{
+	constructRegions();		//uses addRegion(String)
+	// initialize borderMatrix
+    for (int i = 0; i < 41; ++i)
+    {
+		for (int j = 0; j < 41; ++j) {
+            borderMatrix[i][j] = false;
+        }
+	}
+	constructBorders();		//uses addBorder(int,int)
+	constructContinents();	//uses addContinent(Continent)
 }
+
+
+
+void GameMap::makeBorder(int i, int j) {
+    this->borderMatrix[i][j] = true;
+    this->borderMatrix[j][i] = true;
+}
+
 #endif

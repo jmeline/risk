@@ -25,14 +25,14 @@
 #include    <utility>
 #include    <string>
 
+typedef std::pair<int, std::string> Region;
+
 /*
  * =====================================================================================
  *        Class:  GameMap
  *  Description:  Handles the functionality of the game map 
  * =====================================================================================
  */
-
-typedef std::pair<int, std::string> Region;
 
 class GameMap {
     
@@ -49,22 +49,28 @@ public:
 
     /* Returns a list of all regions bordering a given region */
     std::vector<int> getNeighborsOfRegion(int region);
+	
+	String getName(int region);
+	
+	void display();
 
 private:
     /* ====================  METHODS       ======================================= */
-    virtual void constructContinents() = 0; /* builds each continent */
-    virtual void constructRegions() = 0; /* builds each region */
-    virtual void constructBorders() = 0; /* builds each border relationship with each region */
-    Continent getContinent(std::string);
-void makeBorder(int i, int j);
+    virtual void constructRegions() = 0; /* builds each region - set numberOfRegions, and assign names for displaying */
+	virtual void constructBorders() = 0; /* builds each border relationship with each region */
+	virtual void constructContinents() = 0; /* builds each continent */
+    
+	/* For use in children, in constructBorders() */
+	void addRegion(Region r);
+	void makeBorder(int i, int j);
+	void addContinent(Continent c);
 
     /* ====================  DATA MEMBERS  ======================================= */
     std::vector<Continent> continentList; /* list of continents */
+	int numberOfRegions;
+	std::vector<Region> regionList;	//used only for display
 
-        // border list
-    bool borderMatrix[41][41];
 
 }; /* -----  end of class GameMap  ----- */
 
 #endif   /* ----- #ifndef gamemap_INC  ----- */
-
