@@ -41,15 +41,7 @@ public:
     GameMap(); /* constructor */
 
     /* ====================  ACCESSORS     ======================================= */
-
-private:
-    /* ====================  METHODS       ======================================= */
-    virtual void constructContinents() = 0; /* builds each continent */
-    virtual void constructRegions() = 0; /* builds each region */
-    virtual void constructBorders() = 0; /* builds each border relationship with each region */
-    Continent getContinent(std::string);
-
-    /* Returns the list of all Continents on the map */
+	/* Returns the list of all Continents on the map */
     std::vector<Continent> getContinentList();
 
     /* Returns the number of regions on the map */
@@ -57,8 +49,14 @@ private:
 
     /* Returns a list of all regions bordering a given region */
     std::vector<int> getNeighborsOfRegion(int region);
-    
-    void makeBorder(int i, int j);
+
+private:
+    /* ====================  METHODS       ======================================= */
+    virtual void constructContinents() = 0; /* builds each continent */
+    virtual void constructRegions() = 0; /* builds each region */
+    virtual void constructBorders() = 0; /* builds each border relationship with each region */
+    Continent getContinent(std::string);
+void makeBorder(int i, int j);
 
     /* ====================  DATA MEMBERS  ======================================= */
     std::vector<Continent> continentList; /* list of continents */
