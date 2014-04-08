@@ -25,17 +25,26 @@
 #include    <utility>
 #include    <string>
 
+/*
+ * =====================================================================================
+ *        Class:  GameMap
+ *  Description:  Handles the functionality of the game map 
+ * =====================================================================================
+ */
+
+
 class GameMap {
+    
 public:
     /* ====================  LIFECYCLE     ======================================= */
     GameMap(); /* constructor */
 
 private:
     /* ====================  METHODS       ======================================= */
-    virtual void constructContinents() = 0; /* builds each continent */
-    virtual void constructRegions() = 0; /* builds each region */
-    virtual void constructBorders() = 0; /* builds each border relationship with each region */
-
+    void constructContinents(); /* builds each continent */
+    void constructRegions(); /* builds each region */
+    void constructBorders(); /* builds each border relationship with each region */
+    
     Continent getContinent(std::string);
 
     /* Returns the list of all Continents on the map */
@@ -46,13 +55,13 @@ private:
 
     /* Returns a list of all regions bordering a given region */
     std::vector<int> getNeighborsOfRegion(int region);
-
+    
     void makeBorder(int i, int j);
 
     /* ====================  DATA MEMBERS  ======================================= */
     std::vector<Continent> continentList; /* list of continents */
 
-    // border list
+        // border list
     std::vector<std::vector<bool> > borderMatrix;
 
 }; /* -----  end of class GameMap  ----- */

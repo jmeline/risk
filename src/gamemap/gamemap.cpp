@@ -17,7 +17,6 @@
 #include    <vector>
 #include    <utility>
 #include    <string>
-
 #include    "gamemap.hpp"
 #include    "continent.hpp"
 
@@ -30,14 +29,4 @@
  */
 GameMap::GameMap() {
 
-    // initialize borderMatrix
-    for (int i = 0; i < 41; ++i) {
-        std::vector<bool> row = false;
-        borderMatrix.push_back(row);
-    }
-
-    this->constructContinents();
-    this->constructRegions();
-    this->constructRegions();
 }
-

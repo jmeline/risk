@@ -53,7 +53,7 @@ private:
 	int rollToConquer(int numToAttackWith, int numToDefendWith);
 	
 	/* Returns true is there are no countries left owned by a given player. */
-	bool isPlayerTotallyDefeated(int playerNumber);
+	bool isTotallyDefeated(int playerNumber);
 };
 
 #endif   /* ----- #ifndef game_INC  ----- */
