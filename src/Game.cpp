@@ -17,11 +17,12 @@ extern std::default_random_engine rng;
 
 Game::Game(GameMap &gMap)
 {
+	numberOfPlayers = 0;
     map = gMap;
     player = new Strategy*[6];
     for (int i = 0; i < 6; i++)
     {
-        player[i] = null;
+        player[i] = nullptr;
     }
 
     state.createInitialStateFromMap(map);
@@ -75,7 +76,7 @@ std::vector<int> Game::runGame()
 void Game::claimCountries()
 {
     int whoseTurn = 0;
-    for (int i = 0; i < map.getNumberOfCountries(); i++)
+    for (int i = 0; i < map.getNumberOfRegions(); i++)
     {
         int regionToClaim = player[whoseTurn]->claim(state);
         state.setRegionInfo(regionToClaim, std::pair<int, int>(whoseTurn, 1));
@@ -115,7 +116,7 @@ void Game::getAndPlaceTroops(int whoseTurn)
     std::vector<Continent> continentList = map.getContinentList();
     for (int i = 0; i < continentList.size(); i++)
     {
-        std::vector<int> regionList = continentList[i].getRegionList();
+        std::vector<Region> regionList = continentList[i].getRegionList();
         bool gotIt = true;
         for (int j = 0; j < regionList.size(); j++)
         {

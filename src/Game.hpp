@@ -16,7 +16,7 @@ class Game {
 private:
     GameMap map;
     GameState state;
-    int numberOfPlayers = 0;
+    int numberOfPlayers;
     Strategy** player;
 
 public:

@@ -141,6 +141,8 @@ public:
 
     virtual void constructBorders();
 
+	virtual void makeBorder(int,int);
+
 private:
 
 

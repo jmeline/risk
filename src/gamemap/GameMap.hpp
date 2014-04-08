@@ -57,7 +57,7 @@ public:
 
     void makeBorder(int i, int j);
     
-private:
+protected:
     /* ====================  DATA MEMBERS  ======================================= */
     std::vector<Continent> continentList; /* list of continents */
 

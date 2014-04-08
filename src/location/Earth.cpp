@@ -29,13 +29,18 @@ void Earth::constructContinents() {
     
     std::vector<Continent> cList;
     // string countryName, int troopBonus
-    
-    cList.push_back(new Continent("Australia", 2));
-    cList.push_back(new Continent("North America", 5));
-    cList.push_back(new Continent("South America", 2));
-    cList.push_back(new Continent("Europe", 5));
-    cList.push_back(new Continent("Asia", 7));
-    cList.push_back(new Continent("Africa", 3));
+    Continent tmp("Australia",2);
+    cList.push_back(tmp);
+	Continent tmp2("North America", 5);
+    cList.push_back(tmp2);
+	Continent tmp3("South America", 2);
+    cList.push_back(tmp3);
+	Continent tmp4("Europe", 5);
+    cList.push_back(tmp4);
+	Continent tmp5("Asia", 7);
+    cList.push_back(tmp5);
+	Continent tmp6("Africa", 3);
+    cList.push_back(tmp6);
 }
 
 /*
