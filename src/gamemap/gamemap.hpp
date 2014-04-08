@@ -25,140 +25,17 @@
 #include    <utility>
 #include    <string>
 
-/*
- * =====================================================================================
- *        Class:  GameMap
- *  Description:  Handles the functionality of the game map 
- * =====================================================================================
- */
-
-//typedef std::pair<int, std::string> Region;
-enum Regions
-{
-    // North America
-    Alaska,
-    Alberta,
-    CentralAmerica,
-    EasternUnitedStates,
-    Greenland,
-    NorthwestTerritory,
-    Ontario,
-    Quebec,
-    WesternUnitedStates,
-    
-    // South America
-    Argentina,
-    Brazil,
-    Peru,
-    Venezuela,
-    
-    // Europe
-    GreatBritain,
-    Iceland,
-    NorthernEurope,
-    Scandinavia,
-    SouthernEurope,
-    Ukraine,
-    WesternEurope,
-    
-    // Africa
-    Congo,
-    EastAfrica,
-    Egypt,
-    Madagascar,
-    NorthAfrica,
-    SouthAfrica,
-    
-    // Asia
-    Afghanistan,
-    China,
-    India,
-    Irkutsk,
-    Japan,
-    Kamchatka,
-    MiddleEast,
-    Mongolia,
-    Siam,
-    Siberia,
-    Ural,
-    Yakutsk,
-
-    // Australia
-    EasternAustralia,
-    Indonesia,
-    NewGuinea,
-    WesternAustralia
-};
-
-const char* RegionStrings[] =
-{
-    // North America
-    "Alaska",
-    "Alberta",
-    "Central America",
-    "Eastern UnitedStates",
-    "Greenland",
-    "Northwest Territory",
-    "Ontario",
-    "Quebec",
-    "Western United States",
-    
-    // South America
-    "Argentina",
-    "Brazil",
-    "Peru",
-    "Venezuela",
-    
-    // Europe
-    "Great Britain",
-    "Iceland",
-    "Northern Europe",
-    "Scandinavia",
-    "Southern Europe",
-    "Ukraine",
-    "Western Europe",
-    
-    // Africa
-    "Congo",
-    "East Africa",
-    "Egypt",
-    "Madagascar",
-    "North Africa",
-    "South Africa",
-    
-    // Asia
-    "Afghanistan",
-    "China",
-    "India",
-    "Irkutsk",
-    "Japan",
-    "Kamchatka",
-    "Middle East",
-    "Mongolia",
-    "Siam",
-    "Siberia",
-    "Ural",
-    "Yakutsk",
-
-    // Australia
-    "Eastern Australia",
-    "Indonesia",
-    "New Guinea",
-    "Western Australia"
-};
-
 class GameMap {
-    
 public:
     /* ====================  LIFECYCLE     ======================================= */
     GameMap(); /* constructor */
 
 private:
     /* ====================  METHODS       ======================================= */
-    void constructContinents(); /* builds each continent */
-    void constructRegions(); /* builds each region */
-    void constructBorders(); /* builds each border relationship with each region */
-    
+    virtual void constructContinents() = 0; /* builds each continent */
+    virtual void constructRegions() = 0; /* builds each region */
+    virtual void constructBorders() = 0; /* builds each border relationship with each region */
+
     Continent getContinent(std::string);
 
     /* Returns the list of all Continents on the map */
@@ -169,13 +46,13 @@ private:
 
     /* Returns a list of all regions bordering a given region */
     std::vector<int> getNeighborsOfRegion(int region);
-    
+
     void makeBorder(int i, int j);
 
     /* ====================  DATA MEMBERS  ======================================= */
     std::vector<Continent> continentList; /* list of continents */
 
-        // border list
+    // border list
     std::vector<std::vector<bool> > borderMatrix;
 
 }; /* -----  end of class GameMap  ----- */
