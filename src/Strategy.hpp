@@ -9,8 +9,9 @@
 #define  strategy_INC
 
 #include "GameState.hpp"
-#include "gamemap\gamemap.hpp"
+#include "gamemap/GameMap.hpp"
 #include <vector>
+#include <utility>
 #include <tuple>
 
 class Strategy {
@@ -24,7 +25,7 @@ public:
 	/* Returns a list of pairs representing country placement:
 	 * The first int in the each pair is the region where to place
 	 * The second int in each pair is the number of troops to place there */
-	std::vector<std::pair<int,int>> place(GameState state, int numTroops);
+	std::vector<std::pair<int,int> > place(GameState state, int numTroops);
 
 	/* Returns a pair representing an attack:
 	 * The first int in the pair is the country being attacked
@@ -38,7 +39,7 @@ public:
 	 * The first int of each triplet is the country moving from
 	 * The second int of each triplet is the country moving to
 	 * The third int of each triplet is the number of troops to move */
-	std::vector<std::tuple<int,int,int>> fortify(GameState state);
+	std::vector<std::tuple<int,int,int> > fortify(GameState state);
 };
 
 #endif   /* ----- #ifndef strategy_INC  ----- */

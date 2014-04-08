@@ -1,7 +1,8 @@
+
+
 #include "Game.hpp"
 #include <iostream>
-
-#include <stdlib.h>
+#include <random>
 
 std::default_random_engine rng;					//yep... it's a global variable.  But it makes sense here.
 

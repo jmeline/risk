@@ -14,6 +14,8 @@
  */
 
 #include    "Earth.hpp"
+#include    "../gamemap/GameMap.hpp"
+#include    "../gamemap/Continent.hpp"
 #include    <string>
 #include    <utility>
 #include    <vector>
@@ -23,14 +25,17 @@ Earth::Earth()
     
 }
 
-Earth::constructContinents() {
+void Earth::constructContinents() {
+    
+    std::vector<Continent> cList;
     // string countryName, int troopBonus
-    this->continentList.push_back(new Continent("Australia", 2));
-    this->continentList.push_back(new Continent("North America", 5));
-    this->continentList.push_back(new Continent("South America", 2));
-    this->continentList.push_back(new Continent("Europe", 5));
-    this->continentList.push_back(new Continent("Asia", 7));
-    this->continentList.push_back(new Continent("Africa", 3));
+    
+    cList.push_back(new Continent("Australia", 2));
+    cList.push_back(new Continent("North America", 5));
+    cList.push_back(new Continent("South America", 2));
+    cList.push_back(new Continent("Europe", 5));
+    cList.push_back(new Continent("Asia", 7));
+    cList.push_back(new Continent("Africa", 3));
 }
 
 /*
@@ -41,7 +46,7 @@ Earth::constructContinents() {
  *--------------------------------------------------------------------------------------
  */
 
-Earth::constructRegions() {
+void Earth::constructRegions() {
     std::vector<Region> regionList;
 
     // Australia

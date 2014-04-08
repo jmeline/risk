@@ -14,6 +14,7 @@
 
 //typedef std::pair<int, std::string> Region;
 
+#include    "../gamemap/GameMap.hpp"
 #include    <vector>
 #include    <string>
 #include    <utility>
@@ -131,16 +132,17 @@ const char* RegionStrings[] = {
 };
 
 class Earth : public GameMap {
-    
 public:
     Earth();
-
-private:
+    
     virtual void constructContinents();
 
     virtual void constructRegions();
 
     virtual void constructBorders();
+
+private:
+
 
 
 

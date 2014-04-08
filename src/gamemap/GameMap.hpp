@@ -20,7 +20,7 @@
 #ifndef  gamemap_INC
 #define  gamemap_INC
 
-#include    "continent.hpp"
+#include    "Continent.hpp"
 #include    <vector>
 #include    <utility>
 #include    <string>
@@ -34,34 +34,34 @@
 
 
 class GameMap {
-    
 public:
     /* ====================  LIFECYCLE     ======================================= */
     GameMap(); /* constructor */
 
-private:
-    /* ====================  METHODS       ======================================= */
-    void constructContinents(); /* builds each continent */
-    void constructRegions(); /* builds each region */
-    void constructBorders(); /* builds each border relationship with each region */
-    
-    Continent getContinent(std::string);
-
     /* Returns the list of all Continents on the map */
     std::vector<Continent> getContinentList();
 
+    void setContinentList(std::vector<Continent> c) {
+        this->continentList = c;
+    }
     /* Returns the number of regions on the map */
     int getNumberOfRegions();
 
     /* Returns a list of all regions bordering a given region */
     std::vector<int> getNeighborsOfRegion(int region);
-    
-    void makeBorder(int i, int j);
 
+    /* ====================  METHODS       ======================================= */
+    virtual void constructContinents(); /* builds each continent */
+    virtual void constructRegions(); /* builds each region */
+    virtual void constructBorders(); /* builds each border relationship with each region */
+
+    void makeBorder(int i, int j);
+    
+private:
     /* ====================  DATA MEMBERS  ======================================= */
     std::vector<Continent> continentList; /* list of continents */
 
-        // border list
+    // border list
     std::vector<std::vector<bool> > borderMatrix;
 
 }; /* -----  end of class GameMap  ----- */

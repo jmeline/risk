@@ -17,8 +17,8 @@
 #include    <vector>
 #include    <utility>
 #include    <string>
-#include    "gamemap.hpp"
-#include    "continent.hpp"
+#include    "GameMap.hpp"
+#include    "Continent.hpp"
 
 /*
  *--------------------------------------------------------------------------------------
