@@ -25,8 +25,6 @@
 #include    <utility>
 #include    <string>
 
-typedef std::pair<int, std::string> Region;
-
 /*
  * =====================================================================================
  *        Class:  GameMap
@@ -34,14 +32,136 @@ typedef std::pair<int, std::string> Region;
  * =====================================================================================
  */
 
+//typedef std::pair<int, std::string> Region;
+enum Regions
+{
+    // North America
+    Alaska,
+    Alberta,
+    CentralAmerica,
+    EasternUnitedStates,
+    Greenland,
+    NorthwestTerritory,
+    Ontario,
+    Quebec,
+    WesternUnitedStates,
+    
+    // South America
+    Argentina,
+    Brazil,
+    Peru,
+    Venezuela,
+    
+    // Europe
+    GreatBritain,
+    Iceland,
+    NorthernEurope,
+    Scandinavia,
+    SouthernEurope,
+    Ukraine,
+    WesternEurope,
+    
+    // Africa
+    Congo,
+    EastAfrica,
+    Egypt,
+    Madagascar,
+    NorthAfrica,
+    SouthAfrica,
+    
+    // Asia
+    Afghanistan,
+    China,
+    India,
+    Irkutsk,
+    Japan,
+    Kamchatka,
+    MiddleEast,
+    Mongolia,
+    Siam,
+    Siberia,
+    Ural,
+    Yakutsk,
+
+    // Australia
+    EasternAustralia,
+    Indonesia,
+    NewGuinea,
+    WesternAustralia
+};
+
+const char* RegionStrings[] =
+{
+    // North America
+    "Alaska",
+    "Alberta",
+    "Central America",
+    "Eastern UnitedStates",
+    "Greenland",
+    "Northwest Territory",
+    "Ontario",
+    "Quebec",
+    "Western United States",
+    
+    // South America
+    "Argentina",
+    "Brazil",
+    "Peru",
+    "Venezuela",
+    
+    // Europe
+    "Great Britain",
+    "Iceland",
+    "Northern Europe",
+    "Scandinavia",
+    "Southern Europe",
+    "Ukraine",
+    "Western Europe",
+    
+    // Africa
+    "Congo",
+    "East Africa",
+    "Egypt",
+    "Madagascar",
+    "North Africa",
+    "South Africa",
+    
+    // Asia
+    "Afghanistan",
+    "China",
+    "India",
+    "Irkutsk",
+    "Japan",
+    "Kamchatka",
+    "Middle East",
+    "Mongolia",
+    "Siam",
+    "Siberia",
+    "Ural",
+    "Yakutsk",
+
+    // Australia
+    "Eastern Australia",
+    "Indonesia",
+    "New Guinea",
+    "Western Australia"
+};
+
 class GameMap {
     
 public:
     /* ====================  LIFECYCLE     ======================================= */
     GameMap(); /* constructor */
 
-    /* ====================  ACCESSORS     ======================================= */
-	/* Returns the list of all Continents on the map */
+private:
+    /* ====================  METHODS       ======================================= */
+    void constructContinents(); /* builds each continent */
+    void constructRegions(); /* builds each region */
+    void constructBorders(); /* builds each border relationship with each region */
+    
+    Continent getContinent(std::string);
+
+    /* Returns the list of all Continents on the map */
     std::vector<Continent> getContinentList();
 
     /* Returns the number of regions on the map */
@@ -49,28 +169,16 @@ public:
 
     /* Returns a list of all regions bordering a given region */
     std::vector<int> getNeighborsOfRegion(int region);
-	
-	String getName(int region);
-	
-	void display();
-
-private:
-    /* ====================  METHODS       ======================================= */
-    virtual void constructRegions() = 0; /* builds each region - set numberOfRegions, and assign names for displaying */
-	virtual void constructBorders() = 0; /* builds each border relationship with each region */
-	virtual void constructContinents() = 0; /* builds each continent */
     
-	/* For use in children, in constructBorders() */
-	void addRegion(Region r);
-	void makeBorder(int i, int j);
-	void addContinent(Continent c);
+    void makeBorder(int i, int j);
 
     /* ====================  DATA MEMBERS  ======================================= */
     std::vector<Continent> continentList; /* list of continents */
-	int numberOfRegions;
-	std::vector<Region> regionList;	//used only for display
 
+        // border list
+    std::vector<std::vector<bool> > borderMatrix;
 
 }; /* -----  end of class GameMap  ----- */
 
 #endif   /* ----- #ifndef gamemap_INC  ----- */
+
