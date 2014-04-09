@@ -64,9 +64,9 @@ public:
         this->continentName = name;
     }
 
-    void setRegions(std::vector<Region> r) {
-        this->regionList = r;
-    }
+	void addRegion(Region r) {
+		regionList.push_back(r);
+	}
 
 
 private:

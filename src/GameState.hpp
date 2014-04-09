@@ -14,10 +14,13 @@
 
 class GameState
 {
+private:
+	std::vector<std::pair<int,int>> internalState;
+
 public:
-    GameState();
     /* Creates a state where all regions in the map are represented by <allegence,troops> pairs of value <-1,0>*/
-    void createInitialStateFromMap(GameMap map);
+	GameState(int size);
+	GameState(GameMap* map);
 
     /* Returns the information about a region, in the form of a pair of integers
      * The first integer of the pair is the playerNumber to whom the troops in the region belong (the region's allegance)

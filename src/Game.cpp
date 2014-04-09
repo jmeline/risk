@@ -12,20 +12,14 @@
 #include <utility>
 #include <random>
 
-
 extern std::default_random_engine rng;
 
-Game::Game(GameMap &gMap)
+Game::Game(GameMap* gMap) : map(gMap), state(gMap)
 {
 	numberOfPlayers = 0;
-    map = gMap;
     player = new Strategy*[6];
     for (int i = 0; i < 6; i++)
-    {
-        player[i] = nullptr;
-    }
-
-    state.createInitialStateFromMap(map);
+        player[i] = nullptr;	
 }
 
 void Game::addPlayer(Strategy* strat)
@@ -76,7 +70,7 @@ std::vector<int> Game::runGame()
 void Game::claimCountries()
 {
     int whoseTurn = 0;
-    for (int i = 0; i < map.getNumberOfRegions(); i++)
+    for (int i = 0; i < map->getNumberOfRegions(); i++)
     {
         int regionToClaim = player[whoseTurn]->claim(state);
         state.setRegionInfo(regionToClaim, std::pair<int, int>(whoseTurn, 1));
@@ -87,8 +81,9 @@ void Game::claimCountries()
 void Game::placeFirstTroops()
 {
     int numberPerPlayer = 50 - 5 * numberOfPlayers;
-    int piecesAlreadyUsed = map.getNumberOfRegions() / numberOfPlayers;
-    int playersWhoPlacedExtra = map.getNumberOfRegions() % numberOfPlayers;
+	int numberOfRegions = map->getNumberOfRegions();
+    int piecesAlreadyUsed = numberOfRegions / numberOfPlayers;
+    int playersWhoPlacedExtra = numberOfRegions % numberOfPlayers;
     for (int i = 0; i < numberOfPlayers; i++)
     {
         int numTroops = numberPerPlayer - piecesAlreadyUsed - ((i < playersWhoPlacedExtra) ? 1 : 0);
@@ -113,14 +108,14 @@ void Game::getAndPlaceTroops(int whoseTurn)
     int numOfTroops = state.getNumberOccupiedBy(whoseTurn) / 3;
     if (numOfTroops < 3)
         numOfTroops = 3;
-    std::vector<Continent> continentList = map.getContinentList();
+    std::vector<Continent> continentList = map->getContinentList();
     for (int i = 0; i < continentList.size(); i++)
     {
         std::vector<Region> regionList = continentList[i].getRegionList();
         bool gotIt = true;
         for (int j = 0; j < regionList.size(); j++)
         {
-            if (state.getRegionInfo(regionList[j]).first != whoseTurn)
+            if (state.getRegionInfo(regionList[j].first).first != whoseTurn)
             {
                 gotIt = false;
                 break;
@@ -197,9 +192,10 @@ void Game::fortify(int whoseTurn)
 {
     //get player input, then prepare vectors needed to ensure valid moves
     std::vector<std::tuple<int, int, int>> moves = player[whoseTurn]->fortify(state);
-    std::vector<int> adjustmentsToMake;
-    std::vector<bool> regionAlreadyMoved;
-    for (int i = map.getNumberOfRegions() - 1; i >= 0; i++)
+	int numberOfRegions = map->getNumberOfRegions();
+    std::vector<int> adjustmentsToMake(numberOfRegions);
+    std::vector<bool> regionAlreadyMoved(numberOfRegions);
+    for (int i=0; i<numberOfRegions; i++)
     {
         adjustmentsToMake[i] = 0;
         regionAlreadyMoved[i] = false;
@@ -284,7 +280,7 @@ int Game::rollToConquer(int numToAttackWith, int numToDefendWith)
 /* Returns true is there are no countries left owned by a given player. */
 bool Game::isTotallyDefeated(int playerNumber)
 {
-    for (int i = 0; i < map.getNumberOfRegions(); i++)
+    for (int i = 0; i < map->getNumberOfRegions(); i++)
     {
         if (state.getRegionInfo(i).first == playerNumber)
             return false;

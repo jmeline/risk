@@ -14,13 +14,13 @@
 
 class Game {
 private:
-    GameMap map;
+    GameMap* map;
     GameState state;
     int numberOfPlayers;
     Strategy** player;
 
 public:
-    Game(GameMap &gMap);
+    Game(GameMap* gMap);
 
     /* Adds a strategy for the next player, up to 6 */
     void addPlayer(Strategy* s);

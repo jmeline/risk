@@ -25,6 +25,8 @@
 #include    <utility>
 #include    <string>
 
+////typedef std::pair<int, std::string> Region;
+
 /*
  * =====================================================================================
  *        Class:  GameMap
@@ -34,35 +36,34 @@
 
 
 class GameMap {
-public:
-    /* ====================  LIFECYCLE     ======================================= */
-    GameMap(); /* constructor */
-
-    /* Returns the list of all Continents on the map */
-    std::vector<Continent> getContinentList();
-
-    void setContinentList(std::vector<Continent> c) {
-        this->continentList = c;
-    }
-    /* Returns the number of regions on the map */
-    int getNumberOfRegions();
-
-    /* Returns a list of all regions bordering a given region */
-    std::vector<int> getNeighborsOfRegion(int region);
-
-    /* ====================  METHODS       ======================================= */
-    virtual void constructContinents(); /* builds each continent */
-    virtual void constructRegions(); /* builds each region */
-    virtual void constructBorders(); /* builds each border relationship with each region */
-
-    void makeBorder(int i, int j);
-    
 protected:
     /* ====================  DATA MEMBERS  ======================================= */
     std::vector<Continent> continentList; /* list of continents */
 
     // border list
     std::vector<std::vector<bool> > borderMatrix;
+
+public:
+    /* ====================  LIFECYCLE METHODS FOR PUBLIC USE  ======================================= */
+	void initialize(); /* To be called in the implementations' constructors */
+
+    /* Returns the list of all Continents on the map */
+    std::vector<Continent> getContinentList();
+
+    void setContinentList(std::vector<Continent> c);
+
+    /* Returns the number of regions on the map */
+    int getNumberOfRegions();
+
+    /* Returns a list of all regions bordering a given region */
+    std::vector<int> getNeighborsOfRegion(int region);
+
+    /* ====================  METHODS FOR SPECIFIC INSTANCES TO OVERRIDE ======================================= */
+    virtual void constructContinentsAndRegions() = 0;	/* builds each continent */
+    virtual void constructBorders() = 0;				/* builds each border relationship with each region (by repeatedly calling makeBorder())*/
+
+	/* ====================  METHODS USED AS HELPERS FOR SPECIFIC INSTANCES =================================== */
+    void makeBorder(int i, int j);
 
 }; /* -----  end of class GameMap  ----- */
 

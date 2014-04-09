@@ -20,129 +20,195 @@
 #include    <utility>
 #include    <vector>
 
-Earth::Earth()
+enum Regions
 {
-    
-}
-
-void Earth::constructContinents() {
-    
-    std::vector<Continent> cList;
-    // string countryName, int troopBonus
-    Continent tmp("Australia",2);
-    cList.push_back(tmp);
-	Continent tmp2("North America", 5);
-    cList.push_back(tmp2);
-	Continent tmp3("South America", 2);
-    cList.push_back(tmp3);
-	Continent tmp4("Europe", 5);
-    cList.push_back(tmp4);
-	Continent tmp5("Asia", 7);
-    cList.push_back(tmp5);
-	Continent tmp6("Africa", 3);
-    cList.push_back(tmp6);
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  GameMap
- *      Method:  GameMap :: constructRegions
- * Description:  Assigns Regions to each Continent
- *--------------------------------------------------------------------------------------
- */
-
-void Earth::constructRegions() {
-    std::vector<Region> regionList;
-
-    // Australia
-    Continent australia = this->continentList[0];
-    regionList.push_back(std::make_pair(EasternAustralia, RegionStrings[EasternAustralia]));
-    regionList.push_back(std::make_pair(Indonesia, RegionStrings[Indonesia]));
-    regionList.push_back(std::make_pair(NewGuinea, RegionStrings[NewGuinea]));
-    regionList.push_back(std::make_pair(WesternAustralia, RegionStrings[WesternAustralia]));
-    australia.setRegions(regionList);
-    regionList.clear();
-
     // North America
-    Continent northAmerica = this->continentList[1];
-    regionList.push_back(std::make_pair(Alaska, RegionStrings[Alaska]));
-    regionList.push_back(std::make_pair(Alberta, RegionStrings[Alberta]));
-    regionList.push_back(std::make_pair(CentralAmerica, RegionStrings[CentralAmerica]));
-    regionList.push_back(std::make_pair(EasternUnitedStates, RegionStrings[EasternUnitedStates]));
-    regionList.push_back(std::make_pair(Greenland, RegionStrings[Greenland]));
-    regionList.push_back(std::make_pair(NorthwestTerritory, RegionStrings[NorthwestTerritory]));
-    regionList.push_back(std::make_pair(Ontario, RegionStrings[Ontario]));
-    regionList.push_back(std::make_pair(Quebec, RegionStrings[Quebec]));
-    regionList.push_back(std::make_pair(WesternUnitedStates, RegionStrings[WesternUnitedStates]));
-    northAmerica.setRegions(regionList);
-    regionList.clear();
+    Alaska,
+    Alberta,
+    CentralAmerica,
+    EasternUnitedStates,
+    Greenland,
+    NorthwestTerritory,
+    Ontario,
+    Quebec,
+    WesternUnitedStates,
 
     // South America
-    Continent southAmerica = this->continentList[2];
-    regionList.push_back(std::make_pair(Argentina, RegionStrings[Argentina]));
-    regionList.push_back(std::make_pair(Brazil, RegionStrings[Brazil]));
-    regionList.push_back(std::make_pair(Peru, RegionStrings[Peru]));
-    regionList.push_back(std::make_pair(Venezuela, RegionStrings[Venezuela]));
-    southAmerica.setRegions(regionList);
-    regionList.clear();
+    Argentina,
+    Brazil,
+    Peru,
+    Venezuela,
 
     // Europe
-    Continent europe = this->continentList[3];
-    regionList.push_back(std::make_pair(GreatBritain, RegionStrings[GreatBritain]));
-    regionList.push_back(std::make_pair(Iceland, RegionStrings[Iceland]));
-    regionList.push_back(std::make_pair(NorthernEurope, RegionStrings[NorthernEurope]));
-    regionList.push_back(std::make_pair(Scandinavia, RegionStrings[Scandinavia]));
-    regionList.push_back(std::make_pair(SouthernEurope, RegionStrings[SouthernEurope]));
-    regionList.push_back(std::make_pair(Ukraine, RegionStrings[Ukraine]));
-    regionList.push_back(std::make_pair(WesternEurope, RegionStrings[WesternEurope]));
-    europe.setRegions(regionList);
-    regionList.clear();
-
-    // Asia
-    Continent asia = this->continentList[4];
-    regionList.push_back(std::make_pair(Afghanistan, RegionStrings[Afghanistan]));
-    regionList.push_back(std::make_pair(China, RegionStrings[China]));
-    regionList.push_back(std::make_pair(India, RegionStrings[India]));
-    regionList.push_back(std::make_pair(Irkutsk, RegionStrings[Irkutsk]));
-    regionList.push_back(std::make_pair(Japan, RegionStrings[Japan]));
-    regionList.push_back(std::make_pair(Kamchatka, RegionStrings[Kamchatka]));
-    regionList.push_back(std::make_pair(MiddleEast, RegionStrings[MiddleEast]));
-    regionList.push_back(std::make_pair(Mongolia, RegionStrings[Mongolia]));
-    regionList.push_back(std::make_pair(Siam, RegionStrings[Siam]));
-    regionList.push_back(std::make_pair(Siberia, RegionStrings[Siberia]));
-    regionList.push_back(std::make_pair(Ural, RegionStrings[Ural]));
-    regionList.push_back(std::make_pair(Yakutsk, RegionStrings[Yakutsk]));
-    asia.setRegions(regionList);
-    regionList.clear();
+    GreatBritain,
+    Iceland,
+    NorthernEurope,
+    Scandinavia,
+    SouthernEurope,
+    Ukraine,
+    WesternEurope,
 
     // Africa
-    Continent africa = this->continentList[5];
-    regionList.push_back(std::make_pair(Congo, RegionStrings[Congo]));
-    regionList.push_back(std::make_pair(EastAfrica, RegionStrings[EastAfrica]));
-    regionList.push_back(std::make_pair(Egypt, RegionStrings[Egypt]));
-    regionList.push_back(std::make_pair(Madagascar, RegionStrings[Madagascar]));
-    regionList.push_back(std::make_pair(NorthAfrica, RegionStrings[NorthAfrica]));
-    regionList.push_back(std::make_pair(SouthAfrica, RegionStrings[SouthAfrica]));
-    africa.setRegions(regionList);
-    regionList.clear();
+    Congo,
+    EastAfrica,
+    Egypt,
+    Madagascar,
+    NorthAfrica,
+    SouthAfrica,
 
+    // Asia
+    Afghanistan,
+    China,
+    India,
+    Irkutsk,
+    Japan,
+    Kamchatka,
+    MiddleEast,
+    Mongolia,
+    Siam,
+    Siberia,
+    Ural,
+    Yakutsk,
+
+    // Australia
+    EasternAustralia,
+    Indonesia,
+    NewGuinea,
+    WesternAustralia
+};
+
+const char* RegionStrings[] = {
+    // North America
+    "Alaska",
+    "Alberta",
+    "Central America",
+    "Eastern UnitedStates",
+    "Greenland",
+    "Northwest Territory",
+    "Ontario",
+    "Quebec",
+    "Western United States",
+
+    // South America
+    "Argentina",
+    "Brazil",
+    "Peru",
+    "Venezuela",
+
+    // Europe
+    "Great Britain",
+    "Iceland",
+    "Northern Europe",
+    "Scandinavia",
+    "Southern Europe",
+    "Ukraine",
+    "Western Europe",
+
+    // Africa
+    "Congo",
+    "East Africa",
+    "Egypt",
+    "Madagascar",
+    "North Africa",
+    "South Africa",
+
+    // Asia
+    "Afghanistan",
+    "China",
+    "India",
+    "Irkutsk",
+    "Japan",
+    "Kamchatka",
+    "Middle East",
+    "Mongolia",
+    "Siam",
+    "Siberia",
+    "Ural",
+    "Yakutsk",
+
+    // Australia
+    "Eastern Australia",
+    "Indonesia",
+    "New Guinea",
+    "Western Australia"
+};
+
+Earth::Earth()
+{
+	initialize();
 }
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  GameMap
- *      Method:  GameMap :: constructBorders
- * Description:  Assigns which region borders which
- *--------------------------------------------------------------------------------------
- */
+void Earth::constructContinentsAndRegions()
+{
+    // Australia
+    Continent australia("Australia",2);
+	australia.addRegion(std::make_pair(EasternAustralia, RegionStrings[EasternAustralia]));
+    australia.addRegion(std::make_pair(Indonesia, RegionStrings[Indonesia]));
+    australia.addRegion(std::make_pair(NewGuinea, RegionStrings[NewGuinea]));
+    australia.addRegion(std::make_pair(WesternAustralia, RegionStrings[WesternAustralia]));
+	continentList.push_back(australia);
 
-void Earth::makeBorder(int i, int j) {
-    this->borderMatrix[i][j] = true;
-    this->borderMatrix[j][i] = true;
+    // North America
+    Continent northAmerica("North America", 5);
+	northAmerica.addRegion(std::make_pair(Alaska, RegionStrings[Alaska]));
+    northAmerica.addRegion(std::make_pair(Alberta, RegionStrings[Alberta]));
+    northAmerica.addRegion(std::make_pair(CentralAmerica, RegionStrings[CentralAmerica]));
+    northAmerica.addRegion(std::make_pair(EasternUnitedStates, RegionStrings[EasternUnitedStates]));
+    northAmerica.addRegion(std::make_pair(Greenland, RegionStrings[Greenland]));
+    northAmerica.addRegion(std::make_pair(NorthwestTerritory, RegionStrings[NorthwestTerritory]));
+    northAmerica.addRegion(std::make_pair(Ontario, RegionStrings[Ontario]));
+    northAmerica.addRegion(std::make_pair(Quebec, RegionStrings[Quebec]));
+    northAmerica.addRegion(std::make_pair(WesternUnitedStates, RegionStrings[WesternUnitedStates]));
+    continentList.push_back(northAmerica);
+
+    // South America
+    Continent southAmerica("South America", 2);
+    southAmerica.addRegion(std::make_pair(Argentina, RegionStrings[Argentina]));
+    southAmerica.addRegion(std::make_pair(Brazil, RegionStrings[Brazil]));
+    southAmerica.addRegion(std::make_pair(Peru, RegionStrings[Peru]));
+    southAmerica.addRegion(std::make_pair(Venezuela, RegionStrings[Venezuela]));
+    continentList.push_back(southAmerica);
+
+    // Europe
+    Continent europe("Europe", 5);
+    europe.addRegion(std::make_pair(GreatBritain, RegionStrings[GreatBritain]));
+    europe.addRegion(std::make_pair(Iceland, RegionStrings[Iceland]));
+    europe.addRegion(std::make_pair(NorthernEurope, RegionStrings[NorthernEurope]));
+    europe.addRegion(std::make_pair(Scandinavia, RegionStrings[Scandinavia]));
+    europe.addRegion(std::make_pair(SouthernEurope, RegionStrings[SouthernEurope]));
+    europe.addRegion(std::make_pair(Ukraine, RegionStrings[Ukraine]));
+    europe.addRegion(std::make_pair(WesternEurope, RegionStrings[WesternEurope]));
+    continentList.push_back(europe);
+
+    // Asia
+    Continent asia("Asia", 7);
+    asia.addRegion(std::make_pair(Afghanistan, RegionStrings[Afghanistan]));
+    asia.addRegion(std::make_pair(China, RegionStrings[China]));
+    asia.addRegion(std::make_pair(India, RegionStrings[India]));
+    asia.addRegion(std::make_pair(Irkutsk, RegionStrings[Irkutsk]));
+    asia.addRegion(std::make_pair(Japan, RegionStrings[Japan]));
+    asia.addRegion(std::make_pair(Kamchatka, RegionStrings[Kamchatka]));
+    asia.addRegion(std::make_pair(MiddleEast, RegionStrings[MiddleEast]));
+    asia.addRegion(std::make_pair(Mongolia, RegionStrings[Mongolia]));
+    asia.addRegion(std::make_pair(Siam, RegionStrings[Siam]));
+    asia.addRegion(std::make_pair(Siberia, RegionStrings[Siberia]));
+    asia.addRegion(std::make_pair(Ural, RegionStrings[Ural]));
+    asia.addRegion(std::make_pair(Yakutsk, RegionStrings[Yakutsk]));
+    continentList.push_back(asia);
+
+    // Africa
+    Continent africa("Africa", 3);
+    africa.addRegion(std::make_pair(Congo, RegionStrings[Congo]));
+    africa.addRegion(std::make_pair(EastAfrica, RegionStrings[EastAfrica]));
+    africa.addRegion(std::make_pair(Egypt, RegionStrings[Egypt]));
+    africa.addRegion(std::make_pair(Madagascar, RegionStrings[Madagascar]));
+    africa.addRegion(std::make_pair(NorthAfrica, RegionStrings[NorthAfrica]));
+    africa.addRegion(std::make_pair(SouthAfrica, RegionStrings[SouthAfrica]));
+    continentList.push_back(africa);
 }
 
-void Earth::constructBorders() {
-
+void Earth::constructBorders()
+{
     // Australia Border
     makeBorder(EasternAustralia, NewGuinea);
     makeBorder(EasternAustralia, WesternAustralia);
@@ -259,5 +325,3 @@ void Earth::constructBorders() {
     makeBorder(Egypt, NorthAfrica);
 
 }
-
-
