@@ -1,6 +1,5 @@
 #include "Game.hpp"
 #include "location\Earth.hpp"
-#include "strategies\HumanControlledStrategy.hpp"
 #include <iostream>
 #include <random>
 #include <ctime>

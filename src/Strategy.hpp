@@ -50,4 +50,18 @@ public:
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state) = 0;
 };
 
+
+class HumanControlledStrategy : public Strategy
+{
+public:
+	HumanControlledStrategy();
+	virtual int claim(GameState state);
+	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
+	virtual std::pair<int,int> attack(GameState state);
+	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
+	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
+private:
+	int movesDoneAttacking;
+};
+
 #endif   /* ----- #ifndef strategy_INC  ----- */

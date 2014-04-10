@@ -1,5 +1,10 @@
-#include "HumanControlledStrategy.hpp"
+#include "Strategy.hpp"
 #include <iostream>
+
+
+/*************************
+* HUMAN CONTROLLED
+*************************/
 
 HumanControlledStrategy::HumanControlledStrategy()
 {
