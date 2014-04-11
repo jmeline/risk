@@ -16,6 +16,8 @@ int main(int argc, char** argv) {
 	Game game(new Island());
 	//game.addPlayer(new BadStrategy());
 	//game.addPlayer(new BadStrategy());
+	game.addPlayer(new HumanControlledStrategy());
+	game.addPlayer(new HumanControlledStrategy());
 	std::cout << "Ready to run." << std::endl;
 	game.runGame();
 	//GameReport report = game.getReport();

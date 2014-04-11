@@ -46,6 +46,7 @@ int GameState::getNumberOccupiedBy(int player)
 
 void GameState::display()
 {
+	std::cout << "________________________________" << std::endl;
 	std::cout << "Here is what the map looks like." << std::endl;
 	std::cout << "Location:Owner:Number of Troops" << std::endl;
 	for(int i = 0 ; i < internalState.size() ; ++i)
