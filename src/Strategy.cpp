@@ -101,6 +101,9 @@ std::vector<std::tuple<int,int,int> > HumanControlledStrategy::fortify(GameState
 **************************************************/
 
 ObtainSmallestContinentsFirstStrategy::ObtainSmallestContinentsFirstStrategy()
+{
+
+}
 
 ObtainSmallestContinentsFirstStrategy::claim(GameState state)
 {
