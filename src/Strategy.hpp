@@ -64,7 +64,6 @@ private:
 	int movesDoneAttacking;
 };
 
-<<<<<<< HEAD
  /*
   *	This strategy seeks to claim the two smallest continents first: Australia and South America
   * The reasoning behind this strategy is that by having the smaller continents claimed, you
@@ -77,21 +76,24 @@ class ObtainSmallestContinentsFirstStrategy : public Strategy
 public:
 	ObtainSmallestContinentsFirstStrategy();
 	virtual int claim(GameState state);	
-=======
+	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
+	virtual std::pair<int,int> attack(GameState state);
+	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
+	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
+private:
+	int movesDoneAttacking;
+};
+
+
 class BadStrategy : public Strategy
 {
 public:
 	BadStrategy();
 	virtual int claim(GameState state);
->>>>>>> 2f1cf062fcb0027c48fc1fd7109698383164b251
-	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
+		virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);
 	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
-<<<<<<< HEAD
-
-=======
->>>>>>> 2f1cf062fcb0027c48fc1fd7109698383164b251
 private:
 	int movesDoneAttacking;
 };
