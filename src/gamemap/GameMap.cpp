@@ -10,7 +10,7 @@
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  Jacob Meline 
+ *         Author:  Jacob Meline
  * =====================================================================================
  */
 
@@ -29,17 +29,17 @@
  */
 void GameMap::initialize()
 {
-	constructContinentsAndRegions();
-	int regionCount = getNumberOfRegions();
-	borderMatrix = std::vector<std::vector<bool>>(regionCount);
-	for (int i=0; i<regionCount; i++)
-		borderMatrix[i] = std::vector<bool>(regionCount,false);
+    constructContinentsAndRegions();
+    int regionCount = getNumberOfRegions();
+    borderMatrix = std::vector<std::vector<bool>>(regionCount);
+    for (int i = 0; i < regionCount; i++)
+        borderMatrix[i] = std::vector<bool>(regionCount, false);
     constructBorders();
 }
 
 std::vector<Continent> GameMap::getContinentList()
 {
-	return this->continentList;
+    return this->continentList;
 }
 
 void GameMap::setContinentList(std::vector<Continent> c)
@@ -49,22 +49,22 @@ void GameMap::setContinentList(std::vector<Continent> c)
 
 int GameMap::getNumberOfRegions()
 {
-	int count = 0;
-	int continentCount = continentList.size();
-	for each (Continent c in continentList)
-		count += c.getRegionList().size();
-	return count;
+    int count = 0;
+    int continentCount = continentList.size();
+    for (Continent c : continentList)
+        count += c.getRegionList().size();
+    return count;
 }
 
 std::vector<int> GameMap::getNeighborsOfRegion(int region)
 {
-	std::vector<int> neighborList;
-	for (int j=0; j<this->borderMatrix[region].size(); j++)
-	{
-		if (borderMatrix[region][j]==true)
-			neighborList.push_back(j);
-	}
-	return neighborList;
+    std::vector<int> neighborList;
+    for (int j = 0; j < this->borderMatrix[region].size(); j++)
+    {
+        if (borderMatrix[region][j] == true)
+            neighborList.push_back(j);
+    }
+    return neighborList;
 }
 
 void GameMap::makeBorder(int i, int j)

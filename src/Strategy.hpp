@@ -69,7 +69,7 @@ public:
   * the opposing player from claiming them. 
   */
 
-/*
+
 class ObtainSmallestContinentsFirstStrategy : public Strategy
 {
 public:
@@ -81,8 +81,11 @@ public:
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 private:
 	int movesDoneAttacking;
+	bool sortByNumberOfRegions();
 };
-*/
+
+//http://www.cplusplus.com/articles/NhA0RXSz/
+
 
 
 class BadStrategy : public Strategy
