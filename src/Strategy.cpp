@@ -46,19 +46,55 @@ std::vector<std::pair<int,int>> HumanControlledStrategy::place(GameState state, 
 	std::vector<std::pair<int,int>> actions;
 	int wherePut = 0;
 	int howMany = 0;
+	bool outOfBounds = false;
+	bool notYours = false;
+	bool badAmount = false;
 	std::cout<<"Player "<<myPlayerNumber<<": Place your troops."<<std::endl;
-	std::cout<<"You have " << numTroops << " to place." << std::endl;
-	std::cout << "Where would you like to place troops?";
-	std::cin >> wherePut;
-	// Bounds checking loop
-	while(wherePut < 0 || wherePut > (state.getNumRegions()-1) || state.getRegionInfo(wherePut).first != myPlayerNumber)
+	do
 	{
-		std::cout << "You can't put troops there..." << std::endl;
+		outOfBounds = false;
+		notYours = false;
+		std::cout<<"You have " << numTroops << " to place." << std::endl;
 		std::cout << "Where would you like to place troops?";
 		std::cin >> wherePut;
-	}
+		// Error Checking
+		outOfBounds = wherePut < 0 || wherePut > (state.getNumRegions()-1);
+		if(!outOfBounds)
+			notYours = state.getRegionInfo(wherePut).first != myPlayerNumber;
 
-	actions.push_back(std::pair<int,int>(wherePut,howMany));
+		// Location choice is valid
+		if(!outOfBounds && !notYours)
+		{
+			do
+			{
+				badAmount = false;
+				std::cout << "How many troops will you place here? " << std::endl;
+				std::cin >> howMany;
+
+				badAmount = howMany < 0 || howMany > numTroops;
+				if(badAmount)
+					std::cout << "You have " << numTroops << " to place.  Choose a valid number." << std::endl;
+
+			}while(badAmount);
+
+			//Should be valid placement, let them do it.
+			if(howMany == 0)		// Gonna let 0 work so they can change their mind, but not gonna add it to the action list
+				std::cout << "Cute..." << std::endl;
+			else
+			{
+				// THEY CHOSE CORRECTLY YAY!
+				actions.push_back(std::pair<int,int>(wherePut,howMany));
+				numTroops -= howMany;
+			}
+		}
+
+
+		if(outOfBounds)
+			std::cout << "That's not on the map." << std::endl;
+		if(notYours)
+			std::cout << "You have to add them to YOUR territory." << std::endl;
+		
+	}while(numTroops > 0 || outOfBounds || notYours);
 	return actions;
 }
 
