@@ -90,7 +90,7 @@ class BadStrategy : public Strategy
 public:
 	BadStrategy();
 	virtual int claim(GameState state);
-		virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
+	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);
 	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
