@@ -24,7 +24,7 @@ enum Regions
 	Volcano
 };
 
-const char* RegionStrings[] = 
+const char* IslandStrings[] = 
 {
 	"Beach",
 	"Forest",
@@ -42,10 +42,10 @@ void Island::constructContinentsAndRegions()
 {
 	//Paradise
 	Continent paradise("Paradise", 5);
-	paradise.addRegion(std::make_pair(Beach, RegionStrings[Beach]));
-	paradise.addRegion(std::make_pair(Forest, RegionStrings[Forest]));
-	paradise.addRegion(std::make_pair(Garden, RegionStrings[Garden]));
-	paradise.addRegion(std::make_pair(Volcano, RegionStrings[Volcano]));
+	paradise.addRegion(std::make_pair(Beach, IslandStrings[Beach]));
+	paradise.addRegion(std::make_pair(Forest, IslandStrings[Forest]));
+	paradise.addRegion(std::make_pair(Garden, IslandStrings[Garden]));
+	paradise.addRegion(std::make_pair(Volcano, IslandStrings[Volcano]));
 	continentList.push_back(paradise);
 }
 

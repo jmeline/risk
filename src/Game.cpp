@@ -7,6 +7,7 @@
 
 #include "Game.hpp"
 #include "GameState.hpp"
+#include "gamemap\GameMap.hpp"
 #include <iostream>
 #include <vector>
 #include <utility>
@@ -108,7 +109,7 @@ void Game::getAndPlaceTroops(int whoseTurn)
     int numOfTroops = state.getNumberOccupiedBy(whoseTurn) / 3;
     if (numOfTroops < 3)
         numOfTroops = 3;
-    std::vector<Continent> continentList = map->getContinentList();
+	std::vector<Continent> continentList = map->getContinentList();
     for (int i = 0; i < continentList.size(); i++)
     {
         std::vector<Region> regionList = continentList[i].getRegionList();
@@ -133,9 +134,9 @@ void Game::getAndPlaceTroops(int whoseTurn)
 std::vector<int> Game::doATurnOfBattles(int whoseTurn)
 {
     std::vector<int> fallenPlayers;
-    int numberOfPlayersElliminated = 0;
+    int numberOfPlayersEliminated = 0;
     while (true)
-    { //we will keep going until the player's choice is a "magic value" indicating to ned the turn
+    { //we will keep going until the player's choice is a "magic value" indicating to end the turn
         std::pair<int, int> attackInfo = player[whoseTurn]->attack(state);
         int attackTo = attackInfo.first;
         int attackFrom = attackInfo.second;
@@ -200,6 +201,7 @@ void Game::fortify(int whoseTurn)
         adjustmentsToMake[i] = 0;
         regionAlreadyMoved[i] = false;
     }
+
     //load adjustmentsToMake, asserting move validity along the way
     for (int i = 0; i < moves.size(); i++)
     {
@@ -213,6 +215,7 @@ void Game::fortify(int whoseTurn)
             adjustmentsToMake[regionTo] += numTroops;
         }
     }
+
     //move the troops
     for (int i = 0; i < adjustmentsToMake.size(); i++)
     {
