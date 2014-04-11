@@ -43,3 +43,19 @@ int GameState::getNumberOccupiedBy(int player)
 	return count;
 	//
 }
+
+void GameState::display()
+{
+	std::cout << "Here is what the map looks like." << std::endl;
+	std::cout << "Location:Owner:Number of Troops" << std::endl;
+	for(int i = 0 ; i < internalState.size() ; ++i)
+	{
+		std::cout << i << ":" << internalState[i].first << ":" << internalState[i].second;
+		std::cout << std::endl;
+	}
+}
+
+int GameState::getNumRegions()
+{
+	return internalState.size();
+}

@@ -8,6 +8,7 @@
 #ifndef  gamestate_INC
 #define  gamestate_INC
 
+#include <iostream>
 #include <vector>
 
 #include "gamemap/GameMap.hpp"
@@ -34,6 +35,11 @@ public:
 
     /* Returns the number of regions occupied by a player */
     int getNumberOccupiedBy(int player);
+
+	int getNumRegions();
+
+	void display();
+
 };
 
 #endif   /* ----- #ifndef gamestate_INC  ----- */

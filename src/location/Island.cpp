@@ -46,7 +46,7 @@ void Island::constructContinentsAndRegions()
 	paradise.addRegion(std::make_pair(Forest, RegionStrings[Forest]));
 	paradise.addRegion(std::make_pair(Garden, RegionStrings[Garden]));
 	paradise.addRegion(std::make_pair(Volcano, RegionStrings[Volcano]));
-	ContinentList.push_back(paradise);
+	continentList.push_back(paradise);
 }
 
 void Island::constructBorders()
