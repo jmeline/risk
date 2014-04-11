@@ -64,3 +64,18 @@ std::vector<std::tuple<int,int,int> > HumanControlledStrategy::fortify(GameState
 	//actions.push_back(std::tuple<int,int,int>(whereFrom,whereTo,howMany));
 	return actions;	//for now, let's do nothing
 }
+
+/**************************************************
+			COMPUTER CONTROLLED
+	ObtainSmallestContinentsFirstStrategy
+**************************************************/
+
+ObtainSmallestContinentsFirstStrategy::ObtainSmallestContinentsFirstStrategy()
+{
+	movesDoneAttacking = 0;
+}
+
+ObtainSmallestContinentsFirstStrategy::claim(GameState state)
+{
+	
+}

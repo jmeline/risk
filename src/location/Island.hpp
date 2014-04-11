@@ -2,6 +2,7 @@
 #define ISLAND_HPP_
 
 #include    "../gamemap/GameMap.hpp"
+
 class Island : public GameMap
 {
 public:
