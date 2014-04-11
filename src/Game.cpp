@@ -19,7 +19,7 @@ Game::Game(GameMap* gMap) : map(gMap), state(gMap) {
     numberOfPlayers = 0;
     player = new Strategy*[6];
     for (int i = 0; i < 6; i++)
-        player[i] = nullptr;
+        player[i] = NULL;	
 }
 
 void Game::addPlayer(Strategy* strat) {
