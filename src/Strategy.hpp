@@ -60,8 +60,6 @@ public:
 	virtual std::pair<int,int> attack(GameState state);
 	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
-private:
-	int movesDoneAttacking;
 };
 
  /*
@@ -71,6 +69,7 @@ private:
   * the opposing player from claiming them. 
   */
 
+/*
 class ObtainSmallestContinentsFirstStrategy : public Strategy
 {
 public:
@@ -83,6 +82,7 @@ public:
 private:
 	int movesDoneAttacking;
 };
+*/
 
 
 class BadStrategy : public Strategy
