@@ -16,11 +16,22 @@ int HumanControlledStrategy::claim(GameState state)
 	std::cout<<"Player "<<myPlayerNumber<<": Claim a region."<<std::endl;
 	state.display();
 	int whichRegion = 0;
-	for( ; whichRegion < state.getNumRegions() ; ++whichRegion)
+	std::cout << "Which region would you like to claim? ";
+	std::cin >> whichRegion;
+	// Bounds checking loop
+	while(whichRegion < 0 || whichRegion > (state.getNumRegions()-1))
 	{
-		if(state.getRegionInfo(whichRegion).first == -1)
-			break;
+		std::cout << "You can't claim that..." << std::endl;
+		std::cout << "Which region would you like to claim? ";
+		std::cin >> whichRegion;
 	}
+	// Disallow claiming already claimed regions
+	while(state.getRegionInfo(whichRegion).first != -1)
+	{
+		std::cout << "That location is already occupied, choose another location: ";
+		std::cin >> whichRegion;
+	}
+	// I think we checked all the dumb mistakes the user can make
 	return whichRegion;
 }
 	
@@ -37,18 +48,31 @@ std::vector<std::pair<int,int>> HumanControlledStrategy::place(GameState state, 
 std::pair<int,int> HumanControlledStrategy::attack(GameState state)
 {
 	std::cout<<"Player "<<myPlayerNumber<<": Attack."<<std::endl;
-	if (movesDoneAttacking<5)
-	{
-		int attacking = 0;
-		int attacked = 0;
-		movesDoneAttacking++;
-		return std::pair<int,int>(attacked,attacking);
-	}
-	else
-	{
-		movesDoneAttacking = 0;
+	state.display();
+	std::cout << "Which country do you want to attack (-1 to stop this phase)? ";
+	int location = 0;
+	std::cin >> location;
+
+	// Check for quit FIRST  (cuz bounds check on this can get hairy)
+	if (location < 0)
 		return std::pair<int,int>(-1,-1);	//let the turn be over
+
+	// Bounds check
+	while(location >= state.getNumRegions())
+	{
+		std::cout << "You must select a valid location to attack." << std::endl;
+		std::cout << "Which country do you want to attack (-1 to stop this phase)? ";
+		std::cin >> location;
 	}
+	while(state.getRegionInfo(location).first == myPlayerNumber)
+	{
+		std::cout << "You can't attack yourself, dummy." << std::endl;
+		std::cout << "Which country do you want to attack (-1 to stop this phase)? ";
+		std::cin >> location;
+	}
+
+
+	return std::pair<int,int>(location,myPlayerNumber);
 }
 
 bool HumanControlledStrategy::defend(GameState state, int countryAttacked, int countryAttacking)
