@@ -1,17 +1,10 @@
 /* 
  * File:   Earth.cpp
- * Author: Jacob&BJ
+ * Author: Jacob
  *
  * Created on April 7, 2014, 9:53 PM
  */
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  Earth
- *      Method:  GameMap :: constructContinents
- * Description:  Builds each Continent
- *--------------------------------------------------------------------------------------
- */
 
 #include    "Earth.hpp"
 #include    "../gamemap/GameMap.hpp"
