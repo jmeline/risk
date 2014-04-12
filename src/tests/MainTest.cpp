@@ -14,9 +14,13 @@ int main(int argc, char** argv) {
 	srand((unsigned int)time(NULL));		
 	rng = std::default_random_engine(rand());
 
-	Game game(new Island());
-	game.addPlayer(new HumanControlledStrategy());
-	game.addPlayer(new HumanControlledStrategy());
+	//Game game(new Island());
+	Game game(new Earth());
+
+	//game.addPlayer(new HumanControlledStrategy());
+	//game.addPlayer(new HumanControlledStrategy());
+	game.addPlayer(new ObtainSmallestContinentsFirstStrategy());
+
 	std::cout << "Ready to run." << std::endl;
 	GameReport report = game.runGame();
 	std::cout << "All done." << std::endl;

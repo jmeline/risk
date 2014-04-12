@@ -1,22 +1,31 @@
-#include "Game.hpp"
-#include "GameState.hpp"
-#include "..\gamemap\GameMap.hpp"
-#include <iostream>
+
+/*
+ * =====================================================================================
+ *       Filename:  Game.hpp
+ *    Description: Manages the flow of a game
+ * =====================================================================================
+ */
+
 #include <vector>
 #include <utility>
 #include <random>
+#include <iostream>
+#include "Game.hpp"
+#include "GameState.hpp"
+#include "gamemap\GameMap.hpp"
+
 
 extern std::default_random_engine rng;
 
-Game::Game(GameMap* gMap) : map(gMap), state(gMap)
+Game::Game(GameMap *gMap) : map(gMap), state(gMap)
 {
-	numberOfPlayers = 0;
+    numberOfPlayers = 0;
     player = new Strategy*[6];
     for (int i = 0; i < 6; i++)
-        player[i] = NULL;	
+        player[i] = NULL;
 }
 
-void Game::addPlayer(Strategy* strat)
+void Game::addPlayer(Strategy *strat)
 {
     if (numberOfPlayers < 6)
     {
@@ -67,7 +76,7 @@ GameReport Game::runGame()
 void Game::claimCountries()
 {
     int whoseTurn = 0;
-    for (int i = 0; i < map->getNumberOfRegions(); i++)
+    for (int i = 0; i < this->map->getNumberOfRegions(); i++)
     {
 		int regionToClaim = -1;
 		while (regionToClaim < 0)
@@ -84,12 +93,26 @@ void Game::claimCountries()
 void Game::placeFirstTroops()
 {
     int numberPerPlayer = 50 - 5 * numberOfPlayers;
-	int numberOfRegions = map->getNumberOfRegions();
+    int numberOfRegions = map->getNumberOfRegions();
     int piecesAlreadyUsed = numberOfRegions / numberOfPlayers;
     int playersWhoPlacedExtra = numberOfRegions % numberOfPlayers;
     for (int i = 0; i < numberOfPlayers; i++)
     {
         int numTroops = numberPerPlayer - piecesAlreadyUsed - ((i < playersWhoPlacedExtra) ? 1 : 0);
+/*<<<<<<< HEAD:src/Game.cpp
+        std::vector<std::pair<int, int> > placementActions = player[i]->place(state, numTroops);
+        for (int j = 0; j < placementActions.size(); j++)
+        {
+            int wherePut = placementActions[j].first;
+            int howMany = placementActions[j].second;
+            std::pair<int, int> regionInfo = state.getRegionInfo(wherePut);
+            if (regionInfo.first == i)
+            {
+                regionInfo.second += (howMany < numTroops) ? howMany : numTroops;
+                numTroops -= howMany;
+            }
+        }
+=======
 		while (numTroops > 0)
 		{
 			std::vector<std::pair<int, int>> placementActions = player[i]->place(state, numTroops);
@@ -105,6 +128,8 @@ void Game::placeFirstTroops()
 				}
 			}
 		}
+>>>>>>> d2a5159133ecd2d1f2aa40509a187bbd20a69806:src/game/Game.cpp
+*/
     }
 }
 
@@ -114,7 +139,7 @@ void Game::getAndPlaceTroops(int whoseTurn)
     int numOfTroops = state.getNumberOccupiedBy(whoseTurn) / 3;
     if (numOfTroops < 3)
         numOfTroops = 3;
-	std::vector<Continent> continentList = map->getContinentList();
+    std::vector<Continent> continentList = map->getContinentList();
     for (int i = 0; i < continentList.size(); i++)
     {
         std::vector<Region> regionList = continentList[i].getRegionList();
@@ -166,6 +191,43 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
         int playerAttacked = attackedRegionInfo.first;
         if (attackingRegionInfo.first == whoseTurn && playerAttacked != whoseTurn && attackingRegionInfo.second > 1 && map->areConnected(attackFrom,attackTo))
         {
+/*<<<<<<< HEAD:src/Game.cpp
+            int numToDefendWith = player[playerAttacked]->defend(state, attackTo, attackFrom);
+            int numToAttackWith = 3;
+            if (attackingRegionInfo.second < 4)
+                numToAttackWith = (attackingRegionInfo.second < 3) ? 1 : 2;
+            ////roll and compare dice.  Meaning of 2,1,0,-1,-2:
+            //attacker 2, attacker 1, each one, defender 1, defender 2
+            int numberConquered = rollToConquer(numToAttackWith, numToDefendWith);
+            if (numberConquered > 0)
+            {
+                attackedRegionInfo.second -= numberConquered;
+                if (attackedRegionInfo.second == 0)   //conquered
+                {
+                    if (isTotallyDefeated(attackedRegionInfo.first))
+                        fallenPlayers.push_back(attackedRegionInfo.first);
+                    attackedRegionInfo.first = attackingRegionInfo.first;
+                    attackedRegionInfo.second = numToAttackWith;
+                }
+            }
+            else if (numberConquered < 0)
+            {
+                attackingRegionInfo.second += numberConquered; //note that numberConquered is a negative number, here
+            }
+            else
+            {
+                attackedRegionInfo.second -= 1;
+                attackingRegionInfo.second -= 1;
+                if (attackedRegionInfo.second == 0)   //conquered
+                {
+                    if (isTotallyDefeated(attackedRegionInfo.first))
+                        fallenPlayers.push_back(attackedRegionInfo.first);
+                    attackedRegionInfo.first = attackingRegionInfo.first;
+                    attackedRegionInfo.second = numToAttackWith - 1;
+                }
+            }
+        }
+=======
 			int numToDefendWith = player[playerAttacked]->defend(state, attackTo, attackFrom);
 			int numToAttackWith = (attackingRegionInfo.second >= 4) ? 3 : ((attackingRegionInfo.second >= 3) ? 2 : 1);	//we may later give the player a choice, but for now this works
 			////roll and compare dice.  Meaning of 2,1,0,-1,-2:
@@ -199,6 +261,8 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
 				}
 			}
 		}
+>>>>>>> d2a5159133ecd2d1f2aa40509a187bbd20a69806:src/game/Game.cpp
+*/
         state.setRegionInfo(attackFrom, attackingRegionInfo);
         state.setRegionInfo(attackTo, attackedRegionInfo);
     }
@@ -213,7 +277,7 @@ void Game::fortify(int whoseTurn)
 	int numberOfRegions = map->getNumberOfRegions();
     std::vector<int> adjustmentsToMake(numberOfRegions);	//tracks what change is needed in each region.  We don't modify the state until we know all changes to make.
     std::vector<bool> regionAlreadyMoved(numberOfRegions);
-    for (int i=0; i<numberOfRegions; i++)
+    for (int i = 0; i < numberOfRegions; i++)
     {
         adjustmentsToMake[i] = 0;
         regionAlreadyMoved[i] = false;
