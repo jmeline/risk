@@ -1,4 +1,4 @@
-#include "../Strategy.hpp"
+#include "../game/Strategy.hpp"
 
 /*************************
 * BAD STRATEGY

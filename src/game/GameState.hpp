@@ -11,7 +11,7 @@
 #include <iostream>
 #include <vector>
 
-#include "gamemap/GameMap.hpp"
+#include "../gamemap/GameMap.hpp"
 
 class GameState
 {

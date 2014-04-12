@@ -59,12 +59,17 @@ int GameMap::getNumberOfRegions()
 std::vector<int> GameMap::getNeighborsOfRegion(int region)
 {
 	std::vector<int> neighborList;
-	for (int j=0; j<this->borderMatrix[region].size(); j++)
+	for (int j=0; j<(this->borderMatrix[region].size()); j++)
 	{
 		if (borderMatrix[region][j]==true)
 			neighborList.push_back(j);
 	}
 	return neighborList;
+}
+
+bool GameMap::areConnected(int region1, int region2)
+{
+	return borderMatrix[region1][region2];
 }
 
 void GameMap::makeBorder(int i, int j)

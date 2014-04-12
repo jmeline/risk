@@ -8,7 +8,7 @@
 #ifndef  game_INC
 #define  game_INC
 
-#include "gamemap/GameMap.hpp"
+#include "../gamemap/GameMap.hpp"
 #include "GameState.hpp"
 #include "GameReport.hpp"
 #include "Strategy.hpp"
