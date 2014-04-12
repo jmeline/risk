@@ -28,6 +28,8 @@ public:
     /* Uses the strategies to run the game through. */
     GameReport runGame();
 
+	static GameReport quickRun(GameTask task);
+
 private:
     /* Lets the players take turns choosing countries to claim until all are claimed */
     void claimCountries();
