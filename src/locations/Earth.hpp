@@ -1,15 +1,13 @@
-/* 
- * File:   Earth.hpp
- * Author: Jacob
- */
+/////
+/////
+/////  !!!NOTE: I intend to delete this, since, like the strategies, the headers for these are all in GameMap.hpp
+/////
+/////
 
 #ifndef EARTH_HPP
 #define	EARTH_HPP
 
 #include    "../gamemap/GameMap.hpp"
-#include    <vector>
-#include    <string>
-#include    <utility>
 
 class Earth : public GameMap
 {

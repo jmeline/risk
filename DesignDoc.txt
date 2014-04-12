@@ -17,7 +17,7 @@ Goals:
     (9)Make Report
 
 Timeline:
-    Week 4/7  - 1,2 (by Tues night), 5 (by end of week)
+    Week 4/7  - 1,2 (by Tues night), 5,8 (by end of week)
     Week 4/14 - 3,4,7,8
     Week 4/21 - 9
     Due 4/26!
@@ -40,3 +40,4 @@ Display of Map
 		Antartica: Antargica (#9)
 		Europe: France (#2), Brittain (#5), ...
 
+TO DELETE SHORTLY: Strategy.cpp, Earth.hpp, Island.hpp

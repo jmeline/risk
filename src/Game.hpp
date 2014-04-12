@@ -10,6 +10,7 @@
 
 #include "gamemap/GameMap.hpp"
 #include "GameState.hpp"
+#include "GameReport.hpp"
 #include "Strategy.hpp"
 
 class Game {
@@ -25,9 +26,8 @@ public:
     /* Adds a strategy for the next player, up to 6 */
     void addPlayer(Strategy* s);
 
-    /* Uses the strategies to run the game through.
-     * Returns a vector of winners: the first came in first, the second came in second, etc */
-    std::vector<int> runGame();
+    /* Uses the strategies to run the game through. */
+    GameReport runGame();
 
 private:
     /* Lets the players take turns choosing countries to claim until all are claimed */

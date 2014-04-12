@@ -1,10 +1,3 @@
-/*
- * =====================================================================================
- *       Filename:  Game.hpp
- *    Description: Manages the flow of a game
- * =====================================================================================
- */
-
 #include "Game.hpp"
 #include "GameState.hpp"
 #include "gamemap\GameMap.hpp"
@@ -33,19 +26,20 @@ void Game::addPlayer(Strategy* strat)
     }
 }
 
-std::vector<int> Game::runGame()
+GameReport Game::runGame()
 {
     claimCountries();
     placeFirstTroops();
-    std::vector<int> winnerRanking;
-    bool isDead[] = {false, false, false, false, false, false};
+	GameReport report;
+	report.participants = std::vector<int>(numberOfPlayers);
+    report.rounds = 0;
+	bool isDead[] = {false, false, false, false, false, false};
     int numberDead = 0;
     int whoseTurn = 0;
-    int roundNumber = 0;
-    while (true)
+	while (true)
     {
         if (whoseTurn == 0)
-            roundNumber++;
+            report.rounds++;
         if (!isDead[whoseTurn])
         {
             getAndPlaceTroops(whoseTurn);
@@ -53,19 +47,19 @@ std::vector<int> Game::runGame()
             for (int i = 0; i < killedInConquest.size(); i++)
             {
                 numberDead++;
-                winnerRanking[numberOfPlayers - numberDead] = killedInConquest[i];
+                report.participants[numberOfPlayers - numberDead] = killedInConquest[i];
                 isDead[killedInConquest[i]] = true;
             }
             if (numberDead == (numberOfPlayers - 1))
             {
-                winnerRanking[0] = whoseTurn;
+                report.participants[0] = whoseTurn;
                 break;
             }
             fortify(whoseTurn);
         }
         whoseTurn = (whoseTurn + 1) % numberOfPlayers;
     }
-    return winnerRanking;
+	return report;
 }
 
 void Game::claimCountries()
