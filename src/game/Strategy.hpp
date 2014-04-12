@@ -15,7 +15,7 @@
 #define  strategy_INC
 
 #include "GameState.hpp"
-#include "gamemap/GameMap.hpp"
+#include "../gamemap/GameMap.hpp"
 #include <vector>
 #include <utility>
 #include <tuple>
@@ -63,7 +63,7 @@ public:
 	/* Returns a list of pairs representing country placement:
 	 * The first int in the each pair is the region where to place
 	 * The second int in each pair is the number of troops to place there */
-	virtual std::vector<std::pair<int,int> > place(GameState state, int numTroops) = 0;
+	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops) = 0;
 
 	/* Returns a pair representing an attack:
 	 * The first int in the pair is the country being attacked

@@ -70,8 +70,11 @@ public:
     /* Returns a list of all regions bordering a given region */
     std::vector<int> getNeighborsOfRegion(int region);
 
+	/* Indicates whether two regions touch */
+	bool areConnected(int region1, int region2);
+
     /* ====================  METHODS FOR SPECIFIC INSTANCES TO OVERRIDE ======================================= */
-    virtual MapEnum::MapEnum getIdentifier() = 0;				/* uniquely identifies the specific GameMap */
+    virtual MapEnum::MapEnum getIdentifier() = 0;		/* uniquely identifies the specific GameMap */
 	virtual void constructContinentsAndRegions() = 0;	/* builds each continent */
     virtual void constructBorders() = 0;				/* builds each border relationship with each region (by repeatedly calling makeBorder())*/
 

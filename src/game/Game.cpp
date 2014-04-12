@@ -1,10 +1,10 @@
+
 /*
  * =====================================================================================
  *       Filename:  Game.hpp
  *    Description: Manages the flow of a game
  * =====================================================================================
  */
-
 
 #include <vector>
 #include <utility>
@@ -40,8 +40,10 @@ GameReport Game::runGame()
     claimCountries();
     placeFirstTroops();
 	GameReport report;
-	report.participants = std::vector<int>(numberOfPlayers);
-    report.rounds = 0;
+	report.rounds = 0;
+	report.map = map->getIdentifier();
+	for (int i=0; i<numberOfPlayers; i++)
+		report.players[i] = player[i]->getIdentifier();
 	bool isDead[] = {false, false, false, false, false, false};
     int numberDead = 0;
     int whoseTurn = 0;
@@ -56,12 +58,12 @@ GameReport Game::runGame()
             for (int i = 0; i < killedInConquest.size(); i++)
             {
                 numberDead++;
-                report.participants[numberOfPlayers - numberDead] = killedInConquest[i];
+				report.winners[numberOfPlayers - numberDead] = player[killedInConquest[i]]->getIdentifier();
                 isDead[killedInConquest[i]] = true;
             }
             if (numberDead == (numberOfPlayers - 1))
             {
-                report.participants[0] = whoseTurn;
+				report.winners[0] = player[whoseTurn]->getIdentifier();
                 break;
             }
             fortify(whoseTurn);
@@ -76,7 +78,13 @@ void Game::claimCountries()
     int whoseTurn = 0;
     for (int i = 0; i < this->map->getNumberOfRegions(); i++)
     {
-        int regionToClaim = player[whoseTurn]->claim(state);
+		int regionToClaim = -1;
+		while (regionToClaim < 0)
+		{
+			regionToClaim = player[whoseTurn]->claim(state);
+			if (regionToClaim<0 || regionToClaim>=state.getNumRegions() || state.getRegionInfo(regionToClaim).first != -1)
+				regionToClaim = -1;		//they chose an already-chosen region
+		}
         state.setRegionInfo(regionToClaim, std::pair<int, int>(whoseTurn, 1));
         whoseTurn = (whoseTurn + 1) % numberOfPlayers;
     }
@@ -91,6 +99,7 @@ void Game::placeFirstTroops()
     for (int i = 0; i < numberOfPlayers; i++)
     {
         int numTroops = numberPerPlayer - piecesAlreadyUsed - ((i < playersWhoPlacedExtra) ? 1 : 0);
+/*<<<<<<< HEAD:src/Game.cpp
         std::vector<std::pair<int, int> > placementActions = player[i]->place(state, numTroops);
         for (int j = 0; j < placementActions.size(); j++)
         {
@@ -103,6 +112,24 @@ void Game::placeFirstTroops()
                 numTroops -= howMany;
             }
         }
+=======
+		while (numTroops > 0)
+		{
+			std::vector<std::pair<int, int>> placementActions = player[i]->place(state, numTroops);
+			for (int j = 0; j < placementActions.size(); j++)
+			{
+				int wherePut = placementActions[j].first;
+				int howMany = placementActions[j].second;
+				std::pair<int,int> regionInfo = state.getRegionInfo(wherePut);
+				if (regionInfo.first == i && numTroops>0)
+				{
+					regionInfo.second += (howMany<numTroops) ? howMany : numTroops;
+					numTroops -= howMany;
+				}
+			}
+		}
+>>>>>>> d2a5159133ecd2d1f2aa40509a187bbd20a69806:src/game/Game.cpp
+*/
     }
 }
 
@@ -129,7 +156,21 @@ void Game::getAndPlaceTroops(int whoseTurn)
             numOfTroops += continentList[i].getTroopValue();
     }
     //place them
-    player[whoseTurn]->place(state, numOfTroops);
+	while (numOfTroops > 0)
+	{
+		std::vector<std::pair<int,int>> placementActions = player[whoseTurn]->place(state, numOfTroops);
+		for (int j = 0; j < placementActions.size(); j++)
+		{
+			int wherePut = placementActions[j].first;
+			int howMany = placementActions[j].second;
+			std::pair<int, int> regionInfo = state.getRegionInfo(wherePut);
+			if (regionInfo.first == whoseTurn && numOfTroops>0)
+			{
+				regionInfo.second += (howMany<numOfTroops) ? howMany : numOfTroops;
+				numOfTroops -= howMany;
+			}
+		}
+	}
 }
 
 /* Lets the current player do battle as much as desired for a turn
@@ -138,18 +179,19 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
 {
     std::vector<int> fallenPlayers;
     int numberOfPlayersEliminated = 0;
-    while (true)   //we will keep going until the player's choice is a "magic value" indicating to end the turn
-    {
+    while (true)
+    {		//we will keep going until the player's choice is a "magic value" indicating to end the turn
         std::pair<int, int> attackInfo = player[whoseTurn]->attack(state);
         int attackTo = attackInfo.first;
         int attackFrom = attackInfo.second;
         if (attackFrom < 0 || attackTo < 0) //the "magic value" indicating "all done" received
             break;
-        std::pair<int, int> attackedRegionInfo = state.getRegionInfo(attackTo);
-        std::pair<int, int> attackingRegionInfo = state.getRegionInfo(attackFrom);
+        std::pair<int,int> attackedRegionInfo = state.getRegionInfo(attackTo);
+        std::pair<int,int> attackingRegionInfo = state.getRegionInfo(attackFrom);
         int playerAttacked = attackedRegionInfo.first;
-        if (attackingRegionInfo.first == whoseTurn && playerAttacked != whoseTurn && attackingRegionInfo.second > 1)
+        if (attackingRegionInfo.first == whoseTurn && playerAttacked != whoseTurn && attackingRegionInfo.second > 1 && map->areConnected(attackFrom,attackTo))
         {
+/*<<<<<<< HEAD:src/Game.cpp
             int numToDefendWith = player[playerAttacked]->defend(state, attackTo, attackFrom);
             int numToAttackWith = 3;
             if (attackingRegionInfo.second < 4)
@@ -185,6 +227,42 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
                 }
             }
         }
+=======
+			int numToDefendWith = player[playerAttacked]->defend(state, attackTo, attackFrom);
+			int numToAttackWith = (attackingRegionInfo.second >= 4) ? 3 : ((attackingRegionInfo.second >= 3) ? 2 : 1);	//we may later give the player a choice, but for now this works
+			////roll and compare dice.  Meaning of 2,1,0,-1,-2:
+			//attacker wins 2, attacker wins 1, each wins one, defender wins 1, defender wins 2
+			int numberConquered = rollToConquer(numToAttackWith, numToDefendWith);
+			if (numberConquered > 0)
+			{
+				attackedRegionInfo.second -= numberConquered;
+				if (attackedRegionInfo.second == 0)
+				{		//conquered; see if the looser is all dead
+					if (isTotallyDefeated(attackedRegionInfo.first))
+						fallenPlayers.push_back(attackedRegionInfo.first);
+					attackedRegionInfo.first = attackingRegionInfo.first;
+					attackedRegionInfo.second = numToAttackWith;
+				}
+			}
+			else if (numberConquered < 0)
+			{
+				attackingRegionInfo.second += numberConquered; //note that numberConquered is a negative number, here
+			}
+			else
+			{		//they both took a hit
+				attackedRegionInfo.second -= 1;
+				attackingRegionInfo.second -= 1;
+				if (attackedRegionInfo.second == 0)
+				{		//conquered; see if the looser is all dead
+					if (isTotallyDefeated(attackedRegionInfo.first))
+						fallenPlayers.push_back(attackedRegionInfo.first);
+					attackedRegionInfo.first = attackingRegionInfo.first;
+					attackedRegionInfo.second = numToAttackWith - 1;
+				}
+			}
+		}
+>>>>>>> d2a5159133ecd2d1f2aa40509a187bbd20a69806:src/game/Game.cpp
+*/
         state.setRegionInfo(attackFrom, attackingRegionInfo);
         state.setRegionInfo(attackTo, attackedRegionInfo);
     }
@@ -195,9 +273,9 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
 void Game::fortify(int whoseTurn)
 {
     //get player input, then prepare vectors needed to ensure valid moves
-    std::vector<std::tuple<int, int, int> > moves = player[whoseTurn]->fortify(state);
-    int numberOfRegions = map->getNumberOfRegions();
-    std::vector<int> adjustmentsToMake(numberOfRegions);
+    std::vector<std::tuple<int, int, int>> moves = player[whoseTurn]->fortify(state);
+	int numberOfRegions = map->getNumberOfRegions();
+    std::vector<int> adjustmentsToMake(numberOfRegions);	//tracks what change is needed in each region.  We don't modify the state until we know all changes to make.
     std::vector<bool> regionAlreadyMoved(numberOfRegions);
     for (int i = 0; i < numberOfRegions; i++)
     {
@@ -211,15 +289,15 @@ void Game::fortify(int whoseTurn)
         int regionFrom = std::get<0>(moves.at(i));
         int regionTo = std::get<1>(moves.at(i));
         int numTroops = std::get<2>(moves.at(i));
-        if (!regionAlreadyMoved[regionFrom] && state.getRegionInfo(regionFrom).first == whoseTurn && state.getRegionInfo(regionTo).first == whoseTurn && numTroops < state.getRegionInfo(regionFrom).second)
+        if (!regionAlreadyMoved[regionFrom] && state.getRegionInfo(regionFrom).first == whoseTurn && state.getRegionInfo(regionTo).first == whoseTurn && numTroops < state.getRegionInfo(regionFrom).second && map->areConnected(regionFrom,regionTo))
         {
-            regionAlreadyMoved[regionFrom] = true;
-            adjustmentsToMake[regionFrom] -= numTroops;
-            adjustmentsToMake[regionTo] += numTroops;
+			regionAlreadyMoved[regionFrom] = true;
+			adjustmentsToMake[regionFrom] -= numTroops;
+			adjustmentsToMake[regionTo] += numTroops;
         }
     }
 
-    //move the troops
+	//move the troops
     for (int i = 0; i < adjustmentsToMake.size(); i++)
     {
         if (adjustmentsToMake[i] == 0)

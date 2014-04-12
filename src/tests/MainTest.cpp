@@ -1,7 +1,7 @@
-#include "../Game.hpp"
-#include "../GameState.hpp"
+#include "../game/Game.hpp"
+#include "../game/GameState.hpp"
 #include "../gamemap/GameMap.hpp"
-#include "../GameReport.hpp"
+#include "../game/GameReport.hpp"
 #include <iostream>
 #include <random>
 #include <ctime>
