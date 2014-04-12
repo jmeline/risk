@@ -5,8 +5,8 @@
  *
  *    Description:  Contains:
 						1) An enum of all types of GameMaps, by which they can be identified
-						2) The definintion of a GameMap
-							a list of continents and their respective bordering regions
+						2) The definintion of a GameMap: a list of continents and their respective bordering regions
+							2a) Includes a factory
 						3) The definitions of the types of GameMaps
  *                  
  *
@@ -56,6 +56,20 @@ protected:
 public:
 	/* ====================  LIFECYCLE METHODS FOR PUBLIC USE  ======================================= */
 	
+	/* a factoryMethod */
+	static GameMap* make(MapEnum::MapEnum mapType)
+	{
+		switch(mapType)
+		{
+			case (MapEnum::Earth):
+				return (GameMap*)(new Earth());
+			case (MapEnum::Island):
+				return (GameMap*)(new Island());
+			default:
+				return (GameMap*)(new Earth());
+		}
+	}
+
 	/* To be called in the implementations' constructors */
 	void initialize();
 

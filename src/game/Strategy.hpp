@@ -5,8 +5,8 @@
  *
  *    Contains:
 		1) An enum of all types of Strategies, by which they can be identified
-		2) The definintion of a Strategy
-			an abstract interface to be implemented
+		2) The definintion of a Strategy: an abstract interface to be implemented
+			2a) Includes a factory
 		3) The definitions of the types of Strategy
  * =====================================================================================
  */
@@ -48,6 +48,23 @@ protected:
 	int myPlayerNumber;
 
 public:
+
+	/* a factoryMethod */
+	static Strategy* make(StrategyEnum::StrategyEnum strategyType)
+	{
+		switch(strategyType)
+		{
+			case (StrategyEnum::HumanControlledStrategy):
+				return (Strategy*)(new HumanControlledStrategy());
+			case (StrategyEnum::BadStrategy1):
+				return (Strategy*)(new BadStrategy1());
+////		case (StrategyEnum::ObtainSmallestContinentsFirstStrategy):
+////			return (Strategy*)(new ObtainSmallestContinentsFirstStrategy());
+			default:
+				return (Strategy*)(new BadStrategy1());
+		}
+	}
+
 	/* Called once to let the strategy understand the relationship between countries and Contenents.
 	 * Already implemented, but can be overridden if desired. */
 	virtual void init(GameMap* m, int num) {
