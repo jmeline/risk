@@ -6,7 +6,6 @@
  */
 
 
-#include    "Earth.hpp"
 #include    "../gamemap/GameMap.hpp"
 #include    "../gamemap/Continent.hpp"
 #include    <string>

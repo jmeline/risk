@@ -1,19 +1,15 @@
-
 /* 
  * File:   Island.cpp
  * Author: Jacob
  *
- * Test location 
+ * A location for testing
  */
 
-#include 	<iostream>
 #include    "../gamemap/GameMap.hpp"
 #include    "../gamemap/Continent.hpp"
 #include    <string>
 #include    <utility>
 #include    <vector>
-
-#include 	"Island.hpp"
 
 enum Regions
 {

@@ -2,6 +2,12 @@
  * =====================================================================================
  *       Filename:  Strategy.hpp
  *    Description: Defines the interface for a strategy
+ *
+ *    Contains:
+		1) An enum of all types of Strategies, by which they can be identified
+		2) The definintion of a Strategy
+			an abstract interface to be implemented
+		3) The definitions of the types of Strategy
  * =====================================================================================
  */
 
@@ -13,6 +19,28 @@
 #include <vector>
 #include <utility>
 #include <tuple>
+
+
+
+namespace StrategyEnum {
+	enum StrategyEnum
+	{
+		NOPLAYER,		//used as a placeholder to indicate that a given player isn't in the game (ie, if there are only 3 players, p4-p6 can be said to be running StrategyEnum::NOPLAYER.  There is no actual object called "NOPLAYER".
+		HumanControlledStrategy,
+		ObtainSmallestContinentsFirstStrategy,
+		BadStrategy1
+	};
+}
+
+
+
+
+/*
+ * =====================================================================================
+ *        Class:  Strategy
+ *  Description:  An interface that must be implemented to constitute a strategy
+ * =====================================================================================
+ */
 
 class Strategy {
 protected:
@@ -26,6 +54,8 @@ public:
 		map = m;
 		myPlayerNumber = num;
 	}
+
+	virtual StrategyEnum::StrategyEnum getIdentifier() = 0;		/* uniquely identifies the specific Strategy */
 
 	/* Returns the region to claim */
 	virtual int claim(GameState state) = 0;
@@ -47,14 +77,24 @@ public:
 	 * The first int of each triplet is the country moving from
 	 * The second int of each triplet is the country moving to
 	 * The third int of each triplet is the number of troops to move */
-	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state) = 0;
+	virtual std::vector<std::tuple<int,int,int>> fortify(GameState state) = 0;
 };
 
 
+
+
+/*
+ * BELOW HERE are the headers for all the Strategy types
+*/
+
+
+
+/* For testing only.  Is the only interactive strategy: gets human input for all nontrivial decisions. */
 class HumanControlledStrategy : public Strategy
 {
 public:
 	HumanControlledStrategy();
+	StrategyEnum::StrategyEnum getIdentifier() { return StrategyEnum::HumanControlledStrategy; }
 	virtual int claim(GameState state);
 	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);
@@ -62,19 +102,26 @@ public:
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 };
 
- /*
+
+
+/*
   *	This strategy seeks to claim the two smallest continents first: Australia and South America
   * The reasoning behind this strategy is that by having the smaller continents claimed, you
   * can defend more easily and have easy access to North America, Africa, and Asia to prevent
   * the opposing player from claiming them. 
   */
+<<<<<<< HEAD
 
 
+=======
+/*
+>>>>>>> 09d922f398a30298eb6410c15d30b0513b861c0e
 class ObtainSmallestContinentsFirstStrategy : public Strategy
 {
 public:
 	ObtainSmallestContinentsFirstStrategy();
 	virtual int claim(GameState state);	
+	StrategyEnum::StrategyEnum getIdentifier() { return StrategyEnum::ObtainSmallestContinentsFirstStrategy; }
 	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);
 	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
@@ -88,10 +135,12 @@ private:
 
 
 
-class BadStrategy : public Strategy
+/* DISCRIPTION HERE */
+class BadStrategy1 : public Strategy
 {
 public:
-	BadStrategy();
+	BadStrategy1();
+	StrategyEnum::StrategyEnum getIdentifier() { return StrategyEnum::BadStrategy1; }
 	virtual int claim(GameState state);
 	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);

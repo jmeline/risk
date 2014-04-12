@@ -1,3 +1,9 @@
+/////
+/////
+/////  !!!NOTE: I intend to delete this, in favor of the "strategies" folder
+/////
+/////
+
 #include "Strategy.hpp"
 #include <iostream>
 #include <vector>
