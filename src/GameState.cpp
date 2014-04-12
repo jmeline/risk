@@ -45,6 +45,24 @@ int GameState::getNumberOccupiedBy(int player)
     //
 }
 
+
+std::vector<int> GameState::getRegionsOwnedByPlayer(int playerNumber)
+{
+    std::vector<int> regionsOwned;
+    //for (std::pair<int, int> p : internalState)
+    for( int i = 0; i < internalState.size(); i++)
+    {
+        if (internalState[i].first == playerNumber)
+        {
+            regionsOwned.push_back(i);
+        }
+    }
+
+    return regionsOwned;
+}
+
+
+
 void GameState::display()
 {
     std::cout << "________________________________" << std::endl;

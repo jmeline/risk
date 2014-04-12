@@ -7,8 +7,7 @@
 #include "Strategy.hpp"
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <limits> // INT_MAX
+
 
 
 /*************************
@@ -165,63 +164,6 @@ std::vector<std::tuple<int, int, int> > HumanControlledStrategy::fortify(GameSta
     //actions.push_back(std::tuple<int,int,int>(whereFrom,whereTo,howMany));
     return actions; //for now, let's do nothing
 }
-
-/**************************************************
-
-            COMPUTER CONTROLLED
-    ObtainSmallestContinentsFirstStrategy
-    Seeks to get the smallest Continent first
-
-**************************************************/
-
-ObtainSmallestContinentsFirstStrategy::ObtainSmallestContinentsFirstStrategy()
-{
-}
-
-int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
-{
-    // get list of continents
-    std::vector<Continent> continentList = this->map->getContinentList();
-
-
-    
-    // find the min location
-
-    int min = std::numeric_limits<int>::max();
-
-    for ( Continent c : continentList)
-    {
-        if (c.getRegionList().size() < min)
-        {
-            min = c.getRegionList().size();
-        }
-    }
-
-
-
-    return 0;
-}
-
-std::vector<std::pair<int, int>> ObtainSmallestContinentsFirstStrategy::place(GameState state, int numTroops)
-{
-
-    return std::vector<std::pair<int, int>>();
-}
-
-std::pair<int, int> ObtainSmallestContinentsFirstStrategy::attack(GameState state)
-{
-    return std::pair<int, int>();
-}
-bool ObtainSmallestContinentsFirstStrategy::defend(GameState state, int countryAttacked, int countryAttacking)
-{
-    return false;
-}
-
-std::vector<std::tuple<int, int, int> > ObtainSmallestContinentsFirstStrategy::fortify(GameState state)
-{
-    return std::vector<std::tuple<int, int, int> >();
-}
-
 
 
 /*************************

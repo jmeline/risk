@@ -80,14 +80,9 @@ public:
 	virtual std::vector<std::tuple<int,int,int>> fortify(GameState state) = 0;
 };
 
-
-
-
 /*
  * BELOW HERE are the headers for all the Strategy types
 */
-
-
 
 /* For testing only.  Is the only interactive strategy: gets human input for all nontrivial decisions. */
 class HumanControlledStrategy : public Strategy
@@ -102,20 +97,12 @@ public:
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 };
 
-
-
 /*
   *	This strategy seeks to claim the two smallest continents first: Australia and South America
   * The reasoning behind this strategy is that by having the smaller continents claimed, you
   * can defend more easily and have easy access to North America, Africa, and Asia to prevent
   * the opposing player from claiming them. 
   */
-<<<<<<< HEAD
-
-
-=======
-/*
->>>>>>> 09d922f398a30298eb6410c15d30b0513b861c0e
 class ObtainSmallestContinentsFirstStrategy : public Strategy
 {
 public:
@@ -130,10 +117,6 @@ private:
 	int movesDoneAttacking;
 	bool sortByNumberOfRegions();
 };
-
-//http://www.cplusplus.com/articles/NhA0RXSz/
-
-
 
 /* DISCRIPTION HERE */
 class BadStrategy1 : public Strategy

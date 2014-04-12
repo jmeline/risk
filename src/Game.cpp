@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
  * =====================================================================================
  *       Filename:  Game.hpp
@@ -6,12 +5,7 @@
  * =====================================================================================
  */
 
-=======
-#include "Game.hpp"
-#include "GameState.hpp"
-#include "gamemap\GameMap.hpp"
-#include <iostream>
->>>>>>> 09d922f398a30298eb6410c15d30b0513b861c0e
+
 #include <vector>
 #include <utility>
 #include <random>
