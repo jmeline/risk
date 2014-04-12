@@ -46,7 +46,7 @@ GameReport Game::runGame()
         {
             getAndPlaceTroops(whoseTurn);
             std::vector<int> killedInConquest = doATurnOfBattles(whoseTurn);
-            for (int i = 0; i < killedInConquest.size(); i++)
+            for (int i=0; i<killedInConquest.size(); i++)
             {
                 numberDead++;
 				report.winners[numberOfPlayers - numberDead] = player[killedInConquest[i]]->getIdentifier();

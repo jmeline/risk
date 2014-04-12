@@ -10,22 +10,27 @@
 
 #include "Strategy.hpp"
 #include <vector>
-#include <iostream>
+#include <fstream>
 
 class GameReport
 {
 public:
-	// Order is preserved in vectors.
+	const static int encodedSize = 14;
 	int rounds;								//how long the game lasted
 	MapEnum::MapEnum map;					//the map where the game occurred
 	StrategyEnum::StrategyEnum players[6];	//players[0] got the first move, players[1] got the second, etc.
 	StrategyEnum::StrategyEnum winners[6];	//winners[0] is the winner, winners[1] came in second, etc.
 
 	GameReport();
+	GameReport(int theRounds, MapEnum::MapEnum theMap, StrategyEnum::StrategyEnum thePlayers[], StrategyEnum::StrategyEnum theWinners[]);
 
-	void write(std::ofstream outputStream);
+	void write(std::ofstream *outputStream);
 	
-	void read(std::ifstream inputStream);
+	void read(std::ifstream *inputStream);
+
+	void encode(int outData[]);
+	
+	void decode(int inData[]);
 };
 
 #endif   /* ----- #ifndef gamereport_INC  ----- */

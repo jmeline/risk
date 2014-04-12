@@ -1,21 +1,18 @@
-///// incorporate #if statements for MPI vs non-mpi.  Default should be MPI
-
-
 #include "GameManager.hpp"
 #include <fstream>
 #ifndef DONTUSEMPI
 	#include <mpi.h>
 #endif
 
-#define REQUEST = 1;
-#define REPLY = 1;
+#define TASK = 1;	//identifies a type of MPI message
+#define REPORT = 1;	//identified a type of MPI message
 
 GameManager::GameManager(int numberOfSlaves)
 {
 	slaveTasks = std::vector<int>(numberOfSlaves);
 }
 
-std::vector<GameInfo> GameManager::getRunsFor(std::vector<StrategyEnum::StrategyEnum> strategies, std::vector<MapEnum::MapEnum> maps, int numberOfPlayers, int timesToRepeatEachGame)
+std::vector<GameTask> GameManager::getRunsFor(std::vector<StrategyEnum::StrategyEnum> strategies, std::vector<MapEnum::MapEnum> maps, int numberOfPlayers, int timesToRepeatEachGame)
 {
 	//get relevent counts
 	int strategyPossibilities = strategies.size();
@@ -24,7 +21,7 @@ std::vector<GameInfo> GameManager::getRunsFor(std::vector<StrategyEnum::Strategy
 		strategyCombinations *= strategyPossibilities;
 	int numberOfGames = maps.size() * strategyCombinations * timesToRepeatEachGame;
 	//set up all of the gamesInfos
-	std::vector<GameInfo> gameInfoList = std::vector<GameInfo>(numberOfGames);
+	std::vector<GameTask> gameTaskList = std::vector<GameTask>(numberOfGames);
 	for (int map=0; map<maps.size(); map++) {
 		//iterate through all strategy combinations
 		//"currentCombo" tracks the particular strategy combination.  Think of it as a number with "numberOfPlayers" many "digits", each of which can take on one of "strategyPossibilities" possible values
@@ -39,20 +36,17 @@ std::vector<GameInfo> GameManager::getRunsFor(std::vector<StrategyEnum::Strategy
 				strategyIndex %= strategyPossibilities;		//keep the lowest surviving digit
 				strategies[playerNum] = strategies[strategyIndex];
 			}
-			//Set up the current GameInfo
-			GameInfo info =
-				std::tuple<MapEnum::MapEnum,StrategyEnum::StrategyEnum,StrategyEnum::StrategyEnum,StrategyEnum::StrategyEnum,StrategyEnum::StrategyEnum,StrategyEnum::StrategyEnum,StrategyEnum::StrategyEnum>(
-					maps[map], strategies[0],strategies[1],strategies[2],strategies[3],strategies[4],strategies[5]
-				);
+			//Set up the current GameTask
+			GameTask info(maps[map], strategies);
 			for (int rep=0; rep<timesToRepeatEachGame; rep++)
-				gameInfoList[(map*strategyCombinations+currentCombo)*timesToRepeatEachGame+rep] = info;
+				gameTaskList[(map*strategyCombinations+currentCombo)*timesToRepeatEachGame+rep] = info;
 		}
 	}
-	return gameInfoList;
+	return gameTaskList;
 }
 
-void GameManager::setGamesToRun(std::vector<GameInfo> gameInfoList) {
-	gamesToRun = gameInfoList;
+void GameManager::setGamesToRun(std::vector<GameTask> gameTaskList) {
+	gamesToRun = gameTaskList;
 }
 
 void GameManager::readInExistingReport(std::string reportLocation)
@@ -73,7 +67,7 @@ void GameManager::runIt(std::string outputFileLocation)
 	//communicate, until all done
 	for (int i=0; i<gamesToRun.size(); i++)
 	{
-		int whoDone = getAndHandleReport(outputStream);
+		int whoDone = getAndHandleReport(&outputStream);
 		if (nextGameNumber<gamesToRun.size())
 		{
 			launchGame(whoDone, nextGameNumber);
@@ -87,31 +81,32 @@ void GameManager::runIt(std::string outputFileLocation)
 void GameManager::launchGame(int slaveNumber, int gameNumber)
 {
 	slaveTasks[slaveNumber] = gameNumber;
-	GameInfo info = gamesToRun[gameNumber];
+	int dataOut[GameTask::encodedSize];
+	gamesToRun[gameNumber].encode(dataOut);
 	#ifndef DONTUSEMPI
-		MPI_Send(data, numOfDatas, MPI_LONG, slaveNumber+1, REQUEST, MPI_COMM_WORLD);
+		MPI_Send(&dataOut, GameTask::encodedSize, MPI_INT, slaveNumber+1, TASK, MPI_COMM_WORLD);
 	#else
-		std::cout << "MPI is disabled.  Would have launched at slave"<<slaveNumber<<": ";
-		for (int i=0; i<7; i++)
-			std::cout << std::get<0>(info);
+		std::cout << "MPI is disabled.  Would have launched at slave"<<slaveNumber<<":";
+		for (int i=0; i<GameTask::encodedSize; i++)
+			std::cout <<" "<< dataOut[i];
 		std::cout << std::endl;
 	#endif
 }
 
-int GameManager::getAndHandleReport(std::ofstream outputStream)
+int GameManager::getAndHandleReport(std::ofstream *outputStream)
 {
+	GameReport report;
+	int dataIn[GameTask::encodedSize];
 	#ifndef DONTUSEMPI
-		MPI_Status status
-		MPI_Recv(&data, sizeof(GameReport)/sizeof(int), MPI_INT, MPI_ANY_SOURCE, REPLY, MPI_COMM_WORLD, &status);
-        int slaveNumber = status.MPI_SOURCE;
-		GameReport report;
-		////fill report with the data, once you've put something in "data"
+		MPI_Status status;
+		MPI_Recv(&dataIn, GameTask::encodedSize, MPI_INT, MPI_ANY_SOURCE, REPORT, MPI_COMM_WORLD, &status);
+        report.read(inData);
+		int slaveNumber = status.MPI_SOURCE - 1;
 	#else
 		std::cout << "MPI is disabled.  Would have recieved a report." << std::endl;
 		int slaveNumber = 1;
-		GameReport report;
 	#endif
-	slaveTasks[slaveNumber] = -1;
+	slaveTasks[slaveNumber] = -1;	//mark this slave as not working
 	report.write(outputStream);
 	return slaveNumber;
 }

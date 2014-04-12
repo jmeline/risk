@@ -1,7 +1,5 @@
 -----------------------------------------------------------------------
-
   		       RISK
-
 	  	MATT JOSEPH JACOB
 -----------------------------------------------------------------------
 
@@ -22,22 +20,4 @@ Timeline:
     Week 4/21 - 9
     Due 4/26!
     
-
 In Results.txt goes one report per row, semicolon delimeated
-
-Game will be assessed later, and at first we just generate results
-
-Display of State
-	# name allegance occupancy	(align well)
-	# name allegance occupancy
-	# name allegance occupancy
-Display of Map
-	list of country names, in order of #
-	list of edges
-		Russia(#1) - Cuba(#16)
-		Cuba(#16) - China(#22)
-	list of continents
-		Antartica: Antargica (#9)
-		Europe: France (#2), Brittain (#5), ...
-
-TO DELETE SHORTLY: Strategy.cpp, Earth.hpp, Island.hpp
