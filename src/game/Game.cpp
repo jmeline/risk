@@ -99,20 +99,6 @@ void Game::placeFirstTroops()
     for (int i = 0; i < numberOfPlayers; i++)
     {
         int numTroops = numberPerPlayer - piecesAlreadyUsed - ((i < playersWhoPlacedExtra) ? 1 : 0);
-/*<<<<<<< HEAD:src/Game.cpp
-        std::vector<std::pair<int, int> > placementActions = player[i]->place(state, numTroops);
-        for (int j = 0; j < placementActions.size(); j++)
-        {
-            int wherePut = placementActions[j].first;
-            int howMany = placementActions[j].second;
-            std::pair<int, int> regionInfo = state.getRegionInfo(wherePut);
-            if (regionInfo.first == i)
-            {
-                regionInfo.second += (howMany < numTroops) ? howMany : numTroops;
-                numTroops -= howMany;
-            }
-        }
-=======
 		while (numTroops > 0)
 		{
 			std::vector<std::pair<int, int>> placementActions = player[i]->place(state, numTroops);
@@ -128,8 +114,6 @@ void Game::placeFirstTroops()
 				}
 			}
 		}
->>>>>>> d2a5159133ecd2d1f2aa40509a187bbd20a69806:src/game/Game.cpp
-*/
     }
 }
 
@@ -191,43 +175,6 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
         int playerAttacked = attackedRegionInfo.first;
         if (attackingRegionInfo.first == whoseTurn && playerAttacked != whoseTurn && attackingRegionInfo.second > 1 && map->areConnected(attackFrom,attackTo))
         {
-/*<<<<<<< HEAD:src/Game.cpp
-            int numToDefendWith = player[playerAttacked]->defend(state, attackTo, attackFrom);
-            int numToAttackWith = 3;
-            if (attackingRegionInfo.second < 4)
-                numToAttackWith = (attackingRegionInfo.second < 3) ? 1 : 2;
-            ////roll and compare dice.  Meaning of 2,1,0,-1,-2:
-            //attacker 2, attacker 1, each one, defender 1, defender 2
-            int numberConquered = rollToConquer(numToAttackWith, numToDefendWith);
-            if (numberConquered > 0)
-            {
-                attackedRegionInfo.second -= numberConquered;
-                if (attackedRegionInfo.second == 0)   //conquered
-                {
-                    if (isTotallyDefeated(attackedRegionInfo.first))
-                        fallenPlayers.push_back(attackedRegionInfo.first);
-                    attackedRegionInfo.first = attackingRegionInfo.first;
-                    attackedRegionInfo.second = numToAttackWith;
-                }
-            }
-            else if (numberConquered < 0)
-            {
-                attackingRegionInfo.second += numberConquered; //note that numberConquered is a negative number, here
-            }
-            else
-            {
-                attackedRegionInfo.second -= 1;
-                attackingRegionInfo.second -= 1;
-                if (attackedRegionInfo.second == 0)   //conquered
-                {
-                    if (isTotallyDefeated(attackedRegionInfo.first))
-                        fallenPlayers.push_back(attackedRegionInfo.first);
-                    attackedRegionInfo.first = attackingRegionInfo.first;
-                    attackedRegionInfo.second = numToAttackWith - 1;
-                }
-            }
-        }
-=======
 			int numToDefendWith = player[playerAttacked]->defend(state, attackTo, attackFrom);
 			int numToAttackWith = (attackingRegionInfo.second >= 4) ? 3 : ((attackingRegionInfo.second >= 3) ? 2 : 1);	//we may later give the player a choice, but for now this works
 			////roll and compare dice.  Meaning of 2,1,0,-1,-2:
@@ -261,8 +208,6 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
 				}
 			}
 		}
->>>>>>> d2a5159133ecd2d1f2aa40509a187bbd20a69806:src/game/Game.cpp
-*/
         state.setRegionInfo(attackFrom, attackingRegionInfo);
         state.setRegionInfo(attackTo, attackedRegionInfo);
     }
