@@ -7,10 +7,10 @@ GameReport::GameReport()
 	for (int i=0; i<6; i++)
 	{
 		players[i] = StrategyEnum::NOPLAYER;
-		winners[i] = StrategyEnum::NOPLAYER;
+		winners[i] = -1;
 	}
 }
-GameReport::GameReport(int theRounds, MapEnum::MapEnum theMap, StrategyEnum::StrategyEnum thePlayers[], StrategyEnum::StrategyEnum theWinners[])
+GameReport::GameReport(int theRounds, MapEnum::MapEnum theMap, StrategyEnum::StrategyEnum thePlayers[], int theWinners[])
 {
 	rounds = theRounds;
 	map = theMap;
@@ -18,34 +18,6 @@ GameReport::GameReport(int theRounds, MapEnum::MapEnum theMap, StrategyEnum::Str
 	{
 		players[i] = thePlayers[i];
 		winners[i] = theWinners[i];
-	}
-}
-
-void GameReport::write(std::ofstream *outputStream)
-{
-	*outputStream << rounds;
-	*outputStream << map;
-	for (int i=0; i<6; i++)
-		*outputStream << players[i];
-	for (int i=0; i<6; i++)
-		*outputStream << winners[i];
-}
-
-void GameReport::read(std::ifstream *inputStream)
-{
-	int temp;	//used for our enums, before casting
-	*inputStream >> rounds;
-	*inputStream >> temp;
-	map = (MapEnum::MapEnum)temp;
-	for (int i=0; i<6; i++)
-	{
-		*inputStream >> temp;
-		players[i] = (StrategyEnum::StrategyEnum)temp;
-	}
-	for (int i=0; i<6; i++)
-	{
-		*inputStream >> temp;
-		winners[i] = (StrategyEnum::StrategyEnum)temp;
 	}
 }
 
@@ -67,6 +39,19 @@ void GameReport::decode(int inData[])
 	for (int i=0; i<6; i++)
 	{
 		players[i] = (StrategyEnum::StrategyEnum)inData[i+2];
-		winners[i] = (StrategyEnum::StrategyEnum)inData[i+8];
+		winners[i] = inData[i+8];
 	}
+}
+
+void GameReport::write(std::ostream *outputStream)
+{
+	int numberOfPlayers = 0;
+	while (numberOfPlayers<6 && players[numberOfPlayers]!=StrategyEnum::NOPLAYER)
+		numberOfPlayers++;
+	*outputStream << rounds <<";"<< map;
+	for (int i=0; i<numberOfPlayers; i++)
+		*outputStream <<(i==0?';':',')<< players[i];
+	for (int i=0; i<numberOfPlayers; i++)
+		*outputStream <<(i==0?';':',')<< winners[i];
+	*outputStream << std::endl;
 }

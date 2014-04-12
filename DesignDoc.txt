@@ -21,3 +21,12 @@ Timeline:
     Due 4/26!
     
 In Results.txt goes one report per row, semicolon delimeated
+
+To add later:
+	Controlling the number of troops to move into a newly conquered country
+		Can be anywhere from numAttacking-numWhoDied to numInAttackingRegion-numWhoDied-1
+
+Human Controlled Strategy:
+	--Attacking: should ask where to attack from, not just where to
+		As it is, it will sometimes try to attack from a non-touching region.  Test it on the Island map.
+	--Could display state a little more often

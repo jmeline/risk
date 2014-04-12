@@ -1,19 +1,39 @@
-/* 
- * File:   newsimpletest.cpp
- * Author: liquid
- *
- * Created on Apr 7, 2014, 11:41:01 PM
- */
-
 #include <stdlib.h>
 #include <iostream>
 
-/*
- * Simple C++ Test Suite
- */
+#include "../game/GameReport.hpp"
+#include <fstream>
+#include <random>
+#include <ctime>
+
+std::default_random_engine rng;
 
 void test1() {
-    std::cout << "newsimpletest test 1" << std::endl;
+    std::cout << "newsimpletest test 1: Outputting some report" << std::endl;
+	//prepare a few reports
+	StrategyEnum::StrategyEnum players[] = {
+		StrategyEnum::HumanControlledStrategy,
+		StrategyEnum::HumanControlledStrategy,
+		StrategyEnum::NOPLAYER,
+		StrategyEnum::NOPLAYER,
+		StrategyEnum::NOPLAYER,
+		StrategyEnum::NOPLAYER
+	};
+	int winners[] = { 1, 0, -1,-1,-1,-1 };
+	GameReport report1(23,MapEnum::Earth,players,winners);
+	GameReport report2(142,MapEnum::Island,players,winners);
+	players[2] = StrategyEnum::ObtainSmallestContinentsFirstStrategy;
+	winners[0] = 2;
+	winners[2] = 1;
+	GameReport report3(13,MapEnum::Earth,players,winners);
+	//output
+	std::ofstream outStream;
+	outStream.open("testReportOutput.txt", std::ios::out);
+	report1.write(&outStream);
+	report2.write(&outStream);
+	report3.write(&outStream);
+	outStream.close();
+	std::cout << "DONE. testReportOutput.txt generated." << std::endl;
 }
 
 void test2() {
@@ -22,6 +42,10 @@ void test2() {
 }
 
 int main(int argc, char** argv) {
+	//We must seed the random number generator.  This one is only used for testing; rng is used more.
+	srand((unsigned int)time(NULL));		
+	rng = std::default_random_engine(rand());
+
     std::cout << "%SUITE_STARTING% newsimpletest" << std::endl;
     std::cout << "%SUITE_STARTED%" << std::endl;
 

@@ -9,6 +9,7 @@
 #define  game_INC
 
 #include "../gamemap/GameMap.hpp"
+#include "GameTask.hpp"
 #include "GameState.hpp"
 #include "GameReport.hpp"
 #include "Strategy.hpp"
@@ -16,15 +17,13 @@
 class Game {
 private:
     GameMap* map;
-    GameState state;
-    int numberOfPlayers;
     Strategy** player;
+	GameState state;
+    int numberOfPlayers;
 
 public:
-    Game(GameMap* gMap);
-
-    /* Adds a strategy for the next player, up to 6 */
-    void addPlayer(Strategy* s);
+	Game(GameTask task);
+	~Game();
 
     /* Uses the strategies to run the game through. */
     GameReport runGame();

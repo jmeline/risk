@@ -23,6 +23,12 @@ GameState::GameState(GameMap *map)
         internalState[i] = std::pair<int, int>(-1, 0);
 }
 
+GameState::GameState()
+{
+	internalState = std::vector<std::pair<int, int>>(1);
+	internalState[0] = std::pair<int,int>(-1,0);
+}
+
 std::pair<int, int> GameState::getRegionInfo(int region)
 {
     return internalState[region];
@@ -36,7 +42,7 @@ void GameState::setRegionInfo(int region, std::pair<int, int> regionInfo)
 int GameState::getNumberOccupiedBy(int player)
 {
     int count = 0;
-    for (std::pair<int, int> p : internalState)
+    for each (std::pair<int, int> p in internalState)
     {
         if (p.first == player)
             count++;

@@ -11,28 +11,39 @@
 #include <random>
 #include <iostream>
 #include "Game.hpp"
-#include "GameState.hpp"
-#include "gamemap\GameMap.hpp"
 
 
 extern std::default_random_engine rng;
 
-Game::Game(GameMap *gMap) : map(gMap), state(gMap)
+Game::Game(GameTask task)
 {
+	map = GameMap::make(task.map);
+	state = GameState(map);
+	player = new Strategy*[6];
     numberOfPlayers = 0;
-    player = new Strategy*[6];
-    for (int i = 0; i < 6; i++)
-        player[i] = NULL;
+	for (int i=0; i<6; i++)
+	{
+		if (task.players[i] == StrategyEnum::NOPLAYER)
+			break;
+		player[i] = Strategy::make(task.players[i]);
+		(player[i])->init(map, i);
+		numberOfPlayers++;
+	}
+	if (numberOfPlayers<2)
+	{
+		for (int i=numberOfPlayers; i<2; i++)
+			player[i] = Strategy::make(StrategyEnum::NOPLAYER);		//let it use the default
+		numberOfPlayers = 2;
+	}
+	for (int i=numberOfPlayers; i<6; i++)
+		player[i] = NULL;
 }
 
-void Game::addPlayer(Strategy *strat)
+Game::~Game()
 {
-    if (numberOfPlayers < 6)
-    {
-        player[numberOfPlayers] = strat;
-        (player[numberOfPlayers])->init(map, numberOfPlayers);
-        numberOfPlayers++;
-    }
+	delete map;
+	for (int i=numberOfPlayers; i<6; i++)
+		delete player[i];
 }
 
 GameReport Game::runGame()
@@ -58,12 +69,12 @@ GameReport Game::runGame()
             for (int i=0; i<killedInConquest.size(); i++)
             {
                 numberDead++;
-				report.winners[numberOfPlayers - numberDead] = player[killedInConquest[i]]->getIdentifier();
+				report.winners[numberOfPlayers - numberDead] = killedInConquest[i];
                 isDead[killedInConquest[i]] = true;
             }
             if (numberDead == (numberOfPlayers - 1))
             {
-				report.winners[0] = player[whoseTurn]->getIdentifier();
+				report.winners[0] = whoseTurn;
                 break;
             }
             fortify(whoseTurn);
@@ -111,6 +122,7 @@ void Game::placeFirstTroops()
 				{
 					regionInfo.second += (howMany<numTroops) ? howMany : numTroops;
 					numTroops -= howMany;
+					state.setRegionInfo(wherePut,regionInfo);
 				}
 			}
 		}
@@ -152,6 +164,7 @@ void Game::getAndPlaceTroops(int whoseTurn)
 			{
 				regionInfo.second += (howMany<numOfTroops) ? howMany : numOfTroops;
 				numOfTroops -= howMany;
+				state.setRegionInfo(wherePut,regionInfo);
 			}
 		}
 	}
@@ -177,8 +190,7 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
         {
 			int numToDefendWith = player[playerAttacked]->defend(state, attackTo, attackFrom);
 			int numToAttackWith = (attackingRegionInfo.second >= 4) ? 3 : ((attackingRegionInfo.second >= 3) ? 2 : 1);	//we may later give the player a choice, but for now this works
-			////roll and compare dice.  Meaning of 2,1,0,-1,-2:
-			//attacker wins 2, attacker wins 1, each wins one, defender wins 1, defender wins 2
+			////roll and compare dice.  Meaning of 2,1,0,-1,-2:  attacker wins 2, attacker wins 1, each wins one, defender wins 1, defender wins 2
 			int numberConquered = rollToConquer(numToAttackWith, numToDefendWith);
 			if (numberConquered > 0)
 			{
@@ -189,6 +201,7 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
 						fallenPlayers.push_back(attackedRegionInfo.first);
 					attackedRegionInfo.first = attackingRegionInfo.first;
 					attackedRegionInfo.second = numToAttackWith;
+					attackingRegionInfo.second -= numToAttackWith;
 				}
 			}
 			else if (numberConquered < 0)
@@ -204,7 +217,8 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
 					if (isTotallyDefeated(attackedRegionInfo.first))
 						fallenPlayers.push_back(attackedRegionInfo.first);
 					attackedRegionInfo.first = attackingRegionInfo.first;
-					attackedRegionInfo.second = numToAttackWith - 1;
+					attackedRegionInfo.second = numToAttackWith-1;
+					attackingRegionInfo.second -= numToAttackWith-1;
 				}
 			}
 		}

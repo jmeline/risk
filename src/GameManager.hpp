@@ -27,7 +27,7 @@ public:
 	void runIt(std::string outputFileLocation);
 private:
 	void launchGame(int slaveNumber, int gameNumber);	//communicates with a slave: assigns a slave to run gamesToRun[gameNumber]
-	int getAndHandleReport(std::ofstream *outputStream);	//communicates with a slave: gets the results back, then adds them to the output file.  Returns the number of the slave that gave the report
+	int getAndHandleReport(std::ostream *outputStream);	//communicates with a slave: gets the results back, then adds them to the output file.  Returns the number of the slave that gave the report
 };
 
 #endif   /* ----- #ifndef gamemanager_INC  ----- */

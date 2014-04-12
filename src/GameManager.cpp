@@ -58,7 +58,7 @@ void GameManager::runIt(std::string outputFileLocation)
 {
 	//prepare output file
 	std::ofstream outputStream;
-	outputStream.open(outputFileLocation.c_str(), std::ios::out | std::ios::binary);
+	outputStream.open(outputFileLocation.c_str(), std::ios::out);
 	//launch initial games to get all slaves working
 	int slavesToUse = (gamesToRun.size()>=slaveTasks.size() ? slaveTasks.size() : gamesToRun.size());
 	for (int i=0; i<slavesToUse; i++)
@@ -93,7 +93,7 @@ void GameManager::launchGame(int slaveNumber, int gameNumber)
 	#endif
 }
 
-int GameManager::getAndHandleReport(std::ofstream *outputStream)
+int GameManager::getAndHandleReport(std::ostream *outputStream)
 {
 	GameReport report;
 	int dataIn[GameTask::encodedSize];
