@@ -22,7 +22,7 @@ public:
     /* Creates a state where all regions in the map are represented by <allegence,troops> pairs of value <-1,0>*/
 	GameState(int size);
 	GameState(GameMap* map);
-	GameState::GameState();		//used to avoid initialization trouble, but one of the other two should always be called, in reality
+	GameState();		//used to avoid initialization trouble, but one of the other two should always be called, in reality
 
     /* Returns the information about a region, in the form of a pair of integers
      * The first integer of the pair is the playerNumber to whom the troops in the region belong (the region's allegance)

@@ -32,12 +32,12 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
     std::vector<Continent> continentList = this->map->getContinentList();
 
     std::cout << "Printing continentList" << std::endl;
-    for each (Continent c in continentList)
+    for (Continent c : continentList)
     {
         std::cout << "value: " << c.getValue() << std::endl;
         std::cout << "name: " << c.getContinentName() << std::endl;
         std::cout << "regions: " << std::endl;
-        for each (std::pair<int, std::string> r in c.getRegionList())
+        for (std::pair<int, std::string> r : c.getRegionList())
         {
             std::cout << r.first << "->" << r.second << std::endl;
         }
@@ -58,7 +58,7 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
     }
 
     std::cout << "Printing lowRegioncountList (" << lowRegioncountList.size() << ") " << std::endl;
-    for each (std::pair<int,int> p in lowRegioncountList)
+    for  (std::pair<int,int> p : lowRegioncountList)
     {
         std::cout << p.first << " size=" << p.second << std::endl;
     }
@@ -74,7 +74,7 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
 
     
     std::cout << "Printing Sorted lowRegioncountList(" << lowRegioncountList.size() << ") " << std::endl;
-    for each (std::pair<int,int> p in lowRegioncountList)
+    for (std::pair<int,int> p : lowRegioncountList)
     {
         std::cout << p.first << " size=" << p.second << std::endl;
     }
@@ -134,7 +134,7 @@ std::vector<std::pair<int, int>> ObtainSmallestContinentsFirstStrategy::place(Ga
     std::vector<int> regionsOwned = state.getRegionsOwnedByPlayer(myPlayerNumber);
 
     std::cout << "regionsOwned size: " << regionsOwned.size() << std::endl;
-    for each (int i in regionsOwned)
+    for (int i : regionsOwned)
     {
         std::cout << i << " ";
     }
