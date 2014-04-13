@@ -187,6 +187,8 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
     while (true)
     { //we will keep going until the player's choice is a "magic value" indicating to end the turn
         std::pair<int, int> attackInfo = player[whoseTurn]->attack(state);
+		bool regionConquered = false;
+		int defeatedPlayer = 0;
         int attackFrom = attackInfo.first;
 		int attackTo = attackInfo.second;
         if (attackFrom < 0 || attackTo < 0) //the "magic value" indicating "all done" received
@@ -204,9 +206,9 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
             {
                 attackedRegionInfo.second -= numberConquered;
                 if (attackedRegionInfo.second == 0)
-                { //conquered; see if the looser is all dead
-                    if (isTotallyDefeated(attackedRegionInfo.first))
-                        fallenPlayers.push_back(attackedRegionInfo.first);
+                { //conquered;
+					regionConquered = true;
+					defeatedPlayer = attackedRegionInfo.first;
                     attackedRegionInfo.first = attackingRegionInfo.first;
                     attackedRegionInfo.second = numToAttackWith;
                     attackingRegionInfo.second -= numToAttackWith;
@@ -221,17 +223,23 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
                 attackedRegionInfo.second -= 1;
                 attackingRegionInfo.second -= 1;
                 if (attackedRegionInfo.second == 0)
-                { //conquered; see if the looser is all dead
-                    if (isTotallyDefeated(attackedRegionInfo.first))
-                        fallenPlayers.push_back(attackedRegionInfo.first);
+                { //conquered;
+					regionConquered = true;
+					defeatedPlayer = attackedRegionInfo.first;
                     attackedRegionInfo.first = attackingRegionInfo.first;
                     attackedRegionInfo.second = numToAttackWith - 1;
                     attackingRegionInfo.second -= numToAttackWith - 1;
                 }
             }
         }
+
         state.setRegionInfo(attackFrom, attackingRegionInfo);
         state.setRegionInfo(attackTo, attackedRegionInfo);
+
+		// Check if a player has been completely defeated.
+		if(regionConquered)	// only if we have to
+			if (isTotallyDefeated(defeatedPlayer))	//Note:  This check must be performed AFTER the actual state of the game has changed
+				fallenPlayers.push_back(attackedRegionInfo.first);
     }
     return fallenPlayers;
 }

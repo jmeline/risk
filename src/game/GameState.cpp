@@ -42,9 +42,9 @@ void GameState::setRegionInfo(int region, std::pair<int, int> regionInfo)
 int GameState::getNumberOccupiedBy(int player)
 {
     int count = 0;
-    for (std::pair<int, int> p : internalState)
+    for (int i = 0 ; i < internalState.size() ; ++i)
     {
-        if (p.first == player)
+        if (internalState[i].first == player)
             count++;
     }
     return count;

@@ -41,8 +41,8 @@ int GameMap::getNumberOfRegions()
 {
     int count = 0;
     int continentCount = continentList.size();
-    for (Continent c : continentList)
-        count += c.getRegionList().size();
+    for (int i = 0 ; i < continentList.size() ; ++i)
+        count += continentList[i].getRegionList().size();
     return count;
 }
 
