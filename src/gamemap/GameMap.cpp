@@ -8,6 +8,8 @@ GameMap* GameMap::make(MapEnum::MapEnum mapType)
 			return (GameMap*)(new Earth());
 		case (MapEnum::Island):
 			return (GameMap*)(new Island());
+		case (MapEnum::ThreeContinent):
+			return (GameMap*)(new ThreeContinent());
 		default:
 			return (GameMap*)(new Earth());
 	}
