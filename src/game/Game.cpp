@@ -95,10 +95,13 @@ void Game::claimCountries()
     int whoseTurn = 0;
     for (int i = 0; i < this->map->getNumberOfRegions(); i++)
     {
+        std::cout << "this->map->getNumberOfRegions() " << this->map->getNumberOfRegions() << std::endl;
         int regionToClaim = -1;
         while (regionToClaim < 0)
         {
+            std::cout << "regionToClaim: " << regionToClaim << std::endl;
             regionToClaim = player[whoseTurn]->claim(state);
+            std::cout << "returning value" << regionToClaim << std::endl;
             if (regionToClaim < 0 || regionToClaim >= state.getNumRegions() || state.getRegionInfo(regionToClaim).first != -1)
                 regionToClaim = -1; //they chose an already-chosen region
         }

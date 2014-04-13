@@ -6,7 +6,6 @@
  */
 
 #include    "../gamemap/GameMap.hpp"
-
 enum Regions
 {
 	//c1
@@ -23,7 +22,7 @@ enum Regions
 	C3R2
 };
 
-const char* RegionStrings[] = 
+const char* ThreeRegionStrings[] = 
 {
 	"C1R1",
 	"C1R2",
@@ -36,33 +35,34 @@ const char* RegionStrings[] =
 	"C3R2"
 };
 
+
 ThreeContinent::ThreeContinent()
 {
 	initialize();
 }
 
-void Island::constructContinentsAndRegions()
+void ThreeContinent::constructContinentsAndRegions()
 {
 	Continent c1("Continent1", 4);
-	c1.addRegion(std::make_pair(C1R1, RegionStrings[C1R1]));
-	c1.addRegion(std::make_pair(C1R2, RegionStrings[C1R2]));
-	c1.addRegion(std::make_pair(C1R3, RegionStrings[C1R3]));
+	c1.addRegion(std::make_pair(C1R1, ThreeRegionStrings[C1R1]));
+	c1.addRegion(std::make_pair(C1R2, ThreeRegionStrings[C1R2]));
+	c1.addRegion(std::make_pair(C1R3, ThreeRegionStrings[C1R3]));
 	continentList.push_back(c1);
 
 	Continent c2("Continent1", 5);
-	c2.addRegion(std::make_pair(C2R1, RegionStrings[C1R1]));
-	c2.addRegion(std::make_pair(C2R2, RegionStrings[C2R2]));
-	c2.addRegion(std::make_pair(C2R3, RegionStrings[C2R3]));
-	c2.addRegion(std::make_pair(C2R4, RegionStrings[C2R4]));
+	c2.addRegion(std::make_pair(C2R1, ThreeRegionStrings[C1R1]));
+	c2.addRegion(std::make_pair(C2R2, ThreeRegionStrings[C2R2]));
+	c2.addRegion(std::make_pair(C2R3, ThreeRegionStrings[C2R3]));
+	c2.addRegion(std::make_pair(C2R4, ThreeRegionStrings[C2R4]));
 	continentList.push_back(c2);
 
 	Continent c3("Continent3", 2);
-	c3.addRegion(std::make_pair(C3R1, RegionStrings[C3R1]));
-	c3.addRegion(std::make_pair(C3R2, RegionStrings[C3R2]));
+	c3.addRegion(std::make_pair(C3R1, ThreeRegionStrings[C3R1]));
+	c3.addRegion(std::make_pair(C3R2, ThreeRegionStrings[C3R2]));
 	continentList.push_back(c3);
 }
 
-void Island::constructBorders()
+void ThreeContinent::constructBorders()
 {
 	makeBorder(C1R1,C1R2);
 	makeBorder(C1R2,C1R3);

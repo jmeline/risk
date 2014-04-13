@@ -31,6 +31,7 @@ std::vector<Continent> GameMap::getContinentList()
     return this->continentList;
 }
 
+
 void GameMap::setContinentList(std::vector<Continent> c)
 {
     this->continentList = c;

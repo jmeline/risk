@@ -1,5 +1,6 @@
 #include "GameManager.hpp"
 #include <fstream>
+
 #ifndef DONTUSEMPI
 	#include <mpi.h>
 	#define MPI_TASK = 1;		//identifies a type of MPI message
@@ -109,12 +110,14 @@ void GameManager::launchGame(int slaveNumber, int gameNumber)
 int GameManager::getAndHandleReport(std::ostream *outputStream)
 {
 	GameReport report;
+
 	int dataIn[GameReport::encodedSize];
 	MPI_Status status;
 	MPI_Recv(&dataIn, GameReport::encodedSize, MPI_INT, MPI_ANY_SOURCE, MPI_REPORT, MPI_COMM_WORLD, &status);
 	report.read(inData);
 	int slaveNumber = status.MPI_SOURCE - 1;
 	slaveTasks[slaveNumber] = -1;	//mark this slave as not working on anything
+
 	report.write(outputStream);
 	return slaveNumber;
 }

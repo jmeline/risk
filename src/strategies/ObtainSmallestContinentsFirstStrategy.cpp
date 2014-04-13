@@ -31,6 +31,7 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
     // get list of continents
     std::vector<Continent> continentList = this->map->getContinentList();
 
+    /*
     std::cout << "Printing continentList" << std::endl;
     for (Continent c : continentList)
     {
@@ -43,8 +44,8 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
         }
 
     }
-
     std::cout << std::endl;
+    */
 
     // sort the list from the lowest region count to the largest region count
     // std::vector<index> == index from lowest region count to largest region count
@@ -57,13 +58,14 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
         lowRegioncountList.push_back(std::make_pair(i, continentList[i].getRegionList().size()));
     }
 
+    /*
     std::cout << "Printing lowRegioncountList (" << lowRegioncountList.size() << ") " << std::endl;
     for  (std::pair<int,int> p : lowRegioncountList)
     {
         std::cout << p.first << " size=" << p.second << std::endl;
     }
     std::cout << std::endl;
-    
+    */
 
     // sort lowRegioncountList by the second element in the pair: region count. End result is a sorted list of the smallest number of regions 
     // to the largest number of regions. its original index is preserved as established in the map->continentList
@@ -72,41 +74,66 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
     	[](const std::pair<int,int> &lhs, const std::pair<int,int> &rhs)
     	{ return lhs.second < rhs.second; } );
 
-    
+    /*
     std::cout << "Printing Sorted lowRegioncountList(" << lowRegioncountList.size() << ") " << std::endl;
     for (std::pair<int,int> p : lowRegioncountList)
     {
         std::cout << p.first << " size=" << p.second << std::endl;
     }
     std::cout << std::endl;
+    */
 
     bool alreadyClaimed = false;
     int index = 0;
+    int pickedContinent = -1;
     int pickedRegion = -1;
+    std::vector<std::pair<int, std::string>> regionList;
 
     // select the first continent unless it is already taken.
     // If the country has been taken, grab the country with the next smallest region count
     while (index < lowRegioncountList.size() )
     {
-        std::cout << "Index: " << index << std::endl;
-    	// grab the index of the continent with the lowest region count
-    	// countries with the lowest region count have been sorted from lowest to highest
-    	pickedRegion = lowRegioncountList[index].first;
-        std::cout << "pickedRegion: " << pickedRegion << std::endl;
+        std::cout << "index:" << index << std::endl;
+        std::cout << "playerNum:" << myPlayerNumber << std::endl;
 
-    	// check if that 
-        alreadyClaimed = state.getRegionInfo(pickedRegion).first != -1 &&
-            state.getRegionInfo(pickedRegion).first != myPlayerNumber;
+        // grab the index of the continent with the lowest region count
+        // countries with the lowest region count have been sorted from lowest to highest
+        pickedContinent = lowRegioncountList[index].first;
+        regionList = continentList[pickedContinent].getRegionList();
 
-        std::cout << "Claimed? " << (alreadyClaimed ? "True" : "False") << std::endl;
-        // the region is already claimed
-        if (alreadyClaimed)
+        bool isClaimed = false;
+        int regionIndex = 0;
+
+        // loop through each region within the continent for availability
+        while(!isClaimed && regionIndex < regionList.size())
         {
-        	// don't select this one
+            pickedRegion = regionList[regionIndex].first;   
+            std::cout << "regionIndex: " << regionIndex << std::endl;
+            std::cout << "pickedRegion: " << pickedRegion << " " 
+                << continentList[pickedContinent].getRegionList()[regionIndex].second 
+                << std::endl;
+
+            // check if that 
+            alreadyClaimed = state.getRegionInfo(pickedRegion).first != -1 &&
+                state.getRegionInfo(pickedRegion).first != myPlayerNumber;
+            std::cout << "Claimed? " << (alreadyClaimed ? "True" : "False") << std::endl;
+            // the region is already claimed
+            if (alreadyClaimed)
+            {
+                // don't select this one
+                std::cout << "This one is already claimed" << std::endl;
+            }
+            else
+            {
+                std::cout << "This one is available" << std::endl;
+                // select this continent (Found a winner)
+                isClaimed = true;
+                break;
+            }
+            regionIndex++;
         }
-        else
-        {
-            // select this continent (Found a winner)
+
+        if (isClaimed){
             break;
         }
 
