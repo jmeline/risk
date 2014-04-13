@@ -60,18 +60,6 @@ void GameManager::runIt(std::string outputFileLocation)
 	//prepare output file
 	std::ofstream outputStream;
 	outputStream.open(outputFileLocation.c_str(), std::ios::out);
-/*<<<<<<< HEAD
-	//launch initial games to get all slaves working
-	int slavesToUse = (gamesToRun.size() >= slaveTasks.size() ? slaveTasks.size() : gamesToRun.size());
-	for (int i=0; i<slavesToUse; i++)
-		launchGame(i,i);
-	int nextGameNumber = slavesToUse;	//since we just assigned game (since we just assigned game number (slavesToUse-1)
-	//communicate, until all done
-	for (int i=0; i<gamesToRun.size(); i++)
-	{
-		int whoDone = getAndHandleReport(&outputStream);
-		if (nextGameNumber<gamesToRun.size())
-=======
 	
 	#ifndef DONTUSEMPI
 		//launch initial games to get all slaves working
@@ -84,8 +72,6 @@ void GameManager::runIt(std::string outputFileLocation)
 	
 		//communicate, until all done
 		for (int i=0; i<gamesToRun.size(); i++)
->>>>>>> eb759f569b297cd1313b4f6e22f587fc098030ca
-*/
 		{
 			int whoDone = getAndHandleReport(&outputStream);
 			if (nextGameNumber<gamesToRun.size())
@@ -124,27 +110,14 @@ void GameManager::launchGame(int slaveNumber, int gameNumber)
 int GameManager::getAndHandleReport(std::ostream *outputStream)
 {
 	GameReport report;
-/*<<<<<<< HEAD
-	int dataIn[GameTask::encodedSize];
-	#ifndef DONTUSEMPI
-		MPI_Status status;
-		MPI_Recv(&dataIn, GameTask::encodedSize, MPI_INT, MPI_ANY_SOURCE, REPORT, MPI_COMM_WORLD, &status);
-        //report.read(inData);
-		int slaveNumber = status.MPI_SOURCE - 1;
-	#else
-		std::cout << "MPI is disabled.  Would have recieved a report." << std::endl;
-		int slaveNumber = 1;
-	#endif
-	slaveTasks[slaveNumber] = -1;	//mark this slave as not working
-=======
+
 	int dataIn[GameReport::encodedSize];
 	MPI_Status status;
 	MPI_Recv(&dataIn, GameReport::encodedSize, MPI_INT, MPI_ANY_SOURCE, MPI_REPORT, MPI_COMM_WORLD, &status);
 	report.read(inData);
 	int slaveNumber = status.MPI_SOURCE - 1;
 	slaveTasks[slaveNumber] = -1;	//mark this slave as not working on anything
->>>>>>> eb759f569b297cd1313b4f6e22f587fc098030ca
-*/
+
 	report.write(outputStream);
 	return slaveNumber;
 }
