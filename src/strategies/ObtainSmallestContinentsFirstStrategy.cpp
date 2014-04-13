@@ -49,7 +49,7 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
 
     // sort the list from the lowest region count to the largest region count
     // std::vector<index> == index from lowest region count to largest region count
-    // (1) region index
+    // (1) Continent index
     // (2) region count
     std::vector<std::pair<int, int> > lowRegioncountList;
     std::cout << "continentList.size(): " << continentList.size() << std::endl;

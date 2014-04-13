@@ -4,14 +4,14 @@
 -----------------------------------------------------------------------
 
 Goals:
-    (1)Make Strategy Interface, UI, gameFlow, gameState, gameMap, gameReport 
+DONE(1)Make Strategy Interface, UI, gameFlow, gameState, gameMap, gameReport
     (2)Make specific human-controlled strategies
     (3)Organize Dominion Graph
     (4)Analysis Program
     (5)Make it run on UberComputer
     (6)Crossover( Mixing and matching strategies to determine improvement) -> NO!
     (7)Research and add strategies
-    (8)Make Prez
+DONE(8)Make Prez
     (9)Make Report
 
 Timeline:
