@@ -11,10 +11,11 @@
     ObtainSmallestContinentsFirstStrategy
     Seeks to get the smallest Continent first
 
-**************************************************/
+ **************************************************/
 
-ObtainSmallestContinentsFirstStrategy::ObtainSmallestContinentsFirstStrategy() {}
-
+ObtainSmallestContinentsFirstStrategy::ObtainSmallestContinentsFirstStrategy()
+{
+}
 
 /* 
 bool ObtainSmallestContinentsFirstStrategy::sortByNumberOfRegions(
@@ -22,30 +23,14 @@ bool ObtainSmallestContinentsFirstStrategy::sortByNumberOfRegions(
 {
     return lhs.second < rhs.second;
 }
-*/
+ */
 
 int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
 {
-	//std::cout << "ObtainSmallestContinentsFirstStrategy Computer is claiming his land" << std::endl;
+    std::cout << "ObtainSmallestContinentsFirstStrategy Computer is claiming his land" << std::endl;
 
     // get list of continents
     std::vector<Continent> continentList = this->map->getContinentList();
-
-    /*
-    std::cout << "Printing continentList" << std::endl;
-    for (Continent c : continentList)
-    {
-        std::cout << "value: " << c.getValue() << std::endl;
-        std::cout << "name: " << c.getContinentName() << std::endl;
-        std::cout << "regions: " << std::endl;
-        for (std::pair<int, std::string> r : c.getRegionList())
-        {
-            std::cout << r.first << "->" << r.second << std::endl;
-        }
-
-    }
-    std::cout << std::endl;
-    */
 
     // sort the list from the lowest region count to the largest region count
     // std::vector<index> == index from lowest region count to largest region count
@@ -53,40 +38,21 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
     // (2) region count
     std::vector<std::pair<int, int> > lowRegioncountList;
     std::cout << "continentList.size(): " << continentList.size() << std::endl;
-    for ( int i = 0; i < continentList.size(); i++)
+    for (int i = 0; i < continentList.size(); i++)
     {
         lowRegioncountList.push_back(std::make_pair(i, continentList[i].getRegionList().size()));
     }
 
-    /*
-    std::cout << "Printing lowRegioncountList (" << lowRegioncountList.size() << ") " << std::endl;
-    for  (std::pair<int,int> p : lowRegioncountList)
-    {
-        std::cout << p.first << " size=" << p.second << std::endl;
-    }
-    std::cout << std::endl;
-    */
-
     // sort lowRegioncountList by the second element in the pair: region count. End result is a sorted list of the smallest number of regions 
     // to the largest number of regions. its original index is preserved as established in the map->continentList
     //std::sort(lowRegioncountList.begin(), lowRegioncountList.end(), sortByNumberOfRegions);
-    std::sort(lowRegioncountList.begin(), lowRegioncountList.end(), 
-    	[](const std::pair<int,int> &lhs, const std::pair<int,int> &rhs)
-    	{ return lhs.second < rhs.second; } );
+    std::sort(lowRegioncountList.begin(), lowRegioncountList.end(),
+              [](const std::pair<int, int> &lhs, const std::pair<int, int> &rhs)
+              {
+                  return lhs.second < rhs.second; });
 
-    /*
-    std::cout << "Printing Sorted lowRegioncountList(" << lowRegioncountList.size() << ") " << std::endl;
-    for (std::pair<int,int> p : lowRegioncountList)
-    {
-        std::cout << p.first << " size=" << p.second << std::endl;
-    }
-    std::cout << std::endl;
-    */
-
-    // the region being considered is taken
-    bool alreadyClaimed = false;
-    // we have made a valid choice
-    bool isClaimed = false;
+    // have we made a valid choice?
+    bool placeSelected = false;
 
     int index = 0;
     int pickedContinent = -1;
@@ -95,11 +61,8 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
 
     // select the first continent unless it is already taken.
     // If the country has been taken, grab the country with the next smallest region count
-    while (!isClaimed && index < lowRegioncountList.size() )
+    while (!placeSelected && index < lowRegioncountList.size())
     {
-    //    std::cout << "index:" << index << std::endl;
-    //    std::cout << "playerNum:" << myPlayerNumber << std::endl;
-
         // grab the index of the continent with the lowest region count
         // countries with the lowest region count have been sorted from lowest to highest
         pickedContinent = lowRegioncountList[index].first;
@@ -108,82 +71,67 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
         int regionIndex = 0;
 
         // loop through each region within the continent for availability
-        while(!alreadyClaimed && regionIndex < regionList.size())
+        while (regionIndex < regionList.size())
         {
-            pickedRegion = regionList[regionIndex].first;   
-    //        std::cout << "regionIndex: " << regionIndex << std::endl;
-    //        std::cout << "pickedRegion: " << pickedRegion << " " 
-    //            << continentList[pickedContinent].getRegionList()[regionIndex].second 
-    //            << std::endl;
-
-            // check if that 
-            alreadyClaimed = state.getRegionInfo(pickedRegion).first != -1;
-            
-    //        std::cout << "Claimed? " << (alreadyClaimed ? "True" : "False") << std::endl;
+            pickedRegion = regionList[regionIndex].first;
             // the region is already claimed
-            if (alreadyClaimed)
+            if (state.getRegionInfo(pickedRegion).first != -1)
             {
                 // don't select this one
-    //            std::cout << "This one is already claimed" << std::endl;
             }
             else
             {
-    //            std::cout << "This one is available" << std::endl;
                 // select this continent (Found a winner)
-                isClaimed = true;
+                placeSelected = true;
                 break;
             }
+
             regionIndex++;
         }
 
-        if (isClaimed){
+        if (placeSelected)
+        {
             break;
         }
 
         index++;
     }
 
-    if (pickedRegion == -1)
-    {
-    //	std::cout << "ERROR! PickedRegion is still -1" << std::endl;
-    }
-    else{
-        std::cout << "Computer picked: " << pickedRegion << std::endl;
-    }
-	
-	// return the available country with the lowest region count
+    std::cout << "Computer picked: " << pickedRegion << std::endl;
+
+    // return the available country with the lowest region count
     return pickedRegion;
 
 }
 
 std::vector<std::pair<int, int>> ObtainSmallestContinentsFirstStrategy::place(GameState state, int numTroops)
 {
-	std::cout << "ObtainSmallestContinentsFirstStrategy computer is placing his troops" << std::endl;
+    std::cout << "ObtainSmallestContinentsFirstStrategy computer is placing his troops" << std::endl;
 
     // obtain a vector<int> of the regions owned by player
     std::vector<int> regionsOwned = state.getRegionsOwnedByPlayer(myPlayerNumber);
 
-    std::cout << "regionsOwned size: " << regionsOwned.size() << std::endl;
-    for (int i : regionsOwned)
+    std::vector<std::pair<int, int>> action;
+    int index = 0;
+
+    // place troops in each location
+    while (numTroops > 0)
     {
-        std::cout << i << " ";
+        action.push_back(std::pair<int, int>(regionsOwned[index], 1));
+        index = (index + 1) % regionsOwned.size();
+        --numTroops;
     }
-    std::cout << std::endl;
 
-	// place troops in each location
-	while( numTroops > 0 )
-	{
-		// 
-	}
-
-
-    return std::vector<std::pair<int, int>>();
+    return action;
 }
 
 std::pair<int, int> ObtainSmallestContinentsFirstStrategy::attack(GameState state)
 {
+    std::cout << "ObtainSmallestContinentsFirstStrategy computer is placing his troops" << std::endl;
+
     return std::pair<int, int>();
 }
+
 bool ObtainSmallestContinentsFirstStrategy::defend(GameState state, int countryAttacked, int countryAttacking)
 {
     return false;
