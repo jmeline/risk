@@ -36,7 +36,7 @@ const char* ThreeRegionStrings[] =
 };
 
 
-ThreeContinent::ThreeContinent()
+ThreeContinent::ThreeContinent():GameMap(8,1)  // startingTroops,perPlayerTroopPenalty
 {
 	initialize();
 }

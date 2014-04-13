@@ -121,7 +121,8 @@ const char* RegionStrings[] = {
     "Western Australia"
 };
 
-Earth::Earth()
+
+Earth::Earth():GameMap(50,5)	// startingTroops,perPlayerTroopPenalty
 {
 	initialize();
 }

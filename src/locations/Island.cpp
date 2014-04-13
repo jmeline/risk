@@ -25,7 +25,7 @@ const char* IslandStrings[] =
 
 };
 
-Island::Island()
+Island::Island():GameMap(10,2)  // startingTroops,perPlayerTroopPenalty
 {
 	initialize();
 }

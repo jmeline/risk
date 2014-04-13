@@ -111,7 +111,7 @@ void Game::claimCountries()
 
 void Game::placeFirstTroops()
 {
-    int numberPerPlayer = 50 - 5 * numberOfPlayers;
+    int numberPerPlayer = map->startingTroops - map->perPlayerTroopPenalty * numberOfPlayers;
     int numberOfRegions = map->getNumberOfRegions();
     int piecesAlreadyUsed = numberOfRegions / numberOfPlayers;
     int playersWhoPlacedExtra = numberOfRegions % numberOfPlayers;

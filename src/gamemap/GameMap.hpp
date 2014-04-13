@@ -51,6 +51,15 @@ protected:
     std::vector<std::vector<bool> > borderMatrix;	/* list of borders */
 
 public:
+	/* ==================== PUBLIC CONSTANT MEMBERS ==================================== */
+	
+	const int startingTroops;
+	const int perPlayerTroopPenalty;
+	
+	//used for constant member initialization
+	GameMap(int x, int y):startingTroops(x),perPlayerTroopPenalty(y)
+	{ }
+
 	/* ====================  LIFECYCLE METHODS FOR PUBLIC USE  ======================================= */
 	
 	/* a factoryMethod */
