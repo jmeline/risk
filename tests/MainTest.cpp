@@ -16,8 +16,8 @@ int main(int argc, char** argv) {
 	rng = std::default_random_engine(rand());
 	
 	StrategyEnum::StrategyEnum strategies[] = {
-		StrategyEnum::ObtainSmallestContinentsFirstStrategy,
 		StrategyEnum::HumanControlledStrategy,
+		StrategyEnum::ObtainSmallestContinentsFirstStrategy,
 		StrategyEnum::NOPLAYER,
 		StrategyEnum::NOPLAYER,
 		StrategyEnum::NOPLAYER,

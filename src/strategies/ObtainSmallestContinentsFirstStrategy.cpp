@@ -26,7 +26,7 @@ bool ObtainSmallestContinentsFirstStrategy::sortByNumberOfRegions(
 
 int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
 {
-	std::cout << "ObtainSmallestContinentsFirstStrategy Computer is claiming his land" << std::endl;
+	//std::cout << "ObtainSmallestContinentsFirstStrategy Computer is claiming his land" << std::endl;
 
     // get list of continents
     std::vector<Continent> continentList = this->map->getContinentList();
@@ -83,7 +83,11 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
     std::cout << std::endl;
     */
 
+    // the region being considered is taken
     bool alreadyClaimed = false;
+    // we have made a valid choice
+    bool isClaimed = false;
+
     int index = 0;
     int pickedContinent = -1;
     int pickedRegion = -1;
@@ -91,41 +95,40 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
 
     // select the first continent unless it is already taken.
     // If the country has been taken, grab the country with the next smallest region count
-    while (index < lowRegioncountList.size() )
+    while (!isClaimed && index < lowRegioncountList.size() )
     {
-        std::cout << "index:" << index << std::endl;
-        std::cout << "playerNum:" << myPlayerNumber << std::endl;
+    //    std::cout << "index:" << index << std::endl;
+    //    std::cout << "playerNum:" << myPlayerNumber << std::endl;
 
         // grab the index of the continent with the lowest region count
         // countries with the lowest region count have been sorted from lowest to highest
         pickedContinent = lowRegioncountList[index].first;
         regionList = continentList[pickedContinent].getRegionList();
 
-        bool isClaimed = false;
         int regionIndex = 0;
 
         // loop through each region within the continent for availability
-        while(!isClaimed && regionIndex < regionList.size())
+        while(!alreadyClaimed && regionIndex < regionList.size())
         {
             pickedRegion = regionList[regionIndex].first;   
-            std::cout << "regionIndex: " << regionIndex << std::endl;
-            std::cout << "pickedRegion: " << pickedRegion << " " 
-                << continentList[pickedContinent].getRegionList()[regionIndex].second 
-                << std::endl;
+    //        std::cout << "regionIndex: " << regionIndex << std::endl;
+    //        std::cout << "pickedRegion: " << pickedRegion << " " 
+    //            << continentList[pickedContinent].getRegionList()[regionIndex].second 
+    //            << std::endl;
 
             // check if that 
-            alreadyClaimed = state.getRegionInfo(pickedRegion).first != -1 &&
-                state.getRegionInfo(pickedRegion).first != myPlayerNumber;
-            std::cout << "Claimed? " << (alreadyClaimed ? "True" : "False") << std::endl;
+            alreadyClaimed = state.getRegionInfo(pickedRegion).first != -1;
+            
+    //        std::cout << "Claimed? " << (alreadyClaimed ? "True" : "False") << std::endl;
             // the region is already claimed
             if (alreadyClaimed)
             {
                 // don't select this one
-                std::cout << "This one is already claimed" << std::endl;
+    //            std::cout << "This one is already claimed" << std::endl;
             }
             else
             {
-                std::cout << "This one is available" << std::endl;
+    //            std::cout << "This one is available" << std::endl;
                 // select this continent (Found a winner)
                 isClaimed = true;
                 break;
@@ -142,7 +145,7 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
 
     if (pickedRegion == -1)
     {
-    	std::cout << "ERROR! PickedRegion is still -1" << std::endl;
+    //	std::cout << "ERROR! PickedRegion is still -1" << std::endl;
     }
     else{
         std::cout << "Computer picked: " << pickedRegion << std::endl;
