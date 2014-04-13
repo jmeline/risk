@@ -66,8 +66,8 @@ public:
 	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops) = 0;
 
 	/* Returns a pair representing an attack:
-	 * The first int in the pair is the country being attacked
-	 * The second int in the pair is the country doing the attacking */
+	 * The first int in the pair is the country doing the attacking
+	 * The second int in the pair is the country being attacked */
 	virtual std::pair<int,int> attack(GameState state) = 0;
 
 	/* Returns true if the defender wish to defend with two armies, and false if it wishes to defend with only one */

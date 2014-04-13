@@ -17,13 +17,13 @@ int main(int argc, char** argv) {
 	
 	StrategyEnum::StrategyEnum strategies[] = {
 		StrategyEnum::HumanControlledStrategy,
-		StrategyEnum::ObtainSmallestContinentsFirstStrategy,
+		StrategyEnum::HumanControlledStrategy,	////StrategyEnum::ObtainSmallestContinentsFirstStrategy,
 		StrategyEnum::NOPLAYER,
 		StrategyEnum::NOPLAYER,
 		StrategyEnum::NOPLAYER,
 		StrategyEnum::NOPLAYER
 	};
-	GameTask task(MapEnum::ThreeContinent, strategies);
+	GameTask task(MapEnum::Island, strategies);
 	Game game(task);
 	std::cout << "Ready to run." << std::endl;
 	GameReport report = game.runGame();

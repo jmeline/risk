@@ -187,8 +187,8 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
     while (true)
     { //we will keep going until the player's choice is a "magic value" indicating to end the turn
         std::pair<int, int> attackInfo = player[whoseTurn]->attack(state);
-        int attackTo = attackInfo.first;
-        int attackFrom = attackInfo.second;
+        int attackFrom = attackInfo.first;
+		int attackTo = attackInfo.second;
         if (attackFrom < 0 || attackTo < 0) //the "magic value" indicating "all done" received
             break;
         std::pair<int, int> attackedRegionInfo = state.getRegionInfo(attackTo);
@@ -242,36 +242,41 @@ void Game::fortify(int whoseTurn)
     //get player input, then prepare vectors needed to ensure valid moves
     std::vector<std::tuple<int, int, int>> moves = player[whoseTurn]->fortify(state);
     int numberOfRegions = map->getNumberOfRegions();
-    std::vector<int> adjustmentsToMake(numberOfRegions); //tracks what change is needed in each region.  We don't modify the state until we know all changes to make.
-    std::vector<bool> regionAlreadyMoved(numberOfRegions);
-    for (int i = 0; i < numberOfRegions; i++)
-    {
-        adjustmentsToMake[i] = 0;
-        regionAlreadyMoved[i] = false;
-    }
+	std::vector<int> leaving(numberOfRegions,0);	//tracks how many troops have marched out of a region.  Cannot exceed the number that started there, and must leave one behind;
+	std::vector<int> arriving(numberOfRegions,0);	//tracks how many troops have marched into a region.  Allows the state to be updated in the end without confusing the number availiable to move
 
     //load adjustmentsToMake, asserting move validity along the way
     for (int i = 0; i < moves.size(); i++)
     {
         int regionFrom = std::get<0>(moves.at(i));
         int regionTo = std::get<1>(moves.at(i));
-        int numTroops = std::get<2>(moves.at(i));
-        if (!regionAlreadyMoved[regionFrom] && state.getRegionInfo(regionFrom).first == whoseTurn && state.getRegionInfo(regionTo).first == whoseTurn && numTroops < state.getRegionInfo(regionFrom).second && map->areConnected(regionFrom, regionTo))
-        {
-            regionAlreadyMoved[regionFrom] = true;
-            adjustmentsToMake[regionFrom] -= numTroops;
-            adjustmentsToMake[regionTo] += numTroops;
-        }
+        int numTroopsRequested = std::get<2>(moves.at(i));
+		std::pair<int,int> infoFrom = state.getRegionInfo(regionFrom);
+		std::pair<int,int> infoTo = state.getRegionInfo(regionTo);
+		//assert validity, and adjust leaving and arriving if valid
+		if (infoFrom.first==whoseTurn && infoTo.first==whoseTurn && map->areConnected(regionTo,regionFrom))
+		{
+			int maxNumTroops = infoFrom.second-leaving[regionFrom];
+			if (arriving[regionFrom]<1)
+				maxNumTroops--;		//someone has to stay and guard the region
+			if (numTroopsRequested <= maxNumTroops)
+			{
+				leaving[regionFrom] += numTroopsRequested;
+				arriving[regionTo] += numTroopsRequested;
+			}
+		}
     }
 
     //move the troops
-    for (int i = 0; i < adjustmentsToMake.size(); i++)
+    for (int i = 0; i < numberOfRegions; i++)
     {
-        if (adjustmentsToMake[i] == 0)
-            continue;
-        std::pair<int, int> regionInfo = state.getRegionInfo(i);
-        regionInfo.second += adjustmentsToMake[i];
-        state.setRegionInfo(i, regionInfo);
+		int change = arriving[i] - leaving[i];
+		if (change != 0)
+		{
+			std::pair<int, int> regionInfo = state.getRegionInfo(i);
+			regionInfo.second += change;
+			state.setRegionInfo(i, regionInfo);
+		}
     }
 }
 

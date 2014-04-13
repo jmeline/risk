@@ -11,6 +11,7 @@ HumanControlledStrategy::HumanControlledStrategy()
  
 int HumanControlledStrategy::claim(GameState state)
 {
+	std::cout << std::endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 	std::cout<<"Player "<<myPlayerNumber<<": Claim a region."<<std::endl;
 	state.display();
 	int whichRegion = 0;
@@ -48,7 +49,9 @@ std::vector<std::pair<int,int>> HumanControlledStrategy::place(GameState state, 
 	bool outOfBounds = false;
 	bool notYours = false;
 	bool badAmount = false;
+	std::cout << std::endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 	std::cout<<"Player "<<myPlayerNumber<<": Place your troops."<<std::endl;
+	state.display();
 	do
 	{
 		outOfBounds = false;
@@ -67,7 +70,7 @@ std::vector<std::pair<int,int>> HumanControlledStrategy::place(GameState state, 
 			do
 			{
 				badAmount = false;
-				std::cout << "How many troops will you place here? " << std::endl;
+				std::cout << "How many troops will you place here? ";
 				std::cin >> howMany;
 
 				badAmount = howMany < 0 || howMany > numTroops;
@@ -99,37 +102,48 @@ std::vector<std::pair<int,int>> HumanControlledStrategy::place(GameState state, 
 
 std::pair<int,int> HumanControlledStrategy::attack(GameState state)
 {
+	std::cout << std::endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 	std::cout<<"Player "<<myPlayerNumber<<": Attack."<<std::endl;
 	state.display();
 
-	int location = 0;
-	bool outOfBounds = false;
-	bool attackingSelf = false;
-
-	do
+	int fromLocation, toLocation;
+	while (true)
 	{
-		outOfBounds = false;
-		attackingSelf = false;
-		std::cout << "Which country do you want to attack (-1 to stop this phase)? ";
-		std::cin >> location;
-
-		// Check for quit FIRST
-		if (location < 0)
+		// Get where to attack from, or quit
+		bool successfulChoice = false;
+		std::cout << "From which country do you want to attack (-1 to stop this phase)? ";
+		std::cin >> fromLocation;
+		if (fromLocation < 0)	// Check for quit FIRST
 			return std::pair<int,int>(-1,-1);	//let the turn be over
+		if (fromLocation >= state.getNumRegions())
+			std::cout << "Location invalid." << std::endl;
+		else if (state.getRegionInfo(fromLocation).first !=myPlayerNumber)
+			std::cout << "You must attack from a region you own." << std::endl;
+		else if (state.getRegionInfo(fromLocation).second < 2)
+			std::cout << "Not enough troops in that region to attack." << std::endl;
+		else
+			successfulChoice = true;
+		
+		// Get where to attack (unless the last part was unsuccessful
+		if (successfulChoice)
+		{
+			successfulChoice = false;
+			std::cout << "Which country do you want to attack? ";
+			std::cin >> toLocation;
+			if (toLocation < 0 || toLocation >= state.getNumRegions())
+				std::cout << "Location invalid." << std::endl;
+			else if (state.getRegionInfo(toLocation).first == myPlayerNumber)
+				std::cout << "You can't attack yourself, dummy." << std::endl;
+			else if (!map->areConnected(fromLocation,toLocation))
+				std::cout << "Those two regions don't actually touch..." << std::endl;
+			else
+				successfulChoice = true;
+		}
 
-		// Set flags (error check)
-		outOfBounds = location >= state.getNumRegions();
-		if(!outOfBounds)
-			attackingSelf = state.getRegionInfo(location).first == myPlayerNumber;
-
-		if(outOfBounds)
-			std::cout << "You must select a valid location to attack." << std::endl;
-		if(attackingSelf)
-			std::cout << "You can't attack yourself, dummy." << std::endl;
-	}while(outOfBounds || attackingSelf);
-
-
-	return std::pair<int,int>(location,myPlayerNumber);
+		//send in the decision, if successful
+		if (successfulChoice)
+			return std::pair<int,int>(fromLocation, toLocation);
+	}
 }
 
 bool HumanControlledStrategy::defend(GameState state, int countryAttacked, int countryAttacking)
@@ -143,11 +157,77 @@ bool HumanControlledStrategy::defend(GameState state, int countryAttacked, int c
 
 std::vector<std::tuple<int,int,int> > HumanControlledStrategy::fortify(GameState state)
 {
+	std::cout << std::endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 	std::cout<<"Player "<<myPlayerNumber<<": Fortify."<<std::endl;
+	state.display();
 	std::vector<std::tuple<int,int,int>> actions;
-	//int whereFrom = 0;
-	//int whereTo = 0;
-	//int howMany = 0;
-	//actions.push_back(std::tuple<int,int,int>(whereFrom,whereTo,howMany));
-	return actions;	//for now, let's do nothing
+	int numberOfRegions = map->getNumberOfRegions();
+	std::vector<int> leaving(numberOfRegions,0);	//tracks how many troops have marched out of a region.  Cannot exceed the number that started there, and must leave one behind;
+	std::vector<int> arriving(numberOfRegions,0);	//tracks how many troops have marched into a region.  Allows the state to be updated in the end without confusing the number availiable to move
+	int fromLocation, toLocation, howManyToMove;
+    
+	//keep getting input until told to stop
+	while (true)
+	{
+		//get where moving from, or quit
+		bool successfulChoice = false;
+		std::cout << "From where would you like to move troops (-1 to skip this phase)? ";
+			std::cin >> fromLocation;
+		if (fromLocation < 0)	// Check for quit FIRST
+			return actions;
+		if (fromLocation >= numberOfRegions)
+			std::cout << "Location invalid." << std::endl;
+		else if (state.getRegionInfo(fromLocation).first!=myPlayerNumber)
+			std::cout << "You can't move troops you don't own." << std::endl;
+		else
+			successfulChoice = true;
+
+		//get how many to move, unless already failed
+		if (successfulChoice)
+		{
+			successfulChoice = false;
+			int maxNumTroops = state.getRegionInfo(fromLocation).second-leaving[fromLocation];
+			if (arriving[fromLocation]<1)
+				maxNumTroops--;		//someone has to stay and guard the region
+			if (maxNumTroops<=0)
+			{
+				std::cout << "You've already moved all the troops you can from that region." << std::endl;
+			}
+			else
+			{
+				std::cout << "Move how many troops (up to "<<maxNumTroops<<")?";
+				std::cin >> howManyToMove;
+				if (howManyToMove<=0 && howManyToMove>maxNumTroops)
+					std::cout << "Invalid number of troops for this location." << std::endl;
+				else
+					successfulChoice = true;
+			}
+
+		}
+
+		//get who to attack, unless already failed
+		if (successfulChoice)
+		{
+			successfulChoice = false;
+			std::cout << "To where would you like to move those troops? ";
+			std::cin >> toLocation;
+			if (toLocation<0 || toLocation>=numberOfRegions)
+				std::cout << "Location invalid." << std::endl;
+			else if (state.getRegionInfo(toLocation).first!=myPlayerNumber)
+			{
+				std::cout << "You can't move troops to un-owned regions." << std::endl;
+			}
+			else
+				successfulChoice = true;
+		}
+
+		//finalize current action, unless already failed
+		if (successfulChoice)
+		{
+			std::cout << "Move queued." << std::endl;
+			actions.push_back(std::tuple<int,int,int>(fromLocation,toLocation,howManyToMove));
+			leaving[fromLocation] += howManyToMove;
+			arriving[toLocation] += howManyToMove;
+		}
+    }
 }
