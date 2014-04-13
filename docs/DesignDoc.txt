@@ -31,20 +31,3 @@ Human Controlled Strategy problems:
 
 PRESENTATION URL:
 	https://docs.google.com/a/aggiemail.usu.edu/presentation/d/12e0cRb4QVKHs59cHkWbolaBrv-Cnjo6du0B0kAVaOBE/edit?usp=sharing
-	
-Slide Notes
-	--overview of game, game rules
-	--lots of strategies exists
-		name some
-	--what we want to do:
-		compare
-		why?  What beats one may not beat others
-	--what we don't want to do:
-		make a new strategy that's better
-		brute-force look ahead
-	--what is a dominion graph/what to achieve
-	--our organization: game
-	--our organization: master/slave, messages
-	--testing: human strategy
-	--results
-	
