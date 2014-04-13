@@ -8,7 +8,7 @@
 HumanControlledStrategy::HumanControlledStrategy()
 {
 }
-
+ 
 int HumanControlledStrategy::claim(GameState state)
 {
 	std::cout<<"Player "<<myPlayerNumber<<": Claim a region."<<std::endl;

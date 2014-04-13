@@ -37,9 +37,6 @@ namespace MapEnum
 	};
 }
 
-
-
-
 /*
  * =====================================================================================
  *        Class:  GameMap
@@ -114,6 +111,7 @@ public:
 
 class ThreeContinent : public GameMap
 {
+
 public:
     ThreeContinent();
 	MapEnum::MapEnum getIdentifier() { return MapEnum::ThreeContinent; }

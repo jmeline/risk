@@ -87,34 +87,53 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
     int index = 0;
     int pickedContinent = -1;
     int pickedRegion = -1;
+    std::vector<std::pair<int, std::string>> regionList;
 
     // select the first continent unless it is already taken.
     // If the country has been taken, grab the country with the next smallest region count
     while (index < lowRegioncountList.size() )
     {
-        std::cout << "Index: " << index << std::endl;
-    	// grab the index of the continent with the lowest region count
-    	// countries with the lowest region count have been sorted from lowest to highest
-    	pickedContinent = lowRegioncountList[index].first;
-        pickedRegion = continentList[pickedContinent].getRegionList()[index].first;
+        std::cout << "index:" << index << std::endl;
+        std::cout << "playerNum:" << myPlayerNumber << std::endl;
 
-        std::cout << "pickedRegion: " << pickedRegion 
-                << " " << continentList[pickedContinent].getRegionList()[index].second 
+        // grab the index of the continent with the lowest region count
+        // countries with the lowest region count have been sorted from lowest to highest
+        pickedContinent = lowRegioncountList[index].first;
+        regionList = continentList[pickedContinent].getRegionList();
+
+        bool isClaimed = false;
+        int regionIndex = 0;
+
+        // loop through each region within the continent for availability
+        while(!isClaimed && regionIndex < regionList.size())
+        {
+            pickedRegion = regionList[regionIndex].first;   
+            std::cout << "regionIndex: " << regionIndex << std::endl;
+            std::cout << "pickedRegion: " << pickedRegion << " " 
+                << continentList[pickedContinent].getRegionList()[regionIndex].second 
                 << std::endl;
 
-    	// check if that 
-        alreadyClaimed = state.getRegionInfo(pickedRegion).first != -1 &&
-            state.getRegionInfo(pickedRegion).first != myPlayerNumber;
-
-        std::cout << "Claimed? " << (alreadyClaimed ? "True" : "False") << std::endl;
-        // the region is already claimed
-        if (alreadyClaimed)
-        {
-        	// don't select this one
+            // check if that 
+            alreadyClaimed = state.getRegionInfo(pickedRegion).first != -1 &&
+                state.getRegionInfo(pickedRegion).first != myPlayerNumber;
+            std::cout << "Claimed? " << (alreadyClaimed ? "True" : "False") << std::endl;
+            // the region is already claimed
+            if (alreadyClaimed)
+            {
+                // don't select this one
+                std::cout << "This one is already claimed" << std::endl;
+            }
+            else
+            {
+                std::cout << "This one is available" << std::endl;
+                // select this continent (Found a winner)
+                isClaimed = true;
+                break;
+            }
+            regionIndex++;
         }
-        else
-        {
-            // select this continent (Found a winner)
+
+        if (isClaimed){
             break;
         }
 
