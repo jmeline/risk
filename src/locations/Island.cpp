@@ -6,10 +6,6 @@
  */
 
 #include    "../gamemap/GameMap.hpp"
-#include    "../gamemap/Continent.hpp"
-#include    <string>
-#include    <utility>
-#include    <vector>
 
 enum Regions
 {

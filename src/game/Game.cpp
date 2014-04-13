@@ -15,6 +15,12 @@
 
 std::default_random_engine rng;
 
+GameReport Game::quickRun(GameTask task)
+{
+	Game game(task);
+	return game.runGame();
+}
+
 Game::Game(GameTask task)
 {
     map = GameMap::make(task.map);

@@ -16,17 +16,35 @@ Goals:
 
 Timeline:
     Week 4/7  - 1,2 (by Tues night), 5,8 (by end of week)
-    Week 4/14 - 3,4,7,8
+    Week 4/14 - 3,4,7
     Week 4/21 - 9
     Due 4/26!
-    
-In Results.txt goes one report per row, semicolon delimeated
 
-To add later:
+Game/Strategy problems (definitely not a big deal at this stage):
 	Controlling the number of troops to move into a newly conquered country
 		Can be anywhere from numAttacking-numWhoDied to numInAttackingRegion-numWhoDied-1
 
-Human Controlled Strategy:
+Human Controlled Strategy problems:
 	--Attacking: should ask where to attack from, not just where to
 		As it is, it will sometimes try to attack from a non-touching region.  Test it on the Island map.
 	--Could display state a little more often
+
+PRESENTATION URL:
+	https://docs.google.com/a/aggiemail.usu.edu/presentation/d/12e0cRb4QVKHs59cHkWbolaBrv-Cnjo6du0B0kAVaOBE/edit?usp=sharing
+	
+Slide Notes
+	--overview of game, game rules
+	--lots of strategies exists
+		name some
+	--what we want to do:
+		compare
+		why?  What beats one may not beat others
+	--what we don't want to do:
+		make a new strategy that's better
+		brute-force look ahead
+	--what is a dominion graph/what to achieve
+	--our organization: game
+	--our organization: master/slave, messages
+	--testing: human strategy
+	--results
+	

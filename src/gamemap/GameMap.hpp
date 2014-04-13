@@ -32,7 +32,8 @@ namespace MapEnum
 	enum MapEnum
 	{
 		Earth,
-		Island
+		Island,
+		ThreeContinent
 	};
 }
 
@@ -111,6 +112,14 @@ public:
     void constructBorders();
 };
 
+class ThreeContinent : public GameMap
+{
+public:
+    ThreeContinent();
+	MapEnum::MapEnum getIdentifier() { return MapEnum::ThreeContinent; }
+    void constructContinentsAndRegions();
+    void constructBorders();
+};
 
 
 #endif   /* ----- #ifndef gamemap_INC  ----- */

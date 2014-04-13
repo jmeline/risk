@@ -10,14 +10,17 @@
 #ifndef  gameslave_INC
 #define  gameslave_INC
 
+#include "game/Game.hpp"
+
 class GameSlave {
 private:
-	//MEMBER VARIABLES HERE
+	//MEMBER VARIABLES GO HERE
 public:
-	GameSlave() {}
-	//METHODS HERE
+	void runIt();
 private:
-    //METHODS HERE
+	GameReport runOneGame(GameTask task);
+	GameTask receiveGameTask();					//communicates with the manager: obtains work.  May be told to stop, rather than to work, in which case it will return a GameTask where every member is -1.
+	void sendReport(GameReport report);			//communicates with the manager: reports work
 };
 
 #endif   /* ----- #ifndef gameslave_INC  ----- */
