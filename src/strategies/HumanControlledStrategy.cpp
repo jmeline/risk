@@ -2,13 +2,13 @@
 #include <iostream>
 
 /*************************
-* HUMAN CONTROLLED
-*************************/
+ * HUMAN CONTROLLED
+ *************************/
 
 HumanControlledStrategy::HumanControlledStrategy()
 {
 }
- 
+
 int HumanControlledStrategy::claim(GameState state)
 {
 	std::cout << std::endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
@@ -35,13 +35,13 @@ int HumanControlledStrategy::claim(GameState state)
 			std::cout << "You have to claim somewhere ON the map." << std::endl;
 		if(alreadyClaimed)
 			std::cout << "You have to choose unclaimed territory." << std::endl;
-	}while(alreadyClaimed || outOfBounds);
+	} while(alreadyClaimed || outOfBounds);
 
 	// I think we checked all the dumb mistakes the user can make
 	return whichRegion;
 }
-	
-std::vector<std::pair<int,int>> HumanControlledStrategy::place(GameState state, int numTroops)
+
+std::vector<std::pair<int, int>> HumanControlledStrategy::place(GameState state, int numTroops)
 {
 	std::vector<std::pair<int,int>> actions;
 	int wherePut = 0;
@@ -96,11 +96,11 @@ std::vector<std::pair<int,int>> HumanControlledStrategy::place(GameState state, 
 		if(notYours)
 			std::cout << "You have to add them to YOUR territory." << std::endl;
 		
-	}while(numTroops > 0 || outOfBounds || notYours);
+	} while(numTroops > 0 || outOfBounds || notYours);
 	return actions;
 }
 
-std::pair<int,int> HumanControlledStrategy::attack(GameState state)
+std::pair<int, int> HumanControlledStrategy::attack(GameState state)
 {
 	std::cout << std::endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 	std::cout<<"Player "<<myPlayerNumber<<": Attack."<<std::endl;
@@ -148,14 +148,14 @@ std::pair<int,int> HumanControlledStrategy::attack(GameState state)
 
 bool HumanControlledStrategy::defend(GameState state, int countryAttacked, int countryAttacking)
 {
-	//Sufficiently trivial that we don't involve the human.
-	if (state.getRegionInfo(countryAttacked).second >= 2)
-		return true;
-	else
-		return false;
+    //Sufficiently trivial that we don't involve the human.
+    if (state.getRegionInfo(countryAttacked).second >= 2)
+        return true;
+    else
+        return false;
 }
 
-std::vector<std::tuple<int,int,int> > HumanControlledStrategy::fortify(GameState state)
+std::vector<std::tuple<int, int, int> > HumanControlledStrategy::fortify(GameState state)
 {
 	std::cout << std::endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 	std::cout<<"Player "<<myPlayerNumber<<": Fortify."<<std::endl;
