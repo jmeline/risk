@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "../game/GameReport.hpp"
+#include "game/GameReport.hpp"
 #include <fstream>
 #include <random>
 #include <ctime>

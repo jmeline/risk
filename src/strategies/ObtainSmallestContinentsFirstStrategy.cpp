@@ -31,20 +31,21 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
     // get list of continents
     std::vector<Continent> continentList = this->map->getContinentList();
 
+    /*
     std::cout << "Printing continentList" << std::endl;
-    for each (Continent c in continentList)
+    for (Continent c : continentList)
     {
         std::cout << "value: " << c.getValue() << std::endl;
         std::cout << "name: " << c.getContinentName() << std::endl;
         std::cout << "regions: " << std::endl;
-        for each (std::pair<int, std::string> r in c.getRegionList())
+        for (std::pair<int, std::string> r : c.getRegionList())
         {
             std::cout << r.first << "->" << r.second << std::endl;
         }
 
     }
-
     std::cout << std::endl;
+    */
 
     // sort the list from the lowest region count to the largest region count
     // std::vector<index> == index from lowest region count to largest region count
@@ -57,13 +58,14 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
         lowRegioncountList.push_back(std::make_pair(i, continentList[i].getRegionList().size()));
     }
 
+    /*
     std::cout << "Printing lowRegioncountList (" << lowRegioncountList.size() << ") " << std::endl;
-    for each (std::pair<int,int> p in lowRegioncountList)
+    for  (std::pair<int,int> p : lowRegioncountList)
     {
         std::cout << p.first << " size=" << p.second << std::endl;
     }
     std::cout << std::endl;
-    
+    */
 
     // sort lowRegioncountList by the second element in the pair: region count. End result is a sorted list of the smallest number of regions 
     // to the largest number of regions. its original index is preserved as established in the map->continentList
@@ -72,16 +74,18 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
     	[](const std::pair<int,int> &lhs, const std::pair<int,int> &rhs)
     	{ return lhs.second < rhs.second; } );
 
-    
+    /*
     std::cout << "Printing Sorted lowRegioncountList(" << lowRegioncountList.size() << ") " << std::endl;
-    for each (std::pair<int,int> p in lowRegioncountList)
+    for (std::pair<int,int> p : lowRegioncountList)
     {
         std::cout << p.first << " size=" << p.second << std::endl;
     }
     std::cout << std::endl;
+    */
 
     bool alreadyClaimed = false;
     int index = 0;
+    int pickedContinent = -1;
     int pickedRegion = -1;
 
     // select the first continent unless it is already taken.
@@ -91,8 +95,12 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
         std::cout << "Index: " << index << std::endl;
     	// grab the index of the continent with the lowest region count
     	// countries with the lowest region count have been sorted from lowest to highest
-    	pickedRegion = lowRegioncountList[index].first;
-        std::cout << "pickedRegion: " << pickedRegion << std::endl;
+    	pickedContinent = lowRegioncountList[index].first;
+        pickedRegion = continentList[pickedContinent].getRegionList()[index].first;
+
+        std::cout << "pickedRegion: " << pickedRegion 
+                << " " << continentList[pickedContinent].getRegionList()[index].second 
+                << std::endl;
 
     	// check if that 
         alreadyClaimed = state.getRegionInfo(pickedRegion).first != -1 &&
@@ -134,7 +142,7 @@ std::vector<std::pair<int, int>> ObtainSmallestContinentsFirstStrategy::place(Ga
     std::vector<int> regionsOwned = state.getRegionsOwnedByPlayer(myPlayerNumber);
 
     std::cout << "regionsOwned size: " << regionsOwned.size() << std::endl;
-    for each (int i in regionsOwned)
+    for (int i : regionsOwned)
     {
         std::cout << i << " ";
     }

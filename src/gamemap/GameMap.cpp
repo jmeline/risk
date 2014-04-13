@@ -29,6 +29,7 @@ std::vector<Continent> GameMap::getContinentList()
     return this->continentList;
 }
 
+
 void GameMap::setContinentList(std::vector<Continent> c)
 {
     this->continentList = c;
@@ -38,7 +39,7 @@ int GameMap::getNumberOfRegions()
 {
     int count = 0;
     int continentCount = continentList.size();
-    for each (Continent c in continentList)
+    for (Continent c : continentList)
         count += c.getRegionList().size();
     return count;
 }

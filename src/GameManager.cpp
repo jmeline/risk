@@ -4,8 +4,8 @@
 	#include <mpi.h>
 #endif
 
-#define TASK = 1;	//identifies a type of MPI message
-#define REPORT = 1;	//identified a type of MPI message
+#define TASK    1	//identifies a type of MPI message
+#define REPORT  1	//identified a type of MPI message
 
 GameManager::GameManager(int numberOfSlaves)
 {
@@ -60,7 +60,7 @@ void GameManager::runIt(std::string outputFileLocation)
 	std::ofstream outputStream;
 	outputStream.open(outputFileLocation.c_str(), std::ios::out);
 	//launch initial games to get all slaves working
-	int slavesToUse = (gamesToRun.size()>=slaveTasks.size() ? slaveTasks.size() : gamesToRun.size());
+	int slavesToUse = (gamesToRun.size() >= slaveTasks.size() ? slaveTasks.size() : gamesToRun.size());
 	for (int i=0; i<slavesToUse; i++)
 		launchGame(i,i);
 	int nextGameNumber = slavesToUse;	//since we just assigned game (since we just assigned game number (slavesToUse-1)
@@ -100,7 +100,7 @@ int GameManager::getAndHandleReport(std::ostream *outputStream)
 	#ifndef DONTUSEMPI
 		MPI_Status status;
 		MPI_Recv(&dataIn, GameTask::encodedSize, MPI_INT, MPI_ANY_SOURCE, REPORT, MPI_COMM_WORLD, &status);
-        report.read(inData);
+        //report.read(inData);
 		int slaveNumber = status.MPI_SOURCE - 1;
 	#else
 		std::cout << "MPI is disabled.  Would have recieved a report." << std::endl;

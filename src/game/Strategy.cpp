@@ -8,8 +8,8 @@ Strategy* Strategy::make(StrategyEnum::StrategyEnum strategyType)
 			return (Strategy*)(new HumanControlledStrategy());
 		case (StrategyEnum::BadStrategy1):
 			return (Strategy*)(new BadStrategy1());
-////		case (StrategyEnum::ObtainSmallestContinentsFirstStrategy):
-////			return (Strategy*)(new ObtainSmallestContinentsFirstStrategy());
+		case (StrategyEnum::ObtainSmallestContinentsFirstStrategy):
+			return (Strategy*)(new ObtainSmallestContinentsFirstStrategy());
 		default:
 			return (Strategy*)(new BadStrategy1());
 	}
