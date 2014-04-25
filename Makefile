@@ -3,6 +3,7 @@
 CC=g++
 CFLAGS=-g -Wall
 C11=-std=c++11
+VERBOSE=-DVERBOSE_STRATEGIES
 
 INCLUDE_PATH=src/
 LIBS=src/game src/gamemap src/locations src/strategies
@@ -23,7 +24,7 @@ $(BUILD_DIR):
 	mkdir $(BUILD_DIR)/
 	for dir in $(LIBS); do \
 		cd $$dir; \
-		g++ $(C11) -c *.cpp -I../; \
+		g++ $(VERBOSE) $(C11) -c *.cpp -I../; \
 		mv *.o ../../$(BUILD_DIR); \
 		cd -; \
 	done

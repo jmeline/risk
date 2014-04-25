@@ -18,6 +18,11 @@ Strategy* Strategy::make(StrategyEnum::StrategyEnum strategyType)
 void Strategy::init(GameMap* m, int num) {
 	map = m;
 	myPlayerNumber = num;
+	#ifdef VERBOSE_STRATEGIES
+		beVerbose = true;
+	#else
+		beVerbose = false;
+	#endif
 }
 
 void Strategy::init(GameMap* m, int num, bool verbose) {

@@ -5,9 +5,7 @@
  * HUMAN CONTROLLED
  *************************/
 
-HumanControlledStrategy::HumanControlledStrategy()
-{
-}
+HumanControlledStrategy::HumanControlledStrategy() {}
 
 int HumanControlledStrategy::claim(GameState state)
 {

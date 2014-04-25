@@ -8,7 +8,7 @@
 #include <ctime>
 
 // yep... it's a global variable.  But it makes sense here.
-extern std::default_random_engine rng;
+std::default_random_engine rng;
 
 int main(int argc, char** argv) {
 	//We must seed the random number generator.  This one is only used for testing; rng is used more.

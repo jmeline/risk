@@ -12,7 +12,7 @@
 #include "Game.hpp"
 
 
-std::default_random_engine rng;
+extern std::default_random_engine rng;
 
 GameReport Game::quickRun(GameTask task)
 {
@@ -73,8 +73,8 @@ GameReport Game::runGame()
             std::vector<int> killedInConquest = doATurnOfBattles(whoseTurn);
             for (int i = 0; i < killedInConquest.size(); i++)
             {
-                numberDead++;
-                report.winners[numberOfPlayers - numberDead] = killedInConquest[i];
+				numberDead++;
+				report.winners[numberOfPlayers - numberDead] = killedInConquest[i];
                 isDead[killedInConquest[i]] = true;
             }
             if (numberDead == (numberOfPlayers - 1))
@@ -85,8 +85,6 @@ GameReport Game::runGame()
             fortify(whoseTurn);
         }
         whoseTurn = (whoseTurn + 1) % numberOfPlayers;
-		char ch;
-		std::cin >> ch;
     }
     return report;
 }
@@ -201,38 +199,41 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
         if (attackingRegionInfo.first == whoseTurn && playerAttacked != whoseTurn && attackingRegionInfo.second > 1 && map->areConnected(attackFrom, attackTo))
         {
             int numToDefendWith = player[playerAttacked]->defend(state, attackTo, attackFrom);
-            int numToAttackWith = (attackingRegionInfo.second >= 4) ? 3 : ((attackingRegionInfo.second >= 3) ? 2 : 1); //we may later give the player a choice, but for now this works
+            int numToAttackWith = (attackingRegionInfo.second >= 4) ? 3 : ((attackingRegionInfo.second >= 3) ? 2 : (attackingRegionInfo.second ? 1 : 0));	//we may later give the player a choice, but for now this works
             ////roll and compare dice.  Meaning of 2,1,0,-1,-2:  attacker wins 2, attacker wins 1, each wins one, defender wins 1, defender wins 2
-            int numberConquered = rollToConquer(numToAttackWith, numToDefendWith);
-            if (numberConquered > 0)
-            {
-                attackedRegionInfo.second -= numberConquered;
-                if (attackedRegionInfo.second == 0)
-                { //conquered;
-					regionConquered = true;
-					defeatedPlayer = attackedRegionInfo.first;
-                    attackedRegionInfo.first = attackingRegionInfo.first;
-                    attackedRegionInfo.second = numToAttackWith;
-                    attackingRegionInfo.second -= numToAttackWith;
-                }
-            }
-            else if (numberConquered < 0)
-            {
-                attackingRegionInfo.second += numberConquered; //note that numberConquered is a negative number, here
-            }
-            else
-            { //they both took a hit
-                attackedRegionInfo.second -= 1;
-                attackingRegionInfo.second -= 1;
-                if (attackedRegionInfo.second == 0)
-                { //conquered;
-					regionConquered = true;
-					defeatedPlayer = attackedRegionInfo.first;
-                    attackedRegionInfo.first = attackingRegionInfo.first;
-                    attackedRegionInfo.second = numToAttackWith - 1;
-                    attackingRegionInfo.second -= numToAttackWith - 1;
-                }
-            }
+			if (numToAttackWith > 0)
+			{
+				int numberConquered = rollToConquer(numToAttackWith, numToDefendWith);
+				if (numberConquered > 0)
+				{
+					attackedRegionInfo.second -= numberConquered;
+					if (attackedRegionInfo.second == 0)
+					{ //conquered;
+						regionConquered = true;
+						defeatedPlayer = attackedRegionInfo.first;
+						attackedRegionInfo.first = attackingRegionInfo.first;
+						attackedRegionInfo.second = numToAttackWith;
+						attackingRegionInfo.second -= numToAttackWith;
+					}
+				}
+				else if (numberConquered < 0)
+				{
+					attackingRegionInfo.second += numberConquered; //note that numberConquered is a negative number, here
+				}
+				else
+				{ //they both took a hit
+					attackedRegionInfo.second -= 1;
+					attackingRegionInfo.second -= 1;
+					if (attackedRegionInfo.second == 0)
+					{ //conquered;
+						regionConquered = true;
+						defeatedPlayer = attackedRegionInfo.first;
+						attackedRegionInfo.first = attackingRegionInfo.first;
+						attackedRegionInfo.second = numToAttackWith - 1;
+						attackingRegionInfo.second -= numToAttackWith - 1;
+					}
+				}
+			}
         }
 
         state.setRegionInfo(attackFrom, attackingRegionInfo);
@@ -243,7 +244,7 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
 		{
 			if (isTotallyDefeated(defeatedPlayer))	//Note:  This check must be performed AFTER the actual state of the game has changed
 			{
-				fallenPlayers.push_back(attackedRegionInfo.first);
+				fallenPlayers.push_back(defeatedPlayer);
 				if (state.getNumberOccupiedBy(whoseTurn)==state.getNumRegions())
 					return fallenPlayers;	//no need to wait for the player to say they're done
 			}

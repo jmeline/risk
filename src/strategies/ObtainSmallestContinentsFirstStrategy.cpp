@@ -13,44 +13,34 @@
 
  **************************************************/
 
-/*  GOAL: Own the smallest continents, to quickly get troop bonuses.
+/*  GOAL: Own the smallest continents (to which you have access), to quickly get troop bonuses.
 
 Rules for claiming regions:
 	-Go for continents in order of decreasing size, claiming a "random" region if availiable (in-order works fine for "random").
 
 Rules for placing:
 	1) Get a list of all OWNED continents (with "r" total regions)
-	2) Get the smallest non-owned continent.  This is where we want to conquer.  Let there be "R" unowned regions there
+	2) Get the smallest non-owned accessible continent.  This is where we want to conquer.  Let there be "R" unowned regions there
 	3) The number of troops sent to be used to attack is t*F*R/(r+R), where F is the a "favoring factor".  They are distributed uniformly around unconquered regions.
-	4) All other troops fortify owned continents.  Get a list of y regions in the continents bordering hostile territory, and sort by the number of touching enemy troops.  Then serve round-robin.
+	4) All other troops fortify owned continents.  Get a list of y regions in the co:ntinents bordering hostile territory, and sort by the number of touching enemy troops.  Then serve round-robin.
 
 Rules for attacking:
 	1) A region with <=2 troops will not attack.
-	2) Vie for the smallest non-owned continent, so long as there
+	2) Vie for the smallest non-owned continent
 		a) Get a list of all owned regions touching that continent's regions.
-		b) For each, if there are f friently troops and e enemy troops, calculate the diffrence D=(f-e).
-		c) If D > minD (minD differs for regions in "owned" continenets vs hostile continents), attack a bordering hostile country
+		b) For each, if there are f friently troops and e enemy troops, calculate the diffrence D=(f-e).  Subtract 3 if the attack-from location is a part of an owned continent.
+		c) Attack from the location with the highest D so long as (f>2 if in an owned continent; f>6 otherwise).
 	3) Once there is no one able to attack that continent, repeat with the next smallest unowned region, etc.
 
 Rules for fortifying:
 	-If a region is surrounded only by friendly regions, move it's troops into a random one of those regions (eventually getting to the battlefront).
 
-NOTE: attackFavoringFactor, minDiff_hostile, minDiff_home should all be constants, adjustable by child classes for cheap variety.
+NOTE: attackFavoringFactor should be kept constant, but is adjustable by child classes for cheap variety.
 */
 
 
-ObtainSmallestContinentsFirstStrategy::ObtainSmallestContinentsFirstStrategy()
-{
-	beVerbose = true;
-}
+ObtainSmallestContinentsFirstStrategy::ObtainSmallestContinentsFirstStrategy() {}
 
-/* 
-bool ObtainSmallestContinentsFirstStrategy::sortByNumberOfRegions(
-    const std::pair<int,int> &lhs, const std::pair<int,int> &rhs)
-{
-    return lhs.second < rhs.second;
-}
- */
 
 int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
 {
@@ -124,6 +114,7 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
     return pickedRegion;
 }
 
+
 std::vector<std::pair<int, int>> ObtainSmallestContinentsFirstStrategy::place(GameState state, int numTroops)
 {
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
@@ -155,9 +146,8 @@ std::vector<std::pair<int, int>> ObtainSmallestContinentsFirstStrategy::place(Ga
 	std::sort(continentsToConquer.begin(), continentsToConquer.end(),
               [](const std::pair<int, int> &lhs, const std::pair<int, int> &rhs)
 					{ return lhs.second < rhs.second; });
-	Continent targetContinent = continentList[continentsToConquer[0].first];
-	if (beVerbose)  std::cout<<"Continents I own: "<<continentsIOwn.size()<<"; Target Continent: " << continentsToConquer[0].first << std::endl;
-
+	if (beVerbose)  std::cout<<"Continents I own: "<<continentsIOwn.size() << std::endl;
+	
 	//get all friendly regions on the battlefront
 	int regionCountInOwnedContinents = 0;
 	std::vector<std::pair<int, int>> frontlineRegions;		//first int is the region's index, the second is its "score"
@@ -188,23 +178,30 @@ std::vector<std::pair<int, int>> ObtainSmallestContinentsFirstStrategy::place(Ga
 					{ return lhs.second < rhs.second; });
 	if (beVerbose)  std::cout<<"Regions in my continents: "<<regionCountInOwnedContinents<<"; Regions on my frontline: "<<frontlineRegions.size()<<std::endl;
 	
-	// Get a list of regions where to send attackers, and get the number of hostile regions
-	int hostileRegions = 0;
+	// Get a list of regions where to send attackers, and get the number of hostile regions there
+	Continent targetContinent = continentList[continentsToConquer[0].first];
 	std::vector<int> attackWorthyLocations;
-	std::vector<std::pair<int, std::string>> tempRegionList = targetContinent.getRegionList();
-	for (int i=0; i<tempRegionList.size(); i++)
+	int hostileRegions;
+	for (int h=0; h<continentsToConquer.size()&&attackWorthyLocations.size()==0; h++)
 	{
-		int regionBeingConsidered = tempRegionList[i].first;
-		if (state.getRegionInfo(regionBeingConsidered).first != myPlayerNumber)
+		targetContinent = continentList[continentsToConquer[h].first];
+		if (beVerbose)  std::cout<<"Considering target continent: " << continentsToConquer[h].first << std::endl;
+		hostileRegions = 0;
+		std::vector<std::pair<int, std::string>> tempRegionList = targetContinent.getRegionList();
+		for (int i=0; i<tempRegionList.size(); i++)
 		{
-			std::cout << "HOSTILE: " << regionBeingConsidered << std::endl;
-			hostileRegions++;
-			std::vector<int> neighbors = map->getNeighborsOfRegion(regionBeingConsidered);
-			for (int j=0; j<neighbors.size(); j++)
+			int regionBeingConsidered = tempRegionList[i].first;
+			if (state.getRegionInfo(regionBeingConsidered).first != myPlayerNumber)
 			{
-				if (state.getRegionInfo(neighbors[j]).first==myPlayerNumber) {
-					attackWorthyLocations.push_back(neighbors[j]);
-					std::cout << "Attack worthy: " << neighbors[j] << std::endl;
+				if (beVerbose)  std::cout << "Hostile: " << regionBeingConsidered << std::endl;
+				hostileRegions++;
+				std::vector<int> neighbors = map->getNeighborsOfRegion(regionBeingConsidered);
+				for (int j=0; j<neighbors.size(); j++)
+				{
+					if (state.getRegionInfo(neighbors[j]).first==myPlayerNumber) {
+						attackWorthyLocations.push_back(neighbors[j]);
+						if (beVerbose)  std::cout << "Attack worthy: " << neighbors[j] << std::endl;
+					}
 				}
 			}
 		}
@@ -317,7 +314,7 @@ std::pair<int, int> ObtainSmallestContinentsFirstStrategy::attack(GameState stat
 						{
 							if (myImportantRegions[i]==regionMine)
 							{
-								diffrence -= 3;
+								diffrence -= 4;
 								break;
 							}
 						}
@@ -338,7 +335,7 @@ std::pair<int, int> ObtainSmallestContinentsFirstStrategy::attack(GameState stat
 			{
 				if (myImportantRegions[k]==attackWorthyLocations[i].first)
 				{
-					troopsAvailiable -= 3;
+					troopsAvailiable -= 4;
 					break;
 				}
 			}
@@ -349,7 +346,7 @@ std::pair<int, int> ObtainSmallestContinentsFirstStrategy::attack(GameState stat
 				for (int k=0; k<neighborsMine.size(); k++)
 				{
 					int whereIsMyNeighbor = map->whereIs(neighborsMine[k]);
-					std::cout<< "Where is my neighbor: "<<whereIsMyNeighbor<<"; Neighbor Allegance: "<<state.getRegionInfo(neighborsMine[k]).first << std::endl;
+					if (beVerbose)  std::cout<< "Where is my neighbor: "<<whereIsMyNeighbor<<"; Neighbor Allegance: "<<state.getRegionInfo(neighborsMine[k]).first << std::endl;
 					if (state.getRegionInfo(neighborsMine[k]).first != myPlayerNumber && whereIsMyNeighbor==continentsToConquer[h].first)
 					{
 						int attackTo = neighborsMine[k];
@@ -368,6 +365,7 @@ std::pair<int, int> ObtainSmallestContinentsFirstStrategy::attack(GameState stat
 	return std::pair<int,int>(-1,-1);
 }
 
+
 bool ObtainSmallestContinentsFirstStrategy::defend(GameState state, int countryAttacked, int countryAttacking)
 {
     if (state.getRegionInfo(countryAttacked).second >= 2)
@@ -376,15 +374,42 @@ bool ObtainSmallestContinentsFirstStrategy::defend(GameState state, int countryA
         return false;
 }
 
+
 std::vector<std::tuple<int, int, int> > ObtainSmallestContinentsFirstStrategy::fortify(GameState state)
 {
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
 	if (beVerbose)  std::cout << "ObtainSmallestContinentsFirstStrategy "<<myPlayerNumber<<" is fortifying" << std::endl;
     if (beVerbose)  state.display();
-	
+
 	std::vector<std::tuple<int, int, int>> actions;
-	std::tuple<int,int,int> action = std::tuple<int,int,int>(0,0,0);
-	actions.push_back(action);
+
+	std::vector<int> myRegions = state.getRegionsOwnedByPlayer(myPlayerNumber);
+	for (int i=0; i<myRegions.size(); i++)
+	{
+		std::vector<int> neighbors = map->getNeighborsOfRegion(myRegions[i]);
+		bool isOnBattleFront = false;
+		for (int j=0; j<neighbors.size(); j++)
+		{
+			if (state.getRegionInfo(neighbors[j]).first != myPlayerNumber)
+			{
+				isOnBattleFront = true;
+				break;
+			}
+		}
+		if (!isOnBattleFront)
+		{
+			//move it, randomly, hoping to find the battlefront
+			int whereFrom = myRegions[i];
+			int whereTo = neighbors[rand() % neighbors.size()];
+			int howManyToMove = state.getRegionInfo(whereFrom).second - 1;
+			if (howManyToMove > 0)
+			{
+				if (beVerbose)  std::cout<<"Moving "<<howManyToMove<<" from "<<whereFrom<<" to "<<whereTo<<std::endl;
+				actions.push_back(std::tuple<int,int,int>(whereFrom,whereTo,howManyToMove));
+			}
+		}
+	}
+
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
 	return actions;
 }
