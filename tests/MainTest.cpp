@@ -16,14 +16,14 @@ int main(int argc, char** argv) {
 	rng = std::default_random_engine(rand());
 	
 	StrategyEnum::StrategyEnum strategies[] = {
-		StrategyEnum::HumanControlledStrategy,
-		StrategyEnum::HumanControlledStrategy,	////StrategyEnum::ObtainSmallestContinentsFirstStrategy,
+		StrategyEnum::ObtainSmallestContinentsFirstStrategy,
+		StrategyEnum::ObtainSmallestContinentsFirstStrategy,	////StrategyEnum::ObtainSmallestContinentsFirstStrategy,
 		StrategyEnum::NOPLAYER,
 		StrategyEnum::NOPLAYER,
 		StrategyEnum::NOPLAYER,
 		StrategyEnum::NOPLAYER
 	};
-	GameTask task(MapEnum::Island, strategies);
+	GameTask task(MapEnum::ThreeContinent, strategies);
 	Game game(task);
 	std::cout << "Ready to run." << std::endl;
 	GameReport report = game.runGame();

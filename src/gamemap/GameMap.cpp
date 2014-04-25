@@ -63,6 +63,19 @@ bool GameMap::areConnected(int region1, int region2)
 	return borderMatrix[region1][region2];
 }
 
+int GameMap::whereIs(int region) {
+	for (int i=0; i<continentList.size(); i++)
+	{
+		std::vector<std::pair<int,std::string>> regionList = continentList[i].getRegionList();
+		for (int j=0; j<regionList.size(); j++)
+		{
+			if (regionList[j].first == region)
+				return i;
+		}
+	}
+	return -1;
+}
+
 void GameMap::makeBorder(int i, int j)
 {
     this->borderMatrix[i][j] = true;

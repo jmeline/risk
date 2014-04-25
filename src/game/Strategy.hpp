@@ -45,6 +45,7 @@ class Strategy {
 protected:
 	GameMap* map;
 	int myPlayerNumber;
+	bool beVerbose;
 
 public:
 
@@ -54,6 +55,7 @@ public:
 	/* Called once to let the strategy understand the relationship between countries and Contenents.
 	 * To be already implemented, but can be overridden if desired. */
 	virtual void init(GameMap* m, int num);
+	virtual void init(GameMap* m, int num, bool verbose);
 
 	virtual StrategyEnum::StrategyEnum getIdentifier() = 0;		/* uniquely identifies the specific Strategy */
 
@@ -116,6 +118,7 @@ public:
 private:
 	int movesDoneAttacking;
 	bool sortByNumberOfRegions();
+	double attackPlacementPreferenceFactor = 1.0;
 };
 
 /* DISCRIPTION HERE */

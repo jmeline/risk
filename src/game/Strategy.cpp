@@ -19,3 +19,9 @@ void Strategy::init(GameMap* m, int num) {
 	map = m;
 	myPlayerNumber = num;
 }
+
+void Strategy::init(GameMap* m, int num, bool verbose) {
+	map = m;
+	myPlayerNumber = num;
+	beVerbose = verbose;
+}

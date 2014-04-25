@@ -82,6 +82,9 @@ public:
 	/* Indicates whether two regions touch */
 	bool areConnected(int region1, int region2);
 
+	/* Indicates which continent contains a region; -1 if nowhere */
+	int whereIs(int region);
+
     /* ====================  METHODS FOR SPECIFIC INSTANCES TO OVERRIDE ======================================= */
     virtual MapEnum::MapEnum getIdentifier() = 0;		/* uniquely identifies the specific GameMap */
 	virtual void constructContinentsAndRegions() = 0;	/* builds each continent */

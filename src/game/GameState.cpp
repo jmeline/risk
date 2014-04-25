@@ -71,12 +71,10 @@ std::vector<int> GameState::getRegionsOwnedByPlayer(int playerNumber)
 
 void GameState::display()
 {
-    std::cout << "________________________________" << std::endl;
-    std::cout << "Here is what the map looks like." << std::endl;
     std::cout << "Location:Owner:Number of Troops" << std::endl;
     for (int i = 0; i < internalState.size(); ++i)
     {
-        std::cout << i << ":" << internalState[i].first << ":" << internalState[i].second;
+        std::cout << "    " << i << ":" << internalState[i].first << ":" << internalState[i].second;
         std::cout << std::endl;
     }
 }

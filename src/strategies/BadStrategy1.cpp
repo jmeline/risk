@@ -23,12 +23,24 @@ int BadStrategy1::claim(GameState state)
 	
 std::vector<std::pair<int,int>> BadStrategy1::place(GameState state, int numTroops)
 {
-	std::cout<<"Player "<<myPlayerNumber<<": Place your troops."<<std::endl;
-	std::vector<std::pair<int,int>> actions;
-	int wherePut = 0;
-	int howMany = numTroops;
-	actions.push_back(std::pair<int,int>(wherePut,howMany));
-	return actions;
+	if (beVerbose)  std::cout << "________________________________" << std::endl;
+	if (beVerbose)  std::cout << "BadStrategy " << myPlayerNumber << " is placing " << numTroops << " troops." << std::endl;
+
+	std::vector<std::pair<int, int>> actions;
+
+    // obtain a vector<int> of the regions owned by player
+    std::vector<int> regionsOwned = state.getRegionsOwnedByPlayer(myPlayerNumber);
+    
+    int index = 0;
+    while (numTroops > 0)
+    {
+        actions.push_back(std::pair<int, int>(regionsOwned[index], 1));
+        index = (index + 1) % regionsOwned.size();
+        --numTroops;
+    }
+
+	if (beVerbose)  std::cout << "________________________________" << std::endl;
+    return actions;
 }
 
 std::pair<int,int> BadStrategy1::attack(GameState state)

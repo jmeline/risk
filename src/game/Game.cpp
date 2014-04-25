@@ -85,6 +85,8 @@ GameReport Game::runGame()
             fortify(whoseTurn);
         }
         whoseTurn = (whoseTurn + 1) % numberOfPlayers;
+		char ch;
+		std::cin >> ch;
     }
     return report;
 }
@@ -237,9 +239,15 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
         state.setRegionInfo(attackTo, attackedRegionInfo);
 
 		// Check if a player has been completely defeated.
-		if(regionConquered)	// only if we have to
+		if(regionConquered)		//only if we have to
+		{
 			if (isTotallyDefeated(defeatedPlayer))	//Note:  This check must be performed AFTER the actual state of the game has changed
+			{
 				fallenPlayers.push_back(attackedRegionInfo.first);
+				if (state.getNumberOccupiedBy(whoseTurn)==state.getNumRegions())
+					return fallenPlayers;	//no need to wait for the player to say they're done
+			}
+		}
     }
     return fallenPlayers;
 }

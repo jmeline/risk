@@ -4,39 +4,30 @@
 -----------------------------------------------------------------------
 
 Goals:
-done*(1)Make Strategy Interface, UI, gameFlow, gameState, gameMap, gameReport
+DONE(1)Make Strategy Interface, UI, gameFlow, gameState, gameMap, gameReport
 DONE(2)Make specific human-controlled strategies
     (3)Organize Dominion Graph
-    (4)Analysis Program
+no. (4)Analysis Program
     (5)Make it run on UberComputer
-    (6)Crossover( Mixing and matching strategies to determine improvement) -> NO!
+NO. (6)Crossover( Mixing and matching strategies to determine improvement)
     (7)Research and add strategies
 DONE(8)Make Prez
     (9)Make Report
-*not fully tested; may have bugs
-	
-Timeline:
-    Week 4/7  - 1,2 (by Tues night), 5,8 (by end of week)
-    Week 4/14 - 3,4,7
-    Week 4/21 - 9
-    Due 4/26!
+
 
 Pressing todo:
 	2) Test the game
 		When someone is completely conquered, it is not ending the game like it should
 			debug to make sure that the "fallenPlayers" returned from doATurnOfBattles is what it should be
-			make it stop as soon as that last player falls, not waiting for "-1" before checking
 		There may be other bugs, but that's as far as I tested
 	3) Then to test the GameManager all the way
-		There should a an output file as a result; that's what we check
+		There should be an output file as a result; that's what we check
 	4) Then GameManager with MPI
 	5) Then start the supercomputer running.
 	6) While it is, we can decide how to write the analyzer.
-	
-	
-Game/Strategy problems (definitely not a big deal at this stage):
-	Controlling the number of troops to move into a newly conquered country
-		Can be anywhere from numAttacking-numWhoDied to numInAttackingRegion-numWhoDied-1
 
 PRESENTATION URL:
 	https://docs.google.com/a/aggiemail.usu.edu/presentation/d/12e0cRb4QVKHs59cHkWbolaBrv-Cnjo6du0B0kAVaOBE/edit?usp=sharing
+BRAINSTORM URL:
+	https://docs.google.com/a/aggiemail.usu.edu/document/d/13dFqcwhkxmEEDaJVCYgrZjwDOTfcNfbKyB_t3w2_2Kc/edit
+	
