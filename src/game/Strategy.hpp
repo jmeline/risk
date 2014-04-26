@@ -28,6 +28,7 @@ namespace StrategyEnum {
 		HumanControlledStrategy,
 		ObtainSmallestContinentsFirstStrategy,
 		PacifistStrategy,
+		ImmediateBestValueStrategy1,
 		BadStrategy1
 	};
 }
@@ -117,10 +118,29 @@ public:
 	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 private:
-	int movesDoneAttacking;
-	bool sortByNumberOfRegions();
 	double attackPlacementPreferenceFactor;
 };
+
+
+/*
+  *	A greedy method: maximizes a "value" function that considers troop bonus, exposed borders, and versatility (neighboring region counts)
+  */
+class ImmediateBestValueStrategy1 : public Strategy
+{
+public:
+	ImmediateBestValueStrategy1();
+	virtual int claim(GameState state);	
+	StrategyEnum::StrategyEnum getIdentifier() { return StrategyEnum::ObtainSmallestContinentsFirstStrategy; }
+	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
+	virtual std::pair<int,int> attack(GameState state);
+	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
+	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
+private:
+	double dangerThreshold;
+	double stabilityFactor;
+	double versatilityFactor;
+};
+
 
 /* DISCRIPTION HERE */
 class BadStrategy1 : public Strategy
@@ -138,6 +158,8 @@ private:
 };
 
 
+/* Never attacks.  Handles other things more or less at random.
+  WARNING: this strategy MAY NOT TERMINATE; in any case it will never win. */
 class PacifistStrategy : public Strategy
 {
 	PacifistStrategy();

@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 			////strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
 		std::vector<MapEnum::MapEnum> maps;
 			////maps.push_back(MapEnum::Earth);
-			maps.push_back(MapEnum::Island);
+			maps.push_back(MapEnum::ThreeContinent);
 		std::vector<GameTask> tasksToRun = GameManager::getRunsFor(strategies,maps,numberOfPlayers,timesToRepeatEachGame);
 		//start the manager
 		GameManager manager(totalProcCount-1);

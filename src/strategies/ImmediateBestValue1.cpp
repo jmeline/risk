@@ -8,41 +8,47 @@
 /**************************************************
 
             COMPUTER CONTROLLED
-    Obtain Smallest Continents First
-    GOAL: Own the smallest continents (to which you have access), to quickly get troop bonuses.
+    Immediate Best Value Strategy 1
+	A greedy method: maximizes a "value" function that considers troop bonus, exposed borders, and versatility (neighboring region counts).
+    Value function: V=x1*T/B+x2*N
+		T=troop bonus (region and continent); B=exposed borders; N=neighboring regions; x1 and x2 are scaling factors for stability vs having expansion options
 
 Rules for claiming regions:
-	-Go for continents in order of decreasing size, claiming a "random" region if availiable (in-order works fine for "random").
+	-Just greedily maximize V.  Among equally valued locations, pick at random.
 
 Rules for placing:
-	1) Get a list of all OWNED continents (with "r" total regions)
-	2) Get the smallest non-owned accessible continent.  This is where we want to conquer.  Let there be "R" unowned regions there
-	3) The number of troops sent to be used to attack is t*F*R/(r+R), where F is the a "favoring factor".  They are distributed uniformly around unconquered regions.
-	4) All other troops fortify owned continents.  Get a list of y regions in the co:ntinents bordering hostile territory, and sort by the number of touching enemy troops.  Then serve round-robin.
+	1) Makes sure all regions have a minimum of two troops
+	2) Get a list of all exposed borders, sorted by Danger = number of enemies around - number of troops
+	3) Make sure all exposed borders above a certain "danger threshold" are served enough to reach the threshold
+	4) If there are still troops:
+		a) Get a list of neighboring enemies
+		b) Sort by the (amount by which V would increase if it were conquered) * (probability of victory if all remaining troops were placed to attack it)
+		c) Place to attack the best of those neighboring enemies, as determined by the sort
 
 Rules for attacking:
-	1) A region with <=2 troops will not attack.
-	2) Vie for the smallest non-owned continent
-		a) Get a list of all owned regions touching that continent's regions.
-		b) For each, if there are f friently troops and e enemy troops, calculate the diffrence D=(f-e).  Subtract 3 if the attack-from location is a part of an owned continent.
-		c) Attack from the location with the highest D so long as (f>2 if in an owned continent; f>6 otherwise).
-	3) Once there is no one able to attack that continent, repeat with the next smallest unowned region, etc.
+	1) Get a list of neighboring enemies
+	2) Sort by the (amount by which V would increase if it were conquered) * (probability of victory if attack from strongest place)
+	3) Go through the list, attacking as soon as a candidate is found that can attack without leaving the player with a Danger = (number of enemies around - number of troops) above the "danger threshold".  If none found, don't attack.
 
 Rules for fortifying:
-	-If a region is surrounded only by friendly regions, move it's troops into a random one of those regions (eventually getting to the battlefront).
+	-If a region is surrounded only by friendly regions, move all but two of it's troops into a random one of those regions (eventually getting to the battlefront).
 
-NOTE: attackFavoringFactor should be kept constant, but is adjustable by child classes for cheap variety.
+NOTE: "danger threshold", x1=stabilityFactor, and x2=versatilityFactor should be kept constant, but be adjustable by child classes for cheap variety.
 
- **************************************************/
-
-
-ObtainSmallestContinentsFirstStrategy::ObtainSmallestContinentsFirstStrategy() {attackPlacementPreferenceFactor = 1.0;}
+**************************************************/
 
 
-int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
+ImmediateBestValueStrategy1::ImmediateBestValueStrategy1() {
+	dangerThreshold = 1.0;
+	stabilityFactor = 4.0;
+	versatilityFactor = 2.0;
+}
+
+
+int ImmediateBestValueStrategy1::claim(GameState state)
 {
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
-	if (beVerbose)  std::cout << "ObtainSmallestContinentsFirstStrategy "<<myPlayerNumber<<" is claiming his land" << std::endl;
+	if (beVerbose)  std::cout << "ImmediateBestValueStrategy1 "<<myPlayerNumber<<" is claiming his land" << std::endl;
 	if (beVerbose)  state.display();
 
     // get list of continents
@@ -61,6 +67,7 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
 
     // sort lowRegioncountList by the second element in the pair: region count. End result is a sorted list of the smallest number of regions 
     // to the largest number of regions. its original index is preserved as established in the map->continentList
+    //std::sort(lowRegioncountList.begin(), lowRegioncountList.end(), sortByNumberOfRegions);
     std::sort(lowRegioncountList.begin(), lowRegioncountList.end(),
               [](const std::pair<int, int> &lhs, const std::pair<int, int> &rhs)
               {
@@ -111,10 +118,10 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
 }
 
 
-std::vector<std::pair<int, int>> ObtainSmallestContinentsFirstStrategy::place(GameState state, int numTroops)
+std::vector<std::pair<int, int>> ImmediateBestValueStrategy1::place(GameState state, int numTroops)
 {
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
-    if (beVerbose)  std::cout << "ObtainSmallestContinentsFirstStrategy " << myPlayerNumber << " is placing " << numTroops << " troops." << std::endl;
+    if (beVerbose)  std::cout << "ImmediateBestValueStrategy1 " << myPlayerNumber << " is placing " << numTroops << " troops." << std::endl;
 	if (beVerbose)  state.display();
 
 	std::vector<std::pair<int, int>> actions;
@@ -242,10 +249,10 @@ std::vector<std::pair<int, int>> ObtainSmallestContinentsFirstStrategy::place(Ga
 }
 
 
-std::pair<int, int> ObtainSmallestContinentsFirstStrategy::attack(GameState state)
+std::pair<int, int> ImmediateBestValueStrategy1::attack(GameState state)
 {
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
-    if (beVerbose)  std::cout << "ObtainSmallestContinentsFirstStrategy "<<myPlayerNumber<<" is attacking" << std::endl;
+    if (beVerbose)  std::cout << "ImmediateBestValueStrategy1 "<<myPlayerNumber<<" is attacking" << std::endl;
 	if (beVerbose)  state.display();
 
 	// get a list of continents to conquer, and of continents I own
@@ -362,7 +369,7 @@ std::pair<int, int> ObtainSmallestContinentsFirstStrategy::attack(GameState stat
 }
 
 
-bool ObtainSmallestContinentsFirstStrategy::defend(GameState state, int countryAttacked, int countryAttacking)
+bool ImmediateBestValueStrategy1::defend(GameState state, int countryAttacked, int countryAttacking)
 {
     if (state.getRegionInfo(countryAttacked).second >= 2)
         return true;
@@ -371,10 +378,10 @@ bool ObtainSmallestContinentsFirstStrategy::defend(GameState state, int countryA
 }
 
 
-std::vector<std::tuple<int, int, int> > ObtainSmallestContinentsFirstStrategy::fortify(GameState state)
+std::vector<std::tuple<int, int, int> > ImmediateBestValueStrategy1::fortify(GameState state)
 {
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
-	if (beVerbose)  std::cout << "ObtainSmallestContinentsFirstStrategy "<<myPlayerNumber<<" is fortifying" << std::endl;
+	if (beVerbose)  std::cout << "ImmediateBestValueStrategy1 "<<myPlayerNumber<<" is fortifying" << std::endl;
     if (beVerbose)  state.display();
 
 	std::vector<std::tuple<int, int, int>> actions;
