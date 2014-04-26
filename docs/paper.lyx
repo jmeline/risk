@@ -136,28 +136,53 @@ Rules
 \end_layout
 
 \begin_layout Standard
-This section could be expanded pretty nicely.
+Risk is a turn-based for two to six players.
+ In the standard Risk Game, Earth has six continents and 42 regions.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Graphics
+	filename images/earth.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-4"
+
+\end_inset
+
 
 \end_layout
 
 \begin_layout Standard
-Risk is a turn-based for two - six players
+At the start of the game, players choose countries into which they place
+ one army.
+ This is the claiming phase.
+ Only one army may be placed in any region during the claiming phase.
+ At the beginning of each player's turn (after the claiming phase) they
+ will receive bonus troops for continents that they own completely.
 \end_layout
 
 \begin_layout Standard
-In the standard Risk Game, Earth has six continents and 42 regions.
+After claiming, players will then place armies into regions that they own.
+ This happens, again, one at a time until everyone has placed all their
+ starting armies.
 \end_layout
 
 \begin_layout Standard
-Attackers can use up to three dice ( Note that the attackers must have at
- least three troops in order to attack with three dice)
-\end_layout
-
-\begin_layout Standard
-Defenders can use up to two dice
+Then players may choose to attack other regions.
+ They may only attack bordering regions.
+ Attackers can use up to three dice, if they have at least three troops.
+ Otherwise, they may only use one die for each troop.
+ Defenders roll up to two dice.
+ The attacker and the defender then sort their dice and compare them.
+ (Attacker's highest vs defender's highest AND attacker's second highest
+ vs defender's second highest) For each die that is greater in this comparison,
+ that player kills one opposing army in the battle.
+ Defenders win ties.
 \end_layout
 
 \begin_layout Section
@@ -165,7 +190,7 @@ Intricacies
 \end_layout
 
 \begin_layout Standard
-The Startup game can set you up for success or failure.
+The start of the game can set you up for success or failure.
  The player must not underestimate the importance of their choices while
  claiming territories.
 \end_layout
@@ -179,6 +204,22 @@ Strategies are numerous.
  Given more time, this may have been possible through exhaustive searching.
  However, human intuition is more powerful than machinery when it comes
  to identifying deceit.
+\end_layout
+
+\begin_layout Standard
+Representing the board internally was not too difficult.
+ It ends up being an undirected graph.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename images/earth-graph.png
+	scale 35
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -305,6 +346,16 @@ key "key-3"
 \end_inset
 
 http://io9.com/5897532/the-origins-and-evolution-of-the-strategy-board-game-risk
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-4"
+
+\end_inset
+
+http://web.mit.edu/sp.268/www/risk.pdf
 \end_layout
 
 \end_body
