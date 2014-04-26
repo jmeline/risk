@@ -36,8 +36,11 @@ Nifty-looking site:  http://www.totaldiplomacy.com/RiskStrategyGuides/Tactics4Ex
 STRATEGY LIST:
 	Human Controlled - DONE
 	Smallest Continent First - DONE
+	Pacifist Strategy - done?
 	
 	"Bogo strategy" (replaces "Bad strategy")
+		It looks like this may be a lot like pacifist strategy.
+		Only advantage: bogo vs bogo _eventaully_ terminates
 	Attack weak
 		Always go for best odds of immediate victory
 		"The weak" can mean 1) a player almost to be illuminated or 2) a region easily conquered
