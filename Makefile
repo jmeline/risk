@@ -1,6 +1,6 @@
 ## Simple makefile
 
-CC=g++
+CC=mpic++
 CFLAGS=-g -Wall
 C11=-std=c++11
 VERBOSE=-DVERBOSE_STRATEGIES
@@ -24,7 +24,7 @@ $(BUILD_DIR):
 	mkdir $(BUILD_DIR)/
 	for dir in $(LIBS); do \
 		cd $$dir; \
-		g++ $(VERBOSE) $(C11) -c *.cpp -I../; \
+		$(CC) $(VERBOSE) $(C11) -c *.cpp -I../; \
 		mv *.o ../../$(BUILD_DIR); \
 		cd -; \
 	done

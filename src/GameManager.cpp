@@ -3,8 +3,8 @@
 
 #ifndef DONTUSEMPI
 	#include <mpi.h>
-	#define MPI_TASK = 1;		//identifies a type of MPI message
-	#define MPI_REPORT = 2;		//identifies a type of MPI message
+	#define MPI_TASK 1		//identifies a type of MPI message
+	#define MPI_REPORT 2		//identifies a type of MPI message
 #endif
 
 GameManager::GameManager(int numberOfSlaves)
@@ -114,7 +114,7 @@ int GameManager::getAndHandleReport(std::ostream *outputStream)
 	int dataIn[GameReport::encodedSize];
 	MPI_Status status;
 	MPI_Recv(&dataIn, GameReport::encodedSize, MPI_INT, MPI_ANY_SOURCE, MPI_REPORT, MPI_COMM_WORLD, &status);
-	report.read(inData);
+	report.decode(dataIn);
 	int slaveNumber = status.MPI_SOURCE - 1;
 	slaveTasks[slaveNumber] = -1;	//mark this slave as not working on anything
 
