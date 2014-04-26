@@ -1,4 +1,9 @@
 #include "../game/Strategy.hpp"
+#include <vector>
+#include <iostream>
+#include <algorithm>	// std::sort
+#include <utility>		//std::pair
+#include <string>
 
 /**************************************************
 
@@ -64,15 +69,6 @@ std::pair<int,int> PacifistStrategy::attack(GameState state)
 	if(beVerbose) std::cout<<"PacifistStrategy "<<myPlayerNumber<<": Attacking"<<std::endl;
 
 	return std::pair<int,int>(-1,-1);	//let the turn be over
-}
-
-bool PacifistStrategy::defend(GameState state, int countryAttacked, int countryAttacking)
-{
-	//Trivial
-	if (state.getRegionInfo(countryAttacked).second >= 2)
-		return true;
-	else
-		return false;
 }
 
 std::vector<std::tuple<int,int,int> > PacifistStrategy::fortify(GameState state)

@@ -37,7 +37,6 @@ public:
     /* Returns the number of regions occupied by a player */
     int getNumberOccupiedBy(int player);
 
-
     std::vector<int> getRegionsOwnedByPlayer(int playerNumber);
 
 	int getNumRegions();

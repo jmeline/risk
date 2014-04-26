@@ -362,15 +362,6 @@ std::pair<int, int> ObtainSmallestContinentsFirstStrategy::attack(GameState stat
 }
 
 
-bool ObtainSmallestContinentsFirstStrategy::defend(GameState state, int countryAttacked, int countryAttacking)
-{
-    if (state.getRegionInfo(countryAttacked).second >= 2)
-        return true;
-    else
-        return false;
-}
-
-
 std::vector<std::tuple<int, int, int> > ObtainSmallestContinentsFirstStrategy::fortify(GameState state)
 {
 	if (beVerbose)  std::cout << "________________________________" << std::endl;

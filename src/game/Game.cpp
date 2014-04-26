@@ -198,7 +198,7 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
         int playerAttacked = attackedRegionInfo.first;
         if (attackingRegionInfo.first == whoseTurn && playerAttacked != whoseTurn && attackingRegionInfo.second > 1 && map->areConnected(attackFrom, attackTo))
         {
-            int numToDefendWith = player[playerAttacked]->defend(state, attackTo, attackFrom);
+			int numToDefendWith = (attackedRegionInfo.second >= 2) ? 2 : 1;
             int numToAttackWith = (attackingRegionInfo.second >= 4) ? 3 : ((attackingRegionInfo.second >= 3) ? 2 : (attackingRegionInfo.second ? 1 : 0));	//we may later give the player a choice, but for now this works
             ////roll and compare dice.  Meaning of 2,1,0,-1,-2:  attacker wins 2, attacker wins 1, each wins one, defender wins 1, defender wins 2
 			if (numToAttackWith > 0)
@@ -301,53 +301,15 @@ void Game::fortify(int whoseTurn)
  * Meaning of 2,1,0,-1,-2: attacker won 2, attacker won 1, each won one, defender won 1, defender won 2 */
 int Game::rollToConquer(int numToAttackWith, int numToDefendWith)
 {
-    //determine how many possibilities there are, and roll one of those states
-    int numOfDice = numToAttackWith + numToDefendWith;
-    int numOfPossibilities = 36;
-    if (numOfDice > 2)
-        numOfPossibilities *= ((numOfDice == 5) ? 216 : ((numOfDice == 4) ? 36 : 6));
-    std::uniform_int_distribution<int> distribution(0, numOfPossibilities - 1);
-    int rollResult = distribution(rng);
-    //determine the return value for the state.  See "dice probability notes.txt" for calculation steps
-    if (numToDefendWith == 1)
-    {
-        if (numToAttackWith == 1)
-        {
-            if (rollResult < 15) return 1; //probability 15/36
-            else return -1; //probability 21/36
-        }
-        else if (numToAttackWith == 2)
-        {
-            if (rollResult < 125) return 1; //probability 125/216
-            else return -1; //probability 91/216
-        }
-        else if (numToAttackWith == 3)
-        {
-            if (rollResult < 853) return 1; //probability 853/1296
-            else return -1; //probability 443/1296
-        }
-    }
-    else if (numToDefendWith == 2)
-    {
-        if (numToAttackWith == 1)
-        {
-            if (rollResult < 55) return 1; //probability 55/216
-            else return -1; //probability 161/216
-        }
-        else if (numToAttackWith == 2)
-        {
-            if (rollResult < 295) return 2; //probability 295/1296
-            else if (rollResult < (295 + 420)) return 0; //probability 420/1296
-            else return -2; //probability 581/1296
-        }
-        else if (numToAttackWith == 3)
-        {
-            if (rollResult < 2890) return 2; //probability 2890/7776
-            else if (rollResult < (2890 + 2611)) return 0; //probability 2611/7776
-            else return -2; //probability 2275/7776
-        }
-    }
-    return 0; //here for compiling, but this point should never be reached
+    std::uniform_real_distribution<double> distrubution(0,1);
+	double randResult = distrubution(rng);
+	std::pair<double,double> probabilities = getProbability(numToAttackWith, numToDefendWith);
+	
+	//determine the return value for the state.  See "dice probability notes.txt" for calculation steps
+	if (numToAttackWith==1 || numToDefendWith==1)
+		return (randResult < probabilities.first) ? 1 : -1;
+	else
+		return (randResult < probabilities.first) ? 2 : ((randResult-probabilities.first < probabilities.second) ? 0 : -2);
 }
 
 /* Returns true is there are no countries left owned by a given player. */
@@ -359,4 +321,43 @@ bool Game::isTotallyDefeated(int playerNumber)
             return false;
     }
     return true;
+}
+
+/* See the "dice probability notes.txt" doc for the calculations behind this. */
+std::pair<double,double> Game::getProbability(int attackingDice, int defendingDice)
+{
+	if (defendingDice == 1)
+    {
+        if (attackingDice == 1)
+            return std::pair<double,double>(15.0/36.0, 0);
+        else if (attackingDice == 2)
+			return std::pair<double,double>(125.0/216.0, 0);
+        else
+			return std::pair<double,double>(853.0/1296.0, 0);
+    }
+    else
+    {
+        if (attackingDice == 1)
+			return std::pair<double,double>(55.0/216.0, 0);
+        else if (attackingDice == 2)
+			return std::pair<double,double>(295.0/1296.0, 420.0/1296.0);
+        else
+			return std::pair<double,double>(2890.0/7776.0, 2611.0/7776.0);
+    }
+}
+
+double Game::getProbabilityOfVictory(int attacking, int defending) {
+	//Recursive method
+	if (attacking==0)
+		return 0;
+	if (defending==0)
+		return 1.0;
+	std::pair<double,double> probabilities = getProbability(attacking,defending);
+	if (attacking==1 || defending==1)
+		return probabilities.first*getProbabilityOfVictory(attacking, defending-1)
+			+ (1-probabilities.first)*getProbabilityOfVictory(attacking-1, defending);
+	else
+		return probabilities.first*getProbabilityOfVictory(attacking, defending-2)
+			+ probabilities.second*getProbabilityOfVictory(attacking-1, defending-1)
+			+ (1-probabilities.first-probabilities.second)*getProbabilityOfVictory(attacking-2, defending);
 }

@@ -74,9 +74,6 @@ public:
 	 * The second int in the pair is the country being attacked */
 	virtual std::pair<int,int> attack(GameState state) = 0;
 
-	/* Returns true if the defender wish to defend with two armies, and false if it wishes to defend with only one */
-	virtual bool defend(GameState state, int countryAttacked, int countryAttacking) = 0;
-
 	/* Returns a vector of triplets, each representing the movement of troops for fortification:
 	 * The first int of each triplet is the country moving from
 	 * The second int of each triplet is the country moving to
@@ -97,7 +94,6 @@ public:
 	virtual int claim(GameState state);
 	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);
-	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 };
 
@@ -115,7 +111,6 @@ public:
 	StrategyEnum::StrategyEnum getIdentifier() { return StrategyEnum::ObtainSmallestContinentsFirstStrategy; }
 	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);
-	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 private:
 	double attackPlacementPreferenceFactor;
@@ -133,12 +128,14 @@ public:
 	StrategyEnum::StrategyEnum getIdentifier() { return StrategyEnum::ObtainSmallestContinentsFirstStrategy; }
 	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);
-	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 private:
 	double dangerThreshold;
 	double stabilityFactor;
 	double versatilityFactor;
+	std::vector<bool> getBoolOwnershipList(GameState state);
+	double getValue(GameState state);
+	double testValue(GameState state, int regionToOwn);
 };
 
 
@@ -151,7 +148,6 @@ public:
 	virtual int claim(GameState state);
 	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);
-	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 private:
 	int movesDoneAttacking;
@@ -167,7 +163,6 @@ class PacifistStrategy : public Strategy
 	virtual int claim(GameState state);
 	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);
-	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 private:
 	int movesDoneAttacking;

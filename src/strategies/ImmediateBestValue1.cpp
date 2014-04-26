@@ -212,7 +212,7 @@ std::vector<std::pair<int, int>> ImmediateBestValueStrategy1::place(GameState st
 	if (beVerbose)  std::cout<<"In my target continenet:  Hostile regions: "<<hostileRegions<<"; Attack worthy locations: "<<attackWorthyLocations.size()<<std::endl;
 
 	// Decide an appropriate number of troops to each type of location
-	int numberOfTroopsToSendToAttack = (int)(numTroops*attackPlacementPreferenceFactor*hostileRegions/(hostileRegions+regionCountInOwnedContinents));
+	int numberOfTroopsToSendToAttack = (int)(numTroops*1.0*hostileRegions/(hostileRegions+regionCountInOwnedContinents));
 	if (numberOfTroopsToSendToAttack > numTroops || regionCountInOwnedContinents==0)
 		numberOfTroopsToSendToAttack = numTroops;
 	int numberOfTroopsToSendToDefend = numTroops - numberOfTroopsToSendToAttack;
@@ -369,15 +369,6 @@ std::pair<int, int> ImmediateBestValueStrategy1::attack(GameState state)
 }
 
 
-bool ImmediateBestValueStrategy1::defend(GameState state, int countryAttacked, int countryAttacking)
-{
-    if (state.getRegionInfo(countryAttacked).second >= 2)
-        return true;
-    else
-        return false;
-}
-
-
 std::vector<std::tuple<int, int, int> > ImmediateBestValueStrategy1::fortify(GameState state)
 {
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
@@ -415,4 +406,80 @@ std::vector<std::tuple<int, int, int> > ImmediateBestValueStrategy1::fortify(Gam
 
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
 	return actions;
+}
+
+
+std::vector<bool> ImmediateBestValueStrategy1::getBoolOwnershipList(GameState state)
+{
+	std::vector<int> owned = state.getRegionsOwnedByPlayer(myPlayerNumber);
+	std::vector<bool> ownerShipList(false);
+	for (int i=0; i<owned.size(); i++)
+		ownerShipList[owned[i]] = true;
+	return ownerShipList;
+}
+
+
+double ImmediateBestValueStrategy1::getValue(GameState state)
+{
+	// Find the troopBoost
+	double troopBoost = state.getNumberOccupiedBy(myPlayerNumber) / 3.0;
+	std::vector<Continent> continentList = map->getContinentList();
+	for (int i=0; i<continentList.size(); i++)
+	{
+		std::vector<std::pair<int,std::string>> regionList = continentList[i].getRegionList();
+		int j = 0;
+		while (j<regionList.size())
+		{
+			if (state.getRegionInfo(regionList[i].first).first != myPlayerNumber)
+				break;
+			j++;
+		}
+		if (j==regionList.size())
+			troopBoost += continentList[i].getValue();
+	}
+
+	//find the number of exposed borders
+	int borders = 0;
+	std::vector<int> myRegions = state.getRegionsOwnedByPlayer(myPlayerNumber);
+	for (int i=0; i<myRegions.size(); i++)
+	{
+		std::vector<int> neighbors = map->getNeighborsOfRegion(myRegions[i]);
+		for (int j=0; j<neighbors.size(); j++)
+		{
+			if (state.getRegionInfo(neighbors[j]).first != myPlayerNumber)
+			{
+				borders++;
+				break;
+			}
+		}
+	}
+
+	//find the number of neighbors
+	int neighborCount = 0;
+	for (int i=0; i<state.getNumRegions(); i++)
+	{
+		if (state.getRegionInfo(i).first != myPlayerNumber)
+		{
+			std::vector<int> itsNeighbors = map->getNeighborsOfRegion(i);
+			for (int j=0; j<itsNeighbors.size(); j++)
+			{
+				if (state.getRegionInfo(itsNeighbors[j]).first == myPlayerNumber)
+				{
+					neighborCount++;
+					break;
+				}
+			}
+		}
+	}
+
+	//Now compute the value
+	return stabilityFactor*troopBoost/borders + versatilityFactor*neighborCount;
+}
+
+
+double ImmediateBestValueStrategy1::testValue(GameState state, int regionToOwn)
+{
+	//this state is a copy, so it's safe to alter.  It doesn't matter how many troops we place; we just change ownership
+	state.setRegionInfo(regionToOwn, std::pair<int,int>(myPlayerNumber,1));
+	return getValue(state);
 }
