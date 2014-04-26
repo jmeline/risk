@@ -16,7 +16,7 @@ DONE(8)Make Prez
 
 
 Pressing todo:
-	2) Test the game
+DONE	2) Test the game
 		When someone is completely conquered, it is not ending the game like it should
 			debug to make sure that the "fallenPlayers" returned from doATurnOfBattles is what it should be
 		There may be other bugs, but that's as far as I tested
