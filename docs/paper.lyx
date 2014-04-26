@@ -189,6 +189,10 @@ Then players may choose to attack other regions.
 Intricacies
 \end_layout
 
+\begin_layout Subsection
+In theory
+\end_layout
+
 \begin_layout Standard
 The start of the game can set you up for success or failure.
  The player must not underestimate the importance of their choices while
@@ -206,6 +210,10 @@ Strategies are numerous.
  to identifying deceit.
 \end_layout
 
+\begin_layout Subsection
+In practice
+\end_layout
+
 \begin_layout Standard
 Representing the board internally was not too difficult.
  It ends up being an undirected graph.
@@ -216,6 +224,13 @@ Representing the board internally was not too difficult.
 \begin_inset Graphics
 	filename images/earth-graph.png
 	scale 35
+
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-4"
 
 \end_inset
 
