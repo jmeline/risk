@@ -8,12 +8,8 @@
 /**************************************************
 
             COMPUTER CONTROLLED
-    ObtainSmallestContinentsFirstStrategy
-    Seeks to get the smallest Continent first
-
- **************************************************/
-
-/*  GOAL: Own the smallest continents (to which you have access), to quickly get troop bonuses.
+    Obtain Smallest Continents First
+    GOAL: Own the smallest continents (to which you have access), to quickly get troop bonuses.
 
 Rules for claiming regions:
 	-Go for continents in order of decreasing size, claiming a "random" region if availiable (in-order works fine for "random").
@@ -36,7 +32,8 @@ Rules for fortifying:
 	-If a region is surrounded only by friendly regions, move it's troops into a random one of those regions (eventually getting to the battlefront).
 
 NOTE: attackFavoringFactor should be kept constant, but is adjustable by child classes for cheap variety.
-*/
+
+ **************************************************/
 
 
 ObtainSmallestContinentsFirstStrategy::ObtainSmallestContinentsFirstStrategy() {attackPlacementPreferenceFactor = 1.0;}
@@ -64,7 +61,6 @@ int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
 
     // sort lowRegioncountList by the second element in the pair: region count. End result is a sorted list of the smallest number of regions 
     // to the largest number of regions. its original index is preserved as established in the map->continentList
-    //std::sort(lowRegioncountList.begin(), lowRegioncountList.end(), sortByNumberOfRegions);
     std::sort(lowRegioncountList.begin(), lowRegioncountList.end(),
               [](const std::pair<int, int> &lhs, const std::pair<int, int> &rhs)
               {
@@ -363,15 +359,6 @@ std::pair<int, int> ObtainSmallestContinentsFirstStrategy::attack(GameState stat
 	if (beVerbose)  std::cout<<"Not attacking."<<std::endl;
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
 	return std::pair<int,int>(-1,-1);
-}
-
-
-bool ObtainSmallestContinentsFirstStrategy::defend(GameState state, int countryAttacked, int countryAttacking)
-{
-    if (state.getRegionInfo(countryAttacked).second >= 2)
-        return true;
-    else
-        return false;
 }
 
 

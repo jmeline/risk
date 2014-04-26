@@ -66,15 +66,6 @@ std::pair<int,int> BadStrategy1::attack(GameState state)
 	}
 }
 
-bool BadStrategy1::defend(GameState state, int countryAttacked, int countryAttacking)
-{
-	//Trivial
-	if (state.getRegionInfo(countryAttacked).second >= 2)
-		return true;
-	else
-		return false;
-}
-
 std::vector<std::tuple<int,int,int> > BadStrategy1::fortify(GameState state)
 {
 	std::cout<<"Player "<<myPlayerNumber<<": Fortify."<<std::endl;

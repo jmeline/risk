@@ -28,6 +28,7 @@ namespace StrategyEnum {
 		HumanControlledStrategy,
 		ObtainSmallestContinentsFirstStrategy,
 		PacifistStrategy,
+		ImmediateBestValueStrategy1,
 		BadStrategy1
 	};
 }
@@ -70,9 +71,6 @@ public:
 	 * The second int in the pair is the country being attacked */
 	virtual std::pair<int,int> attack(GameState state) = 0;
 
-	/* Returns true if the defender wish to defend with two armies, and false if it wishes to defend with only one */
-	virtual bool defend(GameState state, int countryAttacked, int countryAttacking) = 0;
-
 	/* Returns a vector of triplets, each representing the movement of troops for fortification:
 	 * The first int of each triplet is the country moving from
 	 * The second int of each triplet is the country moving to
@@ -93,7 +91,6 @@ public:
 	virtual int claim(GameState state);
 	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);
-	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 };
 
@@ -111,13 +108,32 @@ public:
 	StrategyEnum::StrategyEnum getIdentifier() { return StrategyEnum::ObtainSmallestContinentsFirstStrategy; }
 	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);
-	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 private:
-	int movesDoneAttacking;
-	bool sortByNumberOfRegions();
 	double attackPlacementPreferenceFactor;
 };
+
+
+/*
+  *	A greedy method: maximizes a "value" function that considers troop bonus, exposed borders, and versatility (neighboring region counts)
+  */
+class ImmediateBestValueStrategy1 : public Strategy
+{
+public:
+	ImmediateBestValueStrategy1();
+	virtual int claim(GameState state);	
+	StrategyEnum::StrategyEnum getIdentifier() { return StrategyEnum::ObtainSmallestContinentsFirstStrategy; }
+	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
+	virtual std::pair<int,int> attack(GameState state);
+	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
+private:
+	double dangerThreshold;
+	double stabilityFactor;
+	double versatilityFactor;
+	double getValue(GameState state);
+	double testValue(GameState state, int regionToOwn);
+};
+
 
 /* DISCRIPTION HERE */
 class BadStrategy1 : public Strategy
@@ -128,13 +144,14 @@ public:
 	virtual int claim(GameState state);
 	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);
-	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 private:
 	int movesDoneAttacking;
 };
 
 
+/* Never attacks.  Handles other things more or less at random.
+  WARNING: this strategy MAY NOT TERMINATE; in any case it will never win. */
 class PacifistStrategy : public Strategy
 {
 	PacifistStrategy();
@@ -142,7 +159,6 @@ class PacifistStrategy : public Strategy
 	virtual int claim(GameState state);
 	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
 	virtual std::pair<int,int> attack(GameState state);
-	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 private:
 	int movesDoneAttacking;

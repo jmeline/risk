@@ -55,6 +55,13 @@ private:
 
     /* Returns true is there are no countries left owned by a given player. */
     bool isTotallyDefeated(int playerNumber);
+
+	/* The first double is the probability of attacker victory.  The second is the probability of a tie.  Probability of defender victory is what remains. */
+	static std::pair<double,double> getProbability(int attackingDice, int defendingDice);
+
+	/* A useful method for strategies: Gives the probability of victory after repeated combat.
+	 * NOTE: "attacking" should refer to AVAILIABLE armies, which is occupyingArmies-1 (someone must stay to defend the land) */
+	static double getProbabilityOfVictory(int attacking, int defending);
 };
 
 #endif   /* ----- #ifndef game_INC  ----- */

@@ -10,6 +10,8 @@ Strategy* Strategy::make(StrategyEnum::StrategyEnum strategyType)
 			return (Strategy*)(new BadStrategy1());
 		case (StrategyEnum::ObtainSmallestContinentsFirstStrategy):
 			return (Strategy*)(new ObtainSmallestContinentsFirstStrategy());
+		case (StrategyEnum::ImmediateBestValueStrategy1):
+			return (Strategy*)(new ImmediateBestValueStrategy1());
 		default:
 			return (Strategy*)(new BadStrategy1());
 	}

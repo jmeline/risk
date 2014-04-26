@@ -144,15 +144,6 @@ std::pair<int, int> HumanControlledStrategy::attack(GameState state)
 	}
 }
 
-bool HumanControlledStrategy::defend(GameState state, int countryAttacked, int countryAttacking)
-{
-    //Sufficiently trivial that we don't involve the human.
-    if (state.getRegionInfo(countryAttacked).second >= 2)
-        return true;
-    else
-        return false;
-}
-
 std::vector<std::tuple<int, int, int> > HumanControlledStrategy::fortify(GameState state)
 {
 	std::cout << std::endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;

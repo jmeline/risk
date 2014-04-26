@@ -37,9 +37,17 @@ public:
     /* Returns the number of regions occupied by a player */
     int getNumberOccupiedBy(int player);
 
-
+	/* Returns a list of owned regions */
     std::vector<int> getRegionsOwnedByPlayer(int playerNumber);
 
+	/* Returns a list of exposed owned regions
+	 * The first int is the region number, the second is the number of enemy troops surrounding it. */
+	std::vector<std::pair<int,int>> getAllExposedBorders(int playerNumber, GameMap* map);
+
+	/* Returns a list of all neighbors of a given player. */
+	std::vector<int> getAllNeighborsOfPlayer(int playerNumber, GameMap* map);
+
+	/* Returns the total number of regions on the map (and hence in the state) */
 	int getNumRegions();
 
 	void display();

@@ -30,4 +30,30 @@ PRESENTATION URL:
 	https://docs.google.com/a/aggiemail.usu.edu/presentation/d/12e0cRb4QVKHs59cHkWbolaBrv-Cnjo6du0B0kAVaOBE/edit?usp=sharing
 BRAINSTORM URL:
 	https://docs.google.com/a/aggiemail.usu.edu/document/d/13dFqcwhkxmEEDaJVCYgrZjwDOTfcNfbKyB_t3w2_2Kc/edit
+
+Nifty-looking site:  http://www.totaldiplomacy.com/RiskStrategyGuides/Tactics4ExchangeCountryIntersectionGround.aspx
 	
+STRATEGY LIST:
+	Human Controlled - DONE
+	Smallest Continent First - DONE
+	Pacifist Strategy - done?
+	
+	"Bogo strategy" (replaces "Bad strategy")
+		It looks like this may be a lot like pacifist strategy.
+		Only advantage: bogo vs bogo _eventaully_ terminates
+	Attack weak
+		Always go for best odds of immediate victory
+		"The weak" can mean 1) a player almost to be illuminated or 2) a region easily conquered
+	Attack strong
+		Don't let anyone size a continent
+		Aside from that, calculate the greatest threat and hurt them
+	Maximize V=x1*T/B+x2*N: Continents-first
+		T=troop bonus; B=exposed borders; N=neighboring regions; x1 and x2 are scaling factors for stability vs having expansion options
+		Goes for the continent of best V
+	Maximize V=x1*T/B+x2*N: Immediate action - Joseph
+		T=troop bonus; B=exposed borders; N=neighboring regions; x1 and x2 are scaling factors for stability vs having expansion options
+		Goes for the best V right now, not caring as much for the long term (just test the V of every move)
+	Region-First method
+		Maximize the number of contigous regions owned, preferring that to continents
+		Aside from maxmizing region count, seeks to maximize V=x1*T/B+x2*N
+		Never less than two troops per region (so that doesn't have terrible odds when its borders broken)
