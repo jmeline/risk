@@ -27,6 +27,7 @@ namespace StrategyEnum {
 		NOPLAYER,		//used as a placeholder to indicate that a given player isn't in the game (ie, if there are only 3 players, p4-p6 can be said to be running StrategyEnum::NOPLAYER.  There is no actual object called "NOPLAYER".
 		HumanControlledStrategy,
 		ObtainSmallestContinentsFirstStrategy,
+		PacifistStrategy,
 		BadStrategy1
 	};
 }
@@ -118,7 +119,7 @@ public:
 private:
 	int movesDoneAttacking;
 	bool sortByNumberOfRegions();
-	double attackPlacementPreferenceFactor = 1.0;
+	double attackPlacementPreferenceFactor;
 };
 
 /* DISCRIPTION HERE */
@@ -136,5 +137,18 @@ private:
 	int movesDoneAttacking;
 };
 
+
+class PacifistStrategy : public Strategy
+{
+	PacifistStrategy();
+	StrategyEnum::StrategyEnum getIdentifier() { return StrategyEnum::PacifistStrategy; }
+	virtual int claim(GameState state);
+	virtual std::vector<std::pair<int,int>> place(GameState state, int numTroops);
+	virtual std::pair<int,int> attack(GameState state);
+	virtual bool defend(GameState state, int countryAttacked, int countryAttacking);
+	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
+private:
+	int movesDoneAttacking;
+};
 
 #endif   /* ----- #ifndef strategy_INC  ----- */
