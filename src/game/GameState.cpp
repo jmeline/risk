@@ -67,7 +67,45 @@ std::vector<int> GameState::getRegionsOwnedByPlayer(int playerNumber)
     return regionsOwned;
 }
 
+std::vector<std::pair<int,int>> GameState::getAllExposedBorders(int playerNumber, GameMap* map)
+{
+	std::vector<std::pair<int,int>> exposedBorders;
+	std::vector<int> regionList = getRegionsOwnedByPlayer(playerNumber);
+	for (int i=0; i<regionList.size(); i++)
+	{
+		int numEnemyTroops = 0;
+		std::vector<int> neighbors = map->getNeighborsOfRegion(regionList[i]);
+		for (int j=0; j<neighbors.size(); j++)
+		{
+			if (getRegionInfo(neighbors[j]).first != playerNumber)
+				numEnemyTroops += getRegionInfo(neighbors[j]).second;
+		}
+		if (numEnemyTroops > 0)
+			exposedBorders.push_back(std::pair<int,int>(regionList[i],numEnemyTroops));
+	}
+	return exposedBorders;
+}
 
+std::vector<int> GameState::getAllNeighborsOfPlayer(int playerNumber, GameMap* map)
+{
+	std::vector<int> myNeighbors;
+	for (int i=0; i<getNumRegions(); i++)
+	{
+		if (getRegionInfo(i).first != playerNumber)
+		{
+			std::vector<int> itsNeighbors = map->getNeighborsOfRegion(i);
+			for (int j=0; j<itsNeighbors.size(); j++)
+			{
+				if (getRegionInfo(itsNeighbors[j]).first == playerNumber)
+				{
+					myNeighbors.push_back(i);
+					break;
+				}
+			}
+		}
+	}
+	return myNeighbors;
+}
 
 void GameState::display()
 {

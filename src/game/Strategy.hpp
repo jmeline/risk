@@ -133,7 +133,6 @@ private:
 	double dangerThreshold;
 	double stabilityFactor;
 	double versatilityFactor;
-	std::vector<bool> getBoolOwnershipList(GameState state);
 	double getValue(GameState state);
 	double testValue(GameState state, int regionToOwn);
 };

@@ -14,7 +14,8 @@
 		T=troop bonus (region and continent); B=exposed borders; N=neighboring regions; x1 and x2 are scaling factors for stability vs having expansion options
 
 Rules for claiming regions:
-	-Just greedily maximize V.  Among equally valued locations, pick at random.
+	-Just greedily maximize V
+	-Among equally valued locations, pick at "random" (first is good enough)
 
 Rules for placing:
 	1) Makes sure all regions have a minimum of two troops
@@ -29,6 +30,7 @@ Rules for attacking:
 	1) Get a list of neighboring enemies
 	2) Sort by the (amount by which V would increase if it were conquered) * (probability of victory if attack from strongest place)
 	3) Go through the list, attacking as soon as a candidate is found that can attack without leaving the player with a Danger = (number of enemies around - number of troops) above the "danger threshold".  If none found, don't attack.
+		a) If none of the owned regions touching the target is above the danger threshold, no attack.
 
 Rules for fortifying:
 	-If a region is surrounded only by friendly regions, move all but two of it's troops into a random one of those regions (eventually getting to the battlefront).
@@ -51,64 +53,16 @@ int ImmediateBestValueStrategy1::claim(GameState state)
 	if (beVerbose)  std::cout << "ImmediateBestValueStrategy1 "<<myPlayerNumber<<" is claiming his land" << std::endl;
 	if (beVerbose)  state.display();
 
-    // get list of continents
-    std::vector<Continent> continentList = this->map->getContinentList();
-
-    // sort the list from the lowest region count to the largest region count
-    // std::vector<index> == index from lowest region count to largest region count
-    // (1) Continent index
-    // (2) region count
-    std::vector<std::pair<int, int> > lowRegioncountList;
-    if (beVerbose)  std::cout << "continentList.size(): " << continentList.size() << std::endl;
-    for (int i = 0; i < continentList.size(); i++)
-    {
-        lowRegioncountList.push_back(std::make_pair(i, continentList[i].getRegionList().size()));
-    }
-
-    // sort lowRegioncountList by the second element in the pair: region count. End result is a sorted list of the smallest number of regions 
-    // to the largest number of regions. its original index is preserved as established in the map->continentList
-    //std::sort(lowRegioncountList.begin(), lowRegioncountList.end(), sortByNumberOfRegions);
-    std::sort(lowRegioncountList.begin(), lowRegioncountList.end(),
-              [](const std::pair<int, int> &lhs, const std::pair<int, int> &rhs)
-              {
-                  return lhs.second < rhs.second; });
-
-    // select the first continent unless it is already taken.
-    // If the continent has been taken, grab the continent with the next smallest region count
-	int index = 0;
-    std::vector<std::pair<int, std::string>> regionList;
-	int pickedContinent = -1;
-    int pickedRegion = -1;
-	bool placeSelected = false;
-    while (!placeSelected && index < lowRegioncountList.size())
-    {
-        // grab the index of the continent with the lowest region count
-        // countries with the lowest region count have been sorted from lowest to highest
-        pickedContinent = lowRegioncountList[index].first;
-        regionList = continentList[pickedContinent].getRegionList();
-
-        int regionIndex = 0;
-
-        // loop through each region within the continent for availability
-        while (regionIndex < regionList.size())
-        {
-            pickedRegion = regionList[regionIndex].first;
-            // the region is already claimed
-            if (state.getRegionInfo(pickedRegion).first == -1)
-            {
-                // select this continent (Found a winner)
-                placeSelected = true;
-                break;
-            }
-
-            regionIndex++;
-        }
-
-        if (placeSelected)
-            break;
-
-        index++;
-    }
+	std::vector<std::pair<int,double>> choices;
+	for (int i=0; i<state.getNumRegions(); i++)
+	{
+		if (state.getRegionInfo(i).first < 0)
+			choices.push_back(i,testValue(state, i));
+	}
+	std::sort(choices.begin(), choices.end(),
+			[](const std::pair<int, double> &lhs, const std::pair<int, double> &rhs)
+				{ return lhs.second < rhs.second; });
+	int pickedRegion = choices[choices.size()-1].first;
 
     if (beVerbose)  std::cout << "Chose: " << pickedRegion << std::endl;
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
@@ -126,121 +80,65 @@ std::vector<std::pair<int, int>> ImmediateBestValueStrategy1::place(GameState st
 
 	std::vector<std::pair<int, int>> actions;
 
-	// get lists for the two types of continents we care about
-	std::vector<std::pair<int, int>> continentsToConquer;	//first int is the continent's index; the second is its region count
-	std::vector<int> continentsIOwn;
-	std::vector<Continent> continentList = this->map->getContinentList();
-    for (int i = 0; i < continentList.size(); i++)
-    {
-		bool iOwnThisContinent = true;
-		std::vector<std::pair<int, std::string>> regionList = continentList[i].getRegionList();
-		for (int j=0; j<regionList.size(); j++)
+	//First, make sure there are no regions with only one troop
+	std::vector<int> myRegions = state.getRegionsOwnedByPlayer(myPlayerNumber);
+	for (int i=0; i<myRegions.size() && numTroops>0; i++)
+	{
+		if (state.getRegionInfo(myRegions[i]).second == 1)
 		{
-			if (regionList[j].first != myPlayerNumber) {
-				iOwnThisContinent = false;
+			if (beVerbose)  std::cout<<"Placing a troop at "<<myRegions[i]<<" to meet the minimum."<<std::endl;
+			actions.push_back(std::pair<int,int>(myRegions[i],1));
+			numTroops--;
+		}
+	}
+
+	//Now, get a list of all exposed borders, sorted by danger, and give them troops, if needed
+	if (numTroops>0)
+	{
+		std::vector<std::pair<int,int>> borders = state.getAllExposedBorders(myPlayerNumber, map);
+		//border's second index is the number of enemy troops; change it to the amount of danger
+		for (int i=0; i<borders.size(); i++)
+		{
+			int danger = borders[i].second - state.getRegionInfo(borders[i]).second;
+			borders[i].second = danger;
+		}
+		std::sort(borders.begin(), borders.end(),
+			[](const std::pair<int, int> &lhs, const std::pair<int, int> &rhs)
+				{ return lhs.second < rhs.second; });
+		for (int i=borders.size()-1; i>=0 && numTroops>0; i--)
+		{
+			if (borders[i].second > dangerThreshold)
+			{
+				int troopsToSend = borders[i].second - dangerThreshold;
+				if (troopsToSend > numTroops)
+					troopsToSend = numTroops;
+				if (beVerbose)  std::cout<<"Placing "<<numTroops<<" troop at "<<borders[i]<<" to get down to the danger threshold."<<std::endl;
+				actions.push_back(std::pair<int,int>(borders[i],numTroops));
+				numTroops -= numTroops;
+			}
+		}
+	}
+
+	//if we still have troops, put them all in the border region that would score the highest points
+	if (numTroops > 0) {
+		//get a list of ideal targets
+		std::vector<std::pair<int,double>> targets;
+		std::vector<int> options = state.getAllNeighborsOfPlayer(myPlayerNumber);
+		for (int i=0; i<options.size(); i++)
+			targets.push_back(std::pair<int,double>(options[i], testValue(state, options[i])));
+		std::sort(targets.begin(), targets.end(),
+			[](const std::pair<int, double> &lhs, const std::pair<int, double> &rhs)
+				{ return lhs.second < rhs.second; });
+		//and pick a neighboring spot to strengthen
+		std::vector<int> theirNeighbors = map->getNeighborsOfRegion(targets[targets.size()-1].first);
+		for (int i=0; i<theirNeighbors.size(); i++)
+		{
+			if (state.getRegionInfo(theirNeighbors[i]).first == myPlayerNumber)
+			{
+				if (beVerbose)  std::cout<<"Placing "<<numTroops<<" troop at "<<theirNeighbors[i]<<" to prepare to attack "<<targets[targets.size()-1].first<<std::endl;
+				actions.push_back(std::pair<int,int>(theirNeighbors[i],numTroops));
 				break;
 			}
-		}
-		if (iOwnThisContinent)
-			continentsIOwn.push_back(i);
-		else
-			continentsToConquer.push_back(std::make_pair(i, continentList[i].getRegionList().size()));
-    }
-	std::sort(continentsToConquer.begin(), continentsToConquer.end(),
-              [](const std::pair<int, int> &lhs, const std::pair<int, int> &rhs)
-					{ return lhs.second < rhs.second; });
-	if (beVerbose)  std::cout<<"Continents I own: "<<continentsIOwn.size() << std::endl;
-	
-	//get all friendly regions on the battlefront
-	int regionCountInOwnedContinents = 0;
-	std::vector<std::pair<int, int>> frontlineRegions;		//first int is the region's index, the second is its "score"
-	for (int i = 0; i < continentsIOwn.size(); i++)
-    {
-		std::vector<std::pair<int, std::string>> tempRegionList = continentList[i].getRegionList();
-		regionCountInOwnedContinents += tempRegionList.size();
-		bool iOwnThisContinent = true;
-		for (int j=0; j<tempRegionList.size(); j++)
-		{
-			int regionBeingConsidered = tempRegionList[j].first;
-			std::vector<int> neighbors = map->getNeighborsOfRegion(regionBeingConsidered);
-			int enemyCount = 0;
-			for (int k=0; k<neighbors.size(); k++)
-			{
-				if (state.getRegionInfo(neighbors[k]).first != myPlayerNumber)
-					enemyCount += state.getRegionInfo(neighbors[k]).second;
-			}
-			if (enemyCount>0)
-			{
-				int score = state.getRegionInfo(regionBeingConsidered).second - enemyCount;
-				frontlineRegions.push_back(std::pair<int,int>(regionBeingConsidered, score));
-			}
-		}
-    }
-	std::sort(frontlineRegions.begin(), frontlineRegions.end(),
-              [](const std::pair<int, int> &lhs, const std::pair<int, int> &rhs)
-					{ return lhs.second < rhs.second; });
-	if (beVerbose)  std::cout<<"Regions in my continents: "<<regionCountInOwnedContinents<<"; Regions on my frontline: "<<frontlineRegions.size()<<std::endl;
-	
-	// Get a list of regions where to send attackers, and get the number of hostile regions there
-	Continent targetContinent = continentList[continentsToConquer[0].first];
-	std::vector<int> attackWorthyLocations;
-	int hostileRegions;
-	for (int h=0; h<continentsToConquer.size()&&attackWorthyLocations.size()==0; h++)
-	{
-		targetContinent = continentList[continentsToConquer[h].first];
-		if (beVerbose)  std::cout<<"Considering target continent: " << continentsToConquer[h].first << std::endl;
-		hostileRegions = 0;
-		std::vector<std::pair<int, std::string>> tempRegionList = targetContinent.getRegionList();
-		for (int i=0; i<tempRegionList.size(); i++)
-		{
-			int regionBeingConsidered = tempRegionList[i].first;
-			if (state.getRegionInfo(regionBeingConsidered).first != myPlayerNumber)
-			{
-				if (beVerbose)  std::cout << "Hostile: " << regionBeingConsidered << std::endl;
-				hostileRegions++;
-				std::vector<int> neighbors = map->getNeighborsOfRegion(regionBeingConsidered);
-				for (int j=0; j<neighbors.size(); j++)
-				{
-					if (state.getRegionInfo(neighbors[j]).first==myPlayerNumber) {
-						attackWorthyLocations.push_back(neighbors[j]);
-						if (beVerbose)  std::cout << "Attack worthy: " << neighbors[j] << std::endl;
-					}
-				}
-			}
-		}
-	}
-	if (beVerbose)  std::cout<<"In my target continenet:  Hostile regions: "<<hostileRegions<<"; Attack worthy locations: "<<attackWorthyLocations.size()<<std::endl;
-
-	// Decide an appropriate number of troops to each type of location
-	int numberOfTroopsToSendToAttack = (int)(numTroops*1.0*hostileRegions/(hostileRegions+regionCountInOwnedContinents));
-	if (numberOfTroopsToSendToAttack > numTroops || regionCountInOwnedContinents==0)
-		numberOfTroopsToSendToAttack = numTroops;
-	int numberOfTroopsToSendToDefend = numTroops - numberOfTroopsToSendToAttack;
-	if (beVerbose)  std::cout<<"Attacking troops: "<<numberOfTroopsToSendToAttack<<"; Defending troops: "<<numberOfTroopsToSendToDefend<<std::endl;
-	
-	// Send troops to target continent
-	if (numberOfTroopsToSendToAttack > 0)
-	{
-		int numToSendPerRegion = numberOfTroopsToSendToAttack / attackWorthyLocations.size();
-		int remainder = numberOfTroopsToSendToAttack - numToSendPerRegion;
-		for (int i=0; i<attackWorthyLocations.size(); i++)
-		{
-			int howMany = numToSendPerRegion + ((i<remainder)?1:0);
-			actions.push_back(std::pair<int,int>(attackWorthyLocations[i], howMany));
-			if (beVerbose)  std::cout << "Placing "<<howMany<<" troops at "<<attackWorthyLocations[i] << std::endl;
-		}
-	}
-
-	// Send troops to frontline defenses
-	if (numberOfTroopsToSendToDefend > 0)
-	{
-		int numToSendPerRegion = numberOfTroopsToSendToDefend / frontlineRegions.size();
-		int remainder = numberOfTroopsToSendToDefend - numToSendPerRegion;
-		for (int i=0; i<frontlineRegions.size(); i++)
-		{
-			int howMany = numToSendPerRegion + ((i<remainder)?1:0);
-			actions.push_back(std::pair<int,int>(frontlineRegions[i].first, howMany));
-			if (beVerbose)  std::cout << "Placing "<<howMany<<" troops at "<<attackWorthyLocations[i] << std::endl;
 		}
 	}
 
@@ -369,7 +267,7 @@ std::pair<int, int> ImmediateBestValueStrategy1::attack(GameState state)
 }
 
 
-std::vector<std::tuple<int, int, int> > ImmediateBestValueStrategy1::fortify(GameState state)
+std::vector<std::tuple<int, int, int>> ImmediateBestValueStrategy1::fortify(GameState state)
 {
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
 	if (beVerbose)  std::cout << "ImmediateBestValueStrategy1 "<<myPlayerNumber<<" is fortifying" << std::endl;
@@ -409,16 +307,6 @@ std::vector<std::tuple<int, int, int> > ImmediateBestValueStrategy1::fortify(Gam
 }
 
 
-std::vector<bool> ImmediateBestValueStrategy1::getBoolOwnershipList(GameState state)
-{
-	std::vector<int> owned = state.getRegionsOwnedByPlayer(myPlayerNumber);
-	std::vector<bool> ownerShipList(false);
-	for (int i=0; i<owned.size(); i++)
-		ownerShipList[owned[i]] = true;
-	return ownerShipList;
-}
-
-
 double ImmediateBestValueStrategy1::getValue(GameState state)
 {
 	// Find the troopBoost
@@ -438,39 +326,9 @@ double ImmediateBestValueStrategy1::getValue(GameState state)
 			troopBoost += continentList[i].getValue();
 	}
 
-	//find the number of exposed borders
-	int borders = 0;
-	std::vector<int> myRegions = state.getRegionsOwnedByPlayer(myPlayerNumber);
-	for (int i=0; i<myRegions.size(); i++)
-	{
-		std::vector<int> neighbors = map->getNeighborsOfRegion(myRegions[i]);
-		for (int j=0; j<neighbors.size(); j++)
-		{
-			if (state.getRegionInfo(neighbors[j]).first != myPlayerNumber)
-			{
-				borders++;
-				break;
-			}
-		}
-	}
-
-	//find the number of neighbors
-	int neighborCount = 0;
-	for (int i=0; i<state.getNumRegions(); i++)
-	{
-		if (state.getRegionInfo(i).first != myPlayerNumber)
-		{
-			std::vector<int> itsNeighbors = map->getNeighborsOfRegion(i);
-			for (int j=0; j<itsNeighbors.size(); j++)
-			{
-				if (state.getRegionInfo(itsNeighbors[j]).first == myPlayerNumber)
-				{
-					neighborCount++;
-					break;
-				}
-			}
-		}
-	}
+	//find the number of exposed borders, and the number of neighbors
+	int borders = state.getAllExposedBorders(myPlayerNumber, map);
+	int neighborCount = state.getAllNeighborsOfPlayer(myPlayerNumber, map);
 
 	//Now compute the value
 	return stabilityFactor*troopBoost/borders + versatilityFactor*neighborCount;
