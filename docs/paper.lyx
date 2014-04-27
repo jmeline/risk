@@ -331,17 +331,59 @@ Type of Strategies
 \end_layout
 
 \begin_layout Subsection
+Bad Strategy
+\end_layout
+
+\begin_layout Standard
+In order to test our code and make sure everything was working, of course
+ we had to make a very simple strategy.
+ This strategy takes the first available location it finds while claiming,
+ always attacks a set number of times per turn (or less), and generally
+ does other mindless things.
+ This strategy should lose to every other strategy except maybe the pacifist.
+\end_layout
+
+\begin_layout Subsection
+Immediate Best Value
+\end_layout
+
+\begin_layout Standard
+This strategy weighs its decisions locally and chooses what it deems to
+ be of the highest value.
+ When considering where to attack, it uses this equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V=x_{1}T/B+x_{2}N\text{ }
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+T represents the troop bonus.
+ B is the number of exposed borders.
+ N is the number of neighboring regions.
+ X is a scaling factor that determines how stable/expansive the strategy
+ will be.
+\end_layout
+
+\begin_layout Subsection
 Smallest Continent first
 \end_layout
 
 \begin_layout Standard
-Popular strategy where the player looks to claim either Australia or South
- America as it is easier to defend due to the limited number of paths into
- and from the continent.
- Easy to build up forces as there are only four territories to maintain
+A popular strategy where the player looks to claim either Australia or South
+ America since they are easier to defend due to the limited number of paths
+ into and out of them.
+ It is easy to build up forces as there are only four territories to maintain
  and the troop bonus is advantageous.
- Places troops on edges of its continents or near continents desired for
- conquering
+ This strategy places troops on edges of its continents or near continents
+ desired for conquering.
 \end_layout
 
 \begin_layout Subsection
@@ -349,8 +391,10 @@ Continents First
 \end_layout
 
 \begin_layout Standard
-Player strategically seeks to claim each continent and doesn’t branch out
- unless a continent can be claimed Defensive playstyle 
+This player strategically seeks to claim each continent and doesn’t branch
+ out unless a continent can be claimed.
+ This playstyle is defensive.
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -358,8 +402,10 @@ Territory First
 \end_layout
 
 \begin_layout Standard
-Player aims to prevent others from claiming continents by securing territories
- Aggressive playstyle 
+This player aims to prevent others from claiming continents by securing
+ territories.
+ This playstyle is aggressive.
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -367,10 +413,19 @@ Prey on the weak
 \end_layout
 
 \begin_layout Standard
-Always targets the weakest bordering country When placing, always prefers
- the least-claimed continent Prey on the strong Always attack the owner
- of a continent, if possible, so that no extra points are gained.
- Choose the strongest territory owned by the strongest opponent to attack,
+Prey on the weak does what you'd expect.
+ It targets the weakest bordering country.
+ When placing, it always prefers the least-claimed continent.
+\end_layout
+
+\begin_layout Subsection
+Prey on the strong 
+\end_layout
+
+\begin_layout Standard
+Always attacks the owner of a continent, if possible, so that no extra points
+ are gained.
+ Chooses the strongest territory owned by the strongest opponent to attack,
  so long as two dice can still be used.
  
 \end_layout
@@ -386,6 +441,18 @@ This strategy will never win, but it may perhaps outlive other strategies.
  For example, if strategy A is knocked out of the game frequently before
  the pacifist strategy, then strategy A is too aggressive to be an effective
  strategy.
+\end_layout
+
+\begin_layout Subsection
+Human Controlled
+\end_layout
+
+\begin_layout Standard
+For debugging purposes and getting a real feel for how certain strategies
+ will play out.
+ Matt played a quick game on a condensed map vs the smallest continents
+ first strategy and lost.
+ This provides evidence that the smallest continent first strategy works.
 \end_layout
 
 \begin_layout Section
