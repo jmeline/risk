@@ -350,6 +350,13 @@ std::pair<double,double> Game::getProbability(int attackingDice, int defendingDi
 }
 
 double Game::getProbabilityOfVictory(int attacking, int defending) {
+	for (int i=0; i<20; i++) {
+		for (int j=0; j<20; j++)
+			std::cout<< (Game::probabilityCacheSet[i][j] ? "T " : "F ");
+		std::cout<<std::endl;
+	}
+	std::cout<<"CLEAR"<<std::endl;
+
 	//Recursive method
 	if (attacking==0)
 		return 0;
