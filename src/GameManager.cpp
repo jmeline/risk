@@ -104,6 +104,13 @@ void GameManager::launchGame(int slaveNumber, int gameNumber)
 	slaveTasks[slaveNumber] = gameNumber;
 	int dataOut[GameTask::encodedSize];
 	gamesToRun[gameNumber].encode(dataOut);
+
+	std::cout<<"DATA AS SENT:"<<std::endl;
+	for ( int i = 0; i <GameTask::encodedSize; i++)
+    {
+        std::cout << dataOut[i] << " ";
+    }
+
 	MPI_Send(&dataOut, GameTask::encodedSize, MPI_INT, slaveNumber+1, MPI_TASK, MPI_COMM_WORLD);
 }
 

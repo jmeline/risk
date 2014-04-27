@@ -20,8 +20,8 @@ private:
     Strategy** player;
 	GameState state;
     int numberOfPlayers;
-	static int probabilityCache[20][20];
-	static bool probabilityCacheSet[20][20];
+////	static int probabilityCache[20][20];
+////	static bool probabilityCacheSet[20][20];
 
 public:
 	Game(GameTask task);

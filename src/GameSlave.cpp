@@ -43,6 +43,12 @@ GameTask GameSlave::receiveGameTask()
 #ifndef DONTUSEMPI
     MPI_Recv(&dataIn, GameTask::encodedSize, MPI_INT, 0, MPI_TASK, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
+	std::cout<<"DATA AS RECEIVED:"<<std::endl;
+	for ( int i = 0; i <GameTask::encodedSize; i++)
+    {
+        std::cout << dataIn[i] << " ";
+    }
+
     task.encode(dataIn);
     task.print(dataIn);
 #else
