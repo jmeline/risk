@@ -189,6 +189,14 @@ Then players may choose to attack other regions.
  Defenders win ties.
 \end_layout
 
+\begin_layout Standard
+In most versions of Risk, there is some sort of card system.
+ Players could trade in cards for armies or attempt to accomplish some secret
+ mission as dictated by the cards for an even larger army bonus.
+ To simplify the problem that we were approaching, we decided to omit the
+ use of cards in our project.
+\end_layout
+
 \begin_layout Section
 Intricacies
 \end_layout
@@ -239,6 +247,83 @@ key "key-4"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+However, other parts of our design did end up taking a lot of time to conceptual
+ize.
+ We knew that we wanted to utilize the resources at our disposal and design
+ a parallel algorithm.
+ At first we thought that perhaps there was some parallelism that we could
+ utilize within each simulated game.
+ In fact, there is.
+ Each 
+\begin_inset Quotes eld
+\end_inset
+
+player
+\begin_inset Quotes erd
+\end_inset
+
+ or strategy could enumerate all of its possible moves and then make a decision.
+ Nevertheless, we decided against implementing this since our primary desire
+ was to treat a game as an atomic event and simulate each game in parallel
+ so that we could discover at least a win/loss rate for each strategy.
+ And we could not come to any conclusions with any desirable degree of confidenc
+e without getting a large enough dataset.
+ With more time both things could have been implemented, but as it stands,
+ we ran many games in parallel.
+\end_layout
+
+\begin_layout Standard
+We took a simple object-oriented approach to designing what a strategy would
+ be.
+ We designed an interface that each strategy would inherit from.
+ All strategies would have to implement five functions:
+\end_layout
+
+\begin_layout Standard
+1.
+ claim()
+\end_layout
+
+\begin_layout Standard
+2.
+ place()
+\end_layout
+
+\begin_layout Standard
+3.
+ attack()
+\end_layout
+
+\begin_layout Standard
+4.
+ defend()
+\end_layout
+
+\begin_layout Standard
+5.
+ fortify()
+\end_layout
+
+\begin_layout Standard
+Each function mirrors one of the stages of the game.
+\end_layout
+
+\begin_layout Standard
+We would then run a game loop containing several strategies and we would
+ pit them against each other to see which ones win out.
+ In order for a strategy to make good decisions, we had to give it information
+ about the board.
+ We would have the game loop send a GameState object to each strategy when
+ it called each of their functions.
+ One option we had here was to add internal state to each of the strategies.
+ Such state would be used for watching other players' tactics to try to
+ counter them or to keep track of previous moves.
+ To some degree or another, we did utilize this internal state.
+ However, such use was perfunctory since getting a strategy to make intelligent
+ decisions based on the game state alone was a significant challenge.
 \end_layout
 
 \begin_layout Section
