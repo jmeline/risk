@@ -77,6 +77,10 @@ Risk Board Game Strategy Assessments
 Joseph Richardson, Jacob Meline, Matthew Dayley
 \end_layout
 
+\begin_layout Date
+April 26, 2014
+\end_layout
+
 \begin_layout Section
 Background 
 \end_layout
@@ -136,36 +140,73 @@ Rules
 \end_layout
 
 \begin_layout Standard
-This section could be expanded pretty nicely.
+Risk is a turn-based for two to six players.
+ In the standard Risk Game, Earth has six continents and 42 regions.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Graphics
+	filename images/earth.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-4"
+
+\end_inset
+
 
 \end_layout
 
 \begin_layout Standard
-Risk is a turn-based for two - six players
+At the start of the game, players choose countries into which they place
+ one army.
+ This is the claiming phase.
+ Only one army may be placed in any region during the claiming phase.
+ At the beginning of each player's turn (after the claiming phase) they
+ will receive bonus troops for continents that they own completely.
 \end_layout
 
 \begin_layout Standard
-In the standard Risk Game, Earth has six continents and 42 regions.
+After claiming, players will then place armies into regions that they own.
+ This happens, again, one at a time until everyone has placed all their
+ starting armies.
 \end_layout
 
 \begin_layout Standard
-Attackers can use up to three dice ( Note that the attackers must have at
- least three troops in order to attack with three dice)
+Then players may choose to attack other regions.
+ They may only attack bordering regions.
+ Attackers can use up to three dice, if they have at least three troops.
+ Otherwise, they may only use one die for each troop.
+ Defenders roll up to two dice.
+ The attacker and the defender then sort their dice and compare them.
+ (Attacker's highest vs defender's highest AND attacker's second highest
+ vs defender's second highest) For each die that is greater in this comparison,
+ that player kills one opposing army in the battle.
+ Defenders win ties.
 \end_layout
 
 \begin_layout Standard
-Defenders can use up to two dice
+In most versions of Risk, there is some sort of card system.
+ Players could trade in cards for armies or attempt to accomplish some secret
+ mission as dictated by the cards for an even larger army bonus.
+ To simplify the problem that we were approaching, we decided to omit the
+ use of cards in our project.
 \end_layout
 
 \begin_layout Section
 Intricacies
 \end_layout
 
+\begin_layout Subsection
+In theory
+\end_layout
+
 \begin_layout Standard
-The Startup game can set you up for success or failure.
+The start of the game can set you up for success or failure.
  The player must not underestimate the importance of their choices while
  claiming territories.
 \end_layout
@@ -179,6 +220,110 @@ Strategies are numerous.
  Given more time, this may have been possible through exhaustive searching.
  However, human intuition is more powerful than machinery when it comes
  to identifying deceit.
+\end_layout
+
+\begin_layout Subsection
+In practice
+\end_layout
+
+\begin_layout Standard
+Representing the board internally was not too difficult.
+ It ends up being an undirected graph.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename images/earth-graph.png
+	scale 35
+
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-4"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+However, other parts of our design did end up taking a lot of time to conceptual
+ize.
+ We knew that we wanted to utilize the resources at our disposal and design
+ a parallel algorithm.
+ At first we thought that perhaps there was some parallelism that we could
+ utilize within each simulated game.
+ In fact, there is.
+ Each 
+\begin_inset Quotes eld
+\end_inset
+
+player
+\begin_inset Quotes erd
+\end_inset
+
+ or strategy could enumerate all of its possible moves and then make a decision.
+ Nevertheless, we decided against implementing this since our primary desire
+ was to treat a game as an atomic event and simulate each game in parallel
+ so that we could discover at least a win/loss rate for each strategy.
+ And we could not come to any conclusions with any desirable degree of confidenc
+e without getting a large enough dataset.
+ With more time both things could have been implemented, but as it stands,
+ we ran many games in parallel.
+\end_layout
+
+\begin_layout Standard
+We took a simple object-oriented approach to designing what a strategy would
+ be.
+ We designed an interface that each strategy would inherit from.
+ All strategies would have to implement five functions:
+\end_layout
+
+\begin_layout Standard
+1.
+ claim()
+\end_layout
+
+\begin_layout Standard
+2.
+ place()
+\end_layout
+
+\begin_layout Standard
+3.
+ attack()
+\end_layout
+
+\begin_layout Standard
+4.
+ defend()
+\end_layout
+
+\begin_layout Standard
+5.
+ fortify()
+\end_layout
+
+\begin_layout Standard
+Each function mirrors one of the stages of the game.
+\end_layout
+
+\begin_layout Standard
+We would then run a game loop containing several strategies and we would
+ pit them against each other to see which ones win out.
+ In order for a strategy to make good decisions, we had to give it information
+ about the board.
+ We would have the game loop send a GameState object to each strategy when
+ it called each of their functions.
+ One option we had here was to add internal state to each of the strategies.
+ Such state would be used for watching other players' tactics to try to
+ counter them or to keep track of previous moves.
+ To some degree or another, we did utilize this internal state.
+ However, such use was perfunctory since getting a strategy to make intelligent
+ decisions based on the game state alone was a significant challenge.
 \end_layout
 
 \begin_layout Section
@@ -230,6 +375,19 @@ Always targets the weakest bordering country When placing, always prefers
  
 \end_layout
 
+\begin_layout Subsection
+Pacifist
+\end_layout
+
+\begin_layout Standard
+This strategy will never win, but it may perhaps outlive other strategies.
+ It will be easy to determine if a strategy is far too aggressive by comparing
+ it against this strategy.
+ For example, if strategy A is knocked out of the game frequently before
+ the pacifist strategy, then strategy A is too aggressive to be an effective
+ strategy.
+\end_layout
+
 \begin_layout Section
 Probability of outcomes 
 \end_layout
@@ -258,7 +416,17 @@ Generation
 \end_layout
 
 \begin_layout Standard
-This is how we generated our strategies
+To test the strategies we had to generate them.
+ They were made by creating a class that conforms to the strategy interface
+ described in the 
+\begin_inset Quotes eld
+\end_inset
+
+Intracacies
+\begin_inset Quotes erd
+\end_inset
+
+ section.
 \end_layout
 
 \begin_layout Subsection
@@ -266,7 +434,19 @@ Simulation
 \end_layout
 
 \begin_layout Standard
-This is how we ran our simulations
+Using MPI, we made a master-slave model with the master issuing matchups
+ and the slaves simulating those games and reporting the results back to
+ the master.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename images/layout.png
+	scale 40
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -275,6 +455,29 @@ Statistics
 
 \begin_layout Standard
 These are our results
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+clearpage
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+onecolumn
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Bibliography
@@ -294,7 +497,8 @@ key "key-2"
 
 \end_inset
 
-http://en.wikipedia.org/wiki/Risk_(game)
+ Wikipedia contributors, "Risk (game)," Wikipedia, The Free Encyclopedia,
+ accessed April 26, 2014, http://en.wikipedia.org/wiki/Risk_(game).
 \end_layout
 
 \begin_layout Bibliography
@@ -304,7 +508,34 @@ key "key-3"
 
 \end_inset
 
-http://io9.com/5897532/the-origins-and-evolution-of-the-strategy-board-game-risk
+Keith Veronese, 
+\begin_inset Quotes eld
+\end_inset
+
+The Origins and Evolution of the Strategy Board Game RISK,
+\begin_inset Quotes erd
+\end_inset
+
+ last modified March 30, 2012, http://io9.com/5897532/the-origins-and-evolution-o
+f-the-strategy-board-game-risk.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-4"
+
+\end_inset
+
+Garrett Robinson, 
+\begin_inset Quotes eld
+\end_inset
+
+The Strategy of Risk,
+\begin_inset Quotes erd
+\end_inset
+
+ accessed April 26, 2014, http://web.mit.edu/sp.268/www/risk.pdf.
 \end_layout
 
 \end_body

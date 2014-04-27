@@ -85,6 +85,9 @@ GameReport Game::runGame()
             fortify(whoseTurn);
         }
         whoseTurn = (whoseTurn + 1) % numberOfPlayers;
+		std::cout<<"Type any char to continue>";
+		char ch;
+		std::cin >> ch;
     }
     return report;
 }

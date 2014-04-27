@@ -127,7 +127,7 @@ public:
 	virtual std::pair<int,int> attack(GameState state);
 	virtual std::vector<std::tuple<int,int,int> > fortify(GameState state);
 private:
-	double dangerThreshold;
+	int dangerThreshold;
 	double stabilityFactor;
 	double versatilityFactor;
 	double getValue(GameState state);
