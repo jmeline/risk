@@ -2,6 +2,7 @@
 #include "GameSlave.hpp"
 
 #include <random>
+#include <iostream>
 #include <time.h>
 #ifndef DONTUSEMPI
 #include <mpi.h>
@@ -23,6 +24,13 @@ int main(int argc, char** argv)
     if (argc >= 4)
         numberOfPlayers = atoi(argv[3]);
 
+    std::cout << "**********************************" << std::endl;
+    std::cout << "Configurations" << std::endl;
+    std::cout << "OutputFile: " << outputFileString << std::endl;
+    std::cout << "TimesToRepeatEachGame: " << timesToRepeatEachGame << std::endl;
+    std::cout << "NumberOfPlayers: " << numberOfPlayers << std::endl;
+    std::cout << "**********************************" << std::endl;
+
     //set up MPI , and then init the randomizer
     int myMpiRank, totalProcCount;
 #ifndef DONTUSEMPI
@@ -38,16 +46,34 @@ int main(int argc, char** argv)
     //Spawn the appropriate object
     if (myMpiRank == 0)
     {
+        std::cout << "Starting Master: " << myMpiRank << std::endl;
+
         //prepare tasks to run
         std::vector<StrategyEnum::StrategyEnum> strategies;
         strategies.push_back(StrategyEnum::HumanControlledStrategy);
         ////strategies.push_back(StrategyEnum::BadStrategy1);
         ////strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
+
+        std::cout << "Strategies being used: ";
+        for (StrategyEnum::StrategyEnum e : strategies)
+        {
+            std::cout << e << " ";
+        }
+        std::cout << std::endl;
+
         std::vector<MapEnum::MapEnum> maps;
         ////maps.push_back(MapEnum::ThreeContinent);
         ////maps.push_back(MapEnum::Earth);
         ////maps.push_back(MapEnum::Island);
         maps.push_back(MapEnum::ThreeContinent);
+
+        std::cout << "Maps being used: ";
+        for (MapEnum::MapEnum e : maps)
+        {
+            std::cout << e << " ";
+        }
+        std::cout << std::endl;
+
         std::vector<GameTask> tasksToRun = GameManager::getRunsFor(strategies, maps, numberOfPlayers, timesToRepeatEachGame);
         //start the manager
         GameManager manager(totalProcCount - 1);
@@ -57,6 +83,8 @@ int main(int argc, char** argv)
     }
     else
     {
+        std::cout << "Starting Slave: " << myMpiRank << std::endl;
+
         GameSlave slave;
         slave.runIt();
     }

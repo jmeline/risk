@@ -1,6 +1,6 @@
 ## Simple makefile
 
-CC=mpic++
+CC=mpicxx
 CFLAGS=-g -Wall
 C11=-std=c++11
 VERBOSE=-DVERBOSE_STRATEGIES
@@ -12,12 +12,13 @@ TARGET=risk_exec
 
 main: $(BUILD_DIR)
 	$(CC) $(C11) src/TrueMain.cpp -I$(INCLUDE_PATH) $(BUILD_DIR)/*.o -o $(TARGET)
+	@echo "HelloWorld"
 
-test: $(BUILD_DIR)
-	$(CC) $(C11) tests/MainTest.cpp -I$(INCLUDE_PATH) $(BUILD_DIR)/*.o -o $(TARGET)
+#test: $(BUILD_DIR)
+#	$(CC) $(C11) tests/MainTest.cpp -I$(INCLUDE_PATH) $(BUILD_DIR)/*.o -o $(TARGET)
 
-simple: $(BUILD_DIR)
-	$(CC) $(C11) tests/newsimpletest.cpp -I$(INCLUDE_PATH) $(BUILD_DIR)/*.o -o $(TARGET)
+#simple: $(BUILD_DIR)
+#	$(CC) $(C11) tests/newsimpletest.cpp -I$(INCLUDE_PATH) $(BUILD_DIR)/*.o -o $(TARGET)
 
 $(BUILD_DIR):
 	@echo "Building Risk for CS5500..."
@@ -28,6 +29,6 @@ $(BUILD_DIR):
 		mv *.o ../../$(BUILD_DIR); \
 		cd -; \
 	done
-
+	
 clean:
 	rm -rf $(BUILD_DIR)/ $(TARGET)
