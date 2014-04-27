@@ -375,6 +375,19 @@ Always targets the weakest bordering country When placing, always prefers
  
 \end_layout
 
+\begin_layout Subsection
+Pacifist
+\end_layout
+
+\begin_layout Standard
+This strategy will never win, but it may perhaps outlive other strategies.
+ It will be easy to determine if a strategy is far too aggressive by comparing
+ it against this strategy.
+ For example, if strategy A is knocked out of the game frequently before
+ the pacifist strategy, then strategy A is too aggressive to be an effective
+ strategy.
+\end_layout
+
 \begin_layout Section
 Probability of outcomes 
 \end_layout
@@ -403,7 +416,17 @@ Generation
 \end_layout
 
 \begin_layout Standard
-This is how we generated our strategies
+To test the strategies we had to generate them.
+ They were made by creating a class that conforms to the strategy interface
+ described in the 
+\begin_inset Quotes eld
+\end_inset
+
+Intracacies
+\begin_inset Quotes erd
+\end_inset
+
+ section.
 \end_layout
 
 \begin_layout Subsection
@@ -411,7 +434,19 @@ Simulation
 \end_layout
 
 \begin_layout Standard
-This is how we ran our simulations
+Using MPI, we made a master-slave model with the master issuing matchups
+ and the slaves simulating those games and reporting the results back to
+ the master.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename images/layout.png
+	scale 40
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -452,7 +487,9 @@ key "key-1"
 
 \end_inset
 
-The Art of War by Sun Tzu
+Sun Tzu, 
+\emph on
+The Art of War
 \end_layout
 
 \begin_layout Bibliography

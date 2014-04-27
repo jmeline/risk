@@ -24,6 +24,8 @@ public:
 	void encode(int outData[]);
 	
 	void decode(int inData[]);
+        
+        void print(int data[]);
 };
 
 #endif   /* ----- #ifndef gametask_INC ----- */
