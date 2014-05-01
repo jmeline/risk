@@ -6,7 +6,7 @@
 Goals:
 DONE(1)Make Strategy Interface, UI, gameFlow, gameState, gameMap, gameReport
 DONE(2)Make specific human-controlled strategies
-    (3)Organize Dominion Graph
+x   (3)Organize Dominion Graph -> We'll do it by hand
 no. (4)Analysis Program
     (5)Make it run on UberComputer
 NO. (6)Crossover( Mixing and matching strategies to determine improvement)
@@ -16,15 +16,9 @@ DONE(8)Make Prez
 
 
 Pressing todo:
-DONE	2) Test the game
-		When someone is completely conquered, it is not ending the game like it should
-			debug to make sure that the "fallenPlayers" returned from doATurnOfBattles is what it should be
-		There may be other bugs, but that's as far as I tested
-	3) Then to test the GameManager all the way
-		There should be an output file as a result; that's what we check
-	4) Then GameManager with MPI
+	4) Then test GameManager with MPI (check for file output)
 	5) Then start the supercomputer running.
-	6) While it is, we can decide how to write the analyzer.
+	6) Get some data
 
 PRESENTATION URL:
 	https://docs.google.com/a/aggiemail.usu.edu/presentation/d/12e0cRb4QVKHs59cHkWbolaBrv-Cnjo6du0B0kAVaOBE/edit?usp=sharing
@@ -36,6 +30,9 @@ Nifty-looking site:  http://www.totaldiplomacy.com/RiskStrategyGuides/Tactics4Ex
 STRATEGY LIST:
 	Human Controlled - DONE
 	Smallest Continent First - DONE
+		we can tweek parameters of this to make more strategie
+	ImmediateBestValueStrategy1 - DONE
+		we can tweek parameters of this to make more strategie
 	Pacifist Strategy - done?
 	
 	"Bogo strategy" (replaces "Bad strategy")
@@ -50,7 +47,7 @@ STRATEGY LIST:
 	Maximize V=x1*T/B+x2*N: Continents-first
 		T=troop bonus; B=exposed borders; N=neighboring regions; x1 and x2 are scaling factors for stability vs having expansion options
 		Goes for the continent of best V
-	Maximize V=x1*T/B+x2*N: Immediate action - Joseph
+	
 		T=troop bonus; B=exposed borders; N=neighboring regions; x1 and x2 are scaling factors for stability vs having expansion options
 		Goes for the best V right now, not caring as much for the long term (just test the V of every move)
 	Region-First method

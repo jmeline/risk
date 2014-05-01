@@ -43,11 +43,9 @@ GameTask GameSlave::receiveGameTask()
 #ifndef DONTUSEMPI
     MPI_Recv(&dataIn, GameTask::encodedSize, MPI_INT, 0, MPI_TASK, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-	std::cout<<"DATA AS RECEIVED:"<<std::endl;
+	std::cout<<"TASK AS RECEIVED:"<<std::endl;
 	for ( int i = 0; i <GameTask::encodedSize; i++)
-    {
         std::cout << dataIn[i] << " ";
-    }
 
     task.encode(dataIn);
     task.print(dataIn);
@@ -63,6 +61,10 @@ void GameSlave::sendReport(GameReport report)
     int dataOut[GameReport::encodedSize];
     report.encode(dataOut);
 #ifndef DONTUSEMPI
+	std::cout<<"REPORT AS SENT:"<<std::endl;
+	for ( int i = 0; i <GameReport::encodedSize; i++)
+        std::cout << dataOut[i] << " ";
+
     MPI_Send(&dataOut, GameTask::encodedSize, MPI_INT, 0, MPI_REPORT, MPI_COMM_WORLD);
 #else
     std::cout << "MPI is disabled.  Would have sent a report." << std::endl;

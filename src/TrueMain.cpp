@@ -55,7 +55,6 @@ int main(int argc, char** argv)
         strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
         strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
 
-
         std::cout << "Strategies being used: ";
         for (StrategyEnum::StrategyEnum e : strategies)
         {
