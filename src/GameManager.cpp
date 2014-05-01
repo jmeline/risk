@@ -105,11 +105,9 @@ void GameManager::launchGame(int slaveNumber, int gameNumber)
 	int dataOut[GameTask::encodedSize];
 	gamesToRun[gameNumber].encode(dataOut);
 
-	std::cout<<"DATA AS SENT:"<<std::endl;
+	std::cout<<"TASK AS SENT:"<<std::endl;
 	for ( int i = 0; i <GameTask::encodedSize; i++)
-    {
         std::cout << dataOut[i] << " ";
-    }
 
 	MPI_Send(&dataOut, GameTask::encodedSize, MPI_INT, slaveNumber+1, MPI_TASK, MPI_COMM_WORLD);
 }
@@ -121,6 +119,11 @@ int GameManager::getAndHandleReport(std::ostream *outputStream)
 	int dataIn[GameReport::encodedSize];
 	MPI_Status status;
 	MPI_Recv(&dataIn, GameReport::encodedSize, MPI_INT, MPI_ANY_SOURCE, MPI_REPORT, MPI_COMM_WORLD, &status);
+
+	std::cout<<"REPORT AS RECEIVED:"<<std::endl;
+	for ( int i = 0; i <GameReport::encodedSize; i++)
+        std::cout << dataIn[i] << " ";
+
 	report.decode(dataIn);
 	int slaveNumber = status.MPI_SOURCE - 1;
 	slaveTasks[slaveNumber] = -1;	//mark this slave as not working on anything
@@ -134,6 +137,11 @@ void GameManager::reportThatIsDone(int slaveNumber)
 	StrategyEnum::StrategyEnum fakePlayers[] = { StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER };
 	GameTask fakeTask(MapEnum::Earth, fakePlayers);
 	int dataOut[GameTask::encodedSize];		//make it the same size as a Task, since that's what the slave will be listening for
+	
+	std::cout<<"TASK AS SENT:"<<std::endl;
+	for ( int i = 0; i <GameTask::encodedSize; i++)
+        std::cout << dataOut[i] << " ";
+	
 	fakeTask.encode(dataOut);
 	MPI_Send(&dataOut, GameTask::encodedSize, MPI_INT, 0, MPI_TASK, MPI_COMM_WORLD);
 }
