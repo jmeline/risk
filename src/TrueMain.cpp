@@ -50,9 +50,11 @@ int main(int argc, char** argv)
 
         //prepare tasks to run
         std::vector<StrategyEnum::StrategyEnum> strategies;
-        strategies.push_back(StrategyEnum::HumanControlledStrategy);
+        ////strategies.push_back(StrategyEnum::HumanControlledStrategy);
         ////strategies.push_back(StrategyEnum::BadStrategy1);
-        ////strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
+        strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
+        strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
+
 
         std::cout << "Strategies being used: ";
         for (StrategyEnum::StrategyEnum e : strategies)
