@@ -22,7 +22,7 @@ void GameSlave::runIt()
             std::cout << "Stopping Slave!" << std::endl;
             break; //we got the "stop" task
         }
-        
+
         GameReport report = runOneGame(task);
         sendReport(report);
     }
@@ -39,16 +39,17 @@ GameTask GameSlave::receiveGameTask()
 
     GameTask task;
     int dataIn[GameTask::encodedSize];
-    std::cout << "Size of DataIn: " << (sizeof (dataIn) / sizeof (*dataIn)) << std::endl;
+    //std::cout << "Size of DataIn: " << (sizeof (dataIn) / sizeof (*dataIn)) << std::endl;
 #ifndef DONTUSEMPI
     MPI_Recv(&dataIn, GameTask::encodedSize, MPI_INT, 0, MPI_TASK, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-	std::cout<<"TASK AS RECEIVED:"<<std::endl;
-	for ( int i = 0; i <GameTask::encodedSize; i++)
+    std::cout << "TASK AS RECEIVED:" << std::endl;
+    for (int i = 0; i < GameTask::encodedSize; i++)
         std::cout << dataIn[i] << " ";
+    std::cout << std::endl;
 
-    task.encode(dataIn);
-    task.print(dataIn);
+    task.decode(dataIn);
+    //task.print(dataIn);
 #else
     std::cout << "MPI is disabled.  Would have recieved a GameTask." << std::endl;
 #endif
@@ -61,8 +62,8 @@ void GameSlave::sendReport(GameReport report)
     int dataOut[GameReport::encodedSize];
     report.encode(dataOut);
 #ifndef DONTUSEMPI
-	std::cout<<"REPORT AS SENT:"<<std::endl;
-	for ( int i = 0; i <GameReport::encodedSize; i++)
+    std::cout << "REPORT AS SENT:" << std::endl;
+    for (int i = 0; i < GameReport::encodedSize; i++)
         std::cout << dataOut[i] << " ";
 
     MPI_Send(&dataOut, GameTask::encodedSize, MPI_INT, 0, MPI_REPORT, MPI_COMM_WORLD);

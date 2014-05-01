@@ -6,12 +6,12 @@ C11=-std=c++11
 VERBOSE=-DVERBOSE_STRATEGIES
 
 INCLUDE_PATH=src/
-LIBS=src/game src/gamemap src/locations src/strategies
+LIBS=src/game src/gamemap src/locations src/strategies src/mpi
 BUILD_DIR=build
 TARGET=risk_exec
 
 main: $(BUILD_DIR)
-	$(CC) $(C11) src/TrueMain.cpp -I$(INCLUDE_PATH) $(BUILD_DIR)/*.o -o $(TARGET)
+	$(CC) $(C11) -I$(INCLUDE_PATH) $(BUILD_DIR)/*.o -o $(TARGET)
 	@echo "HelloWorld"
 
 #test: $(BUILD_DIR)
