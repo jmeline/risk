@@ -3,18 +3,6 @@
 	  	MATT JOSEPH JACOB
 -----------------------------------------------------------------------
 
-Goals:
-DONE(1)Make Strategy Interface, UI, gameFlow, gameState, gameMap, gameReport
-DONE(2)Make specific human-controlled strategies
-x   (3)Organize Dominion Graph -> We'll do it by hand
-no. (4)Analysis Program
-    (5)Make it run on UberComputer
-NO. (6)Crossover( Mixing and matching strategies to determine improvement)
-    (7)Research and add strategies
-DONE(8)Make Prez
-    (9)Make Report
-
-
 Pressing todo:
 	4) Then test GameManager with MPI (check for file output)
 	5) Then start the supercomputer running.
