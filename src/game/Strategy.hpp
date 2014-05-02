@@ -32,6 +32,7 @@ enum StrategyEnum
     ObtainSmallestContinentsFirstStrategy,
     PacifistStrategy,
     ImmediateBestValueStrategy1,
+	PreyOnWeakStrategy,
     BadStrategy1
 };
 }
@@ -112,7 +113,10 @@ class AggressiveStrategy : public Strategy
 public:
     AggressiveStrategy();
 
-    StrategyEnum::StrategyEnum getIdentifier();
+	StrategyEnum::StrategyEnum getIdentifier()
+    {
+        return StrategyEnum::AggressiveStrategy;
+    }
     virtual int claim(GameState state);
     virtual std::vector<std::pair<int, int>> place(GameState state, int numTroops);
     virtual std::pair<int, int> attack(GameState state);
@@ -188,11 +192,31 @@ private:
   WARNING: this strategy MAY NOT TERMINATE; in any case it will never win. */
 class PacifistStrategy : public Strategy
 {
+public:
     PacifistStrategy();
 
     StrategyEnum::StrategyEnum getIdentifier()
     {
         return StrategyEnum::PacifistStrategy;
+    }
+    virtual int claim(GameState state);
+    virtual std::vector<std::pair<int, int>> place(GameState state, int numTroops);
+    virtual std::pair<int, int> attack(GameState state);
+    virtual std::vector<std::tuple<int, int, int> > fortify(GameState state);
+private:
+    int movesDoneAttacking;
+};
+
+/* Never attacks.  Handles other things more or less at random.
+  WARNING: this strategy MAY NOT TERMINATE; in any case it will never win. */
+class PreyOnWeakStrategy : public Strategy
+{
+public:
+    PreyOnWeakStrategy();
+
+    StrategyEnum::StrategyEnum getIdentifier()
+    {
+        return StrategyEnum::PreyOnWeakStrategy;
     }
     virtual int claim(GameState state);
     virtual std::vector<std::pair<int, int>> place(GameState state, int numTroops);
