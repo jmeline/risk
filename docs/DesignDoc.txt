@@ -3,24 +3,12 @@
 	  	MATT JOSEPH JACOB
 -----------------------------------------------------------------------
 
-Pressing todo:
-	4) Then test GameManager with MPI (check for file output)
-	5) Then start the supercomputer running.
-	6) Get some data
-
-PRESENTATION URL:
-	https://docs.google.com/a/aggiemail.usu.edu/presentation/d/12e0cRb4QVKHs59cHkWbolaBrv-Cnjo6du0B0kAVaOBE/edit?usp=sharing
-BRAINSTORM URL:
-	https://docs.google.com/a/aggiemail.usu.edu/document/d/13dFqcwhkxmEEDaJVCYgrZjwDOTfcNfbKyB_t3w2_2Kc/edit
-
-Nifty-looking site:  http://www.totaldiplomacy.com/RiskStrategyGuides/Tactics4ExchangeCountryIntersectionGround.aspx
-	
 STRATEGY LIST:
 	Human Controlled - DONE
 	Smallest Continent First - DONE
-		we can tweek parameters of this to make more strategie
+		we can tweak parameters of this to make more strategie
 	ImmediateBestValueStrategy1 - DONE
-		we can tweek parameters of this to make more strategie
+		we can tweak parameters of this to make more strategie
 	Pacifist Strategy - done?
 	
 	"Bogo strategy" (replaces "Bad strategy")
@@ -42,3 +30,10 @@ STRATEGY LIST:
 		Maximize the number of contigous regions owned, preferring that to continents
 		Aside from maxmizing region count, seeks to maximize V=x1*T/B+x2*N
 		Never less than two troops per region (so that doesn't have terrible odds when its borders broken)
+
+PRESENTATION URL:
+	https://docs.google.com/a/aggiemail.usu.edu/presentation/d/12e0cRb4QVKHs59cHkWbolaBrv-Cnjo6du0B0kAVaOBE/edit?usp=sharing
+BRAINSTORM URL:
+	https://docs.google.com/a/aggiemail.usu.edu/document/d/13dFqcwhkxmEEDaJVCYgrZjwDOTfcNfbKyB_t3w2_2Kc/edit
+
+Nifty-looking site:  http://www.totaldiplomacy.com/RiskStrategyGuides/Tactics4ExchangeCountryIntersectionGround.aspx
