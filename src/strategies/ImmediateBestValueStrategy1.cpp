@@ -201,15 +201,20 @@ std::pair<int, int> ImmediateBestValueStrategy1::attack(GameState state)
 	{
 		if (beVerbose)  std::cout<<"Considering attacking "<<std::get<0>(weightedNeighborList[chosen])<<std::endl;
 		int attackFrom = std::get<1>(weightedNeighborList[chosen]);
-		int danger = 0 - state.getRegionInfo(attackFrom).second;
-		std::vector<int> localNeighbors = map->getNeighborsOfRegion(attackFrom);
-		for (int k=0; k<localNeighbors.size(); k++)
-		{
-			if (state.getRegionInfo(localNeighbors[k]).first != myPlayerNumber)
-				danger += state.getRegionInfo(localNeighbors[k]).second;
+		int armiesAtAttackFrom = state.getRegionInfo(attackFrom).second;
+		if (armiesAtAttackFrom>10)		//if we have at least 10 and are still in danger, the game is stagnating.  Just let it happen, danger or no
+				break;
+		if (armiesAtAttackFrom>2) {
+			int danger = 0 - armiesAtAttackFrom;
+			std::vector<int> localNeighbors = map->getNeighborsOfRegion(attackFrom);
+			for (int k=0; k<localNeighbors.size(); k++)
+			{
+				if (state.getRegionInfo(localNeighbors[k]).first != myPlayerNumber)
+					danger += state.getRegionInfo(localNeighbors[k]).second;
+			}
+			if (danger < dangerThreshold)
+				break;
 		}
-		if (danger < dangerThreshold)
-			break;
 		chosen--;
 	}
 

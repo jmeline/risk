@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
 	
 	StrategyEnum::StrategyEnum strategies[] = {
 		StrategyEnum::AggressiveStrategy,
-		StrategyEnum::AggressiveStrategy,	////StrategyEnum::ImmediateBestValueStrategy1,
+		StrategyEnum::AggressiveStrategy,
 		StrategyEnum::NOPLAYER,
 		StrategyEnum::NOPLAYER,
 		StrategyEnum::NOPLAYER,

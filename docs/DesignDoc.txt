@@ -42,6 +42,7 @@ Data Needed/Stats to get/Reports to write:
 			Don't actually go to 6.  Start with 2 and go up
 	Number of rounds it takes, as a function of players involved
 		use same data as was used for dominion graph
+		include standard deviation, or make a histogram
 
 
 STRATEGY LIST:
