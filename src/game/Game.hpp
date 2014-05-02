@@ -14,30 +14,31 @@
 #include "GameReport.hpp"
 #include "Strategy.hpp"
 
-class Game {
+class Game
+{
 private:
     GameMap* map;
     Strategy** player;
-	GameState state;
+    GameState state;
     int numberOfPlayers;
-////	static int probabilityCache[20][20];
-////	static bool probabilityCacheSet[20][20];
+    ////	static int probabilityCache[20][20];
+    ////	static bool probabilityCacheSet[20][20];
 
 public:
-	Game(GameTask task);
-	~Game();
+    Game(GameTask task);
+    ~Game();
 
     /* Uses the strategies to run the game through. */
     GameReport runGame();
 
-	static GameReport quickRun(GameTask task);
+    static GameReport quickRun(GameTask task);
 
-	/* The first double is the probability of attacker victory.  The second is the probability of a tie.  Probability of defender victory is what remains. */
-	static std::pair<double,double> getProbability(int attackingDice, int defendingDice);
+    /* The first double is the probability of attacker victory.  The second is the probability of a tie.  Probability of defender victory is what remains. */
+    static std::pair<double, double> getProbability(int attackingDice, int defendingDice);
 
-	/* A useful method for strategies: Gives the probability of victory after repeated combat.
-	 * NOTE: "attacking" should refer to AVAILIABLE armies, which is occupyingArmies-1 (someone must stay to defend the land) */
-	static double getProbabilityOfVictory(int attacking, int defending);
+    /* A useful method for strategies: Gives the probability of victory after repeated combat.
+     * NOTE: "attacking" should refer to AVAILIABLE armies, which is occupyingArmies-1 (someone must stay to defend the land) */
+    static double getProbabilityOfVictory(int attacking, int defending);
 
 private:
     /* Lets the players take turns choosing countries to claim until all are claimed */

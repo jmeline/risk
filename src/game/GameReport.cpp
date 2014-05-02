@@ -51,7 +51,11 @@ void GameReport::write(std::ostream *outputStream)
 	*outputStream << rounds <<";"<< map;
 	for (int i=0; i<numberOfPlayers; i++)
 		*outputStream <<(i==0?';':',')<< players[i];
+        for (int i=numberOfPlayers; i<6; i++)
+		*outputStream <<(i==0?';':',')<< -1;
 	for (int i=0; i<numberOfPlayers; i++)
 		*outputStream <<(i==0?';':',')<< winners[i];
+        for (int i=numberOfPlayers; i<6; i++)
+		*outputStream <<(i==0?';':',')<< -1;
 	*outputStream << std::endl;
 }
