@@ -2,6 +2,14 @@
   		       RISK
 	  	MATT JOSEPH JACOB
 -----------------------------------------------------------------------
+TODO:
+	Joseph fix DP for prob of victory
+	Write last 3 strategies (see "STRATEGY LIST")
+	Joseph fix issues he has a note on
+	Run experiments descibed under "data needed"
+	Crunch data - Joseph
+	Write Report - see notes here
+
 
 Stuff for report:
 	each game runs faster than expected, so MPI overhead a bit pricy.  Oh well.
@@ -10,8 +18,18 @@ Stuff for report:
 			We sacrifice speed to keep maximum amounts of data
 	Strategies much harder to develop than expected, SO
 		Make parameter-adjustable so can get lots of cheap strats
+	Change "Type of Strategies" section
+		Rename "Immediate Best Value" as greedy
+		Kill Continents First and Territory First
+		Add to report (and make) Agressive strategy:  Attack from strongest place, EVERY time possible
+		Make "Prey on the weak" and "Pray on the Strong"
+			fortunately, they _shouldn't_ be as hard as the others
+			we don't have to do what's in the paper
+		Update everything in the paper to match what we actually did
+		Mention tweakability
+	Focus on everything our program does; we can get all but the results in advance
 
-Stats to get:
+Data Needed/Stats to get/Reports to write:
 	order advantage:
 		have games with all the same strategy (2-6 players), and see how often p1, p2, etc wins, to see if there's an advantage.
 	2-player total dominion graph:
@@ -32,26 +50,27 @@ STRATEGY LIST:
 		we can tweak parameters of this to make more strategie
 	Pacifist Strategy - done?
 	
-	"Bogo strategy" (replaces "Bad strategy")
-		It looks like this may be a lot like pacifist strategy.
-		Only advantage: bogo vs bogo _eventaully_ terminates
+	Aggressive
+		Claim: Randomly
+		Place: Anywhere touching an enemy
+		Attacking: Pick my region with most troops first, attack anyone.  ALWAYS attack if you can, never hold back
+		Fortify: If not touching any enemy, move to random neighbor (code for this exists, recycle it)
 	Attack weak
-		Always go for best odds of immediate victory
-		"The weak" can mean 1) a player almost to be illuminated or 2) a region easily conquered
+		Claim: Randomly
+		Place: On strongest myRegion that borders the weakest enemy region
+		Attack: Always go for best odds of immediate victory (inspects neighbors)
+			"The weak" can mean 1) a player almost to be illuminated or 2) a region easily conquered
+			There exists a funciton in Game.cpp that will get victory probability for you
+		Fortify: If not touching any enemy, move to random neighbor (code for this exists, recycle it)
 	Attack strong
-		Don't let anyone size a continent
-		Aside from that, calculate the greatest threat and hurt them
-	Maximize V=x1*T/B+x2*N: Continents-first
-		T=troop bonus; B=exposed borders; N=neighboring regions; x1 and x2 are scaling factors for stability vs having expansion options
-		Goes for the continent of best V
+		Claim: Randomly
+		Place: On strongest myRegion that borders the the type of region that would be targeted by "attack"
+		Attack: Find out who's "most valuable" and attack them "where it hurts"
+			Value determined by continents owned (valued by their reinforcement value) and regions owned.  Come up with a function to weight those.
+			"Where it hurts the most": the most expensive continent they have complete, if possible.  If not, any region.
+		Fortify: If not touching any enemy, move to random neighbor (code for this exists, recycle it)
+		
 	
-		T=troop bonus; B=exposed borders; N=neighboring regions; x1 and x2 are scaling factors for stability vs having expansion options
-		Goes for the best V right now, not caring as much for the long term (just test the V of every move)
-	Region-First method
-		Maximize the number of contigous regions owned, preferring that to continents
-		Aside from maxmizing region count, seeks to maximize V=x1*T/B+x2*N
-		Never less than two troops per region (so that doesn't have terrible odds when its borders broken)
-
 PRESENTATION URL:
 	https://docs.google.com/a/aggiemail.usu.edu/presentation/d/12e0cRb4QVKHs59cHkWbolaBrv-Cnjo6du0B0kAVaOBE/edit?usp=sharing
 BRAINSTORM URL:
