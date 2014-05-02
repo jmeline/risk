@@ -67,7 +67,7 @@ void GameManager::runIt(std::string outputFileLocation)
 		for (int i=0; i<slavesToUse; i++)
 			launchGame(i,i);
 		for (int i=slavesToUse; i<slaveTasks.size(); i++)
-			reportThatIsDone(i);	//tell unneeded slaves they are done
+			informThatIsDone(i);	//tell unneeded slaves they are done
 		int nextGameNumber = slavesToUse;	//since we just assigned game number (slavesToUse-1)
 	
 		//communicate, until all done
@@ -81,7 +81,7 @@ void GameManager::runIt(std::string outputFileLocation)
 			}
 			else
 			{
-				reportThatIsDone(whoDone);
+				informThatIsDone(whoDone);
 			}
 		}
 	#else
@@ -120,21 +120,26 @@ int GameManager::getAndHandleReport(std::ostream *outputStream)
 	int dataIn[GameReport::encodedSize];
 	MPI_Status status;
 	MPI_Recv(&dataIn, GameReport::encodedSize, MPI_INT, MPI_ANY_SOURCE, MPI_REPORT, MPI_COMM_WORLD, &status);
-
-	std::cout<<"REPORT AS RECEIVED:"<<std::endl;
+        int number = 0;
+        MPI_Get_count(&status, MPI_INT, &number);
+	std::cout<<"REPORT AS RECEIVED: " << number << " " << std::endl;
 	for ( int i = 0; i <GameReport::encodedSize; i++)
             std::cout << dataIn[i] << " ";
         std::cout << std::endl;
+        
+        
+        
 
 	report.decode(dataIn);
 	int slaveNumber = status.MPI_SOURCE - 1;
 	slaveTasks[slaveNumber] = -1;	//mark this slave as not working on anything
 
+        //report.write(&(std::cout));
 	report.write(outputStream);
 	return slaveNumber;
 }
 
-void GameManager::reportThatIsDone(int slaveNumber)
+void GameManager::informThatIsDone(int slaveNumber)
 {
 	StrategyEnum::StrategyEnum fakePlayers[] = { StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER };
 	GameTask fakeTask(MapEnum::Earth, fakePlayers);

@@ -25,7 +25,7 @@ private:
 	#ifndef DONTUSEMPI
 	void launchGame(int slaveNumber, int gameNumber);	//communicates with a slave: assigns a slave to run gamesToRun[gameNumber]
 	int getAndHandleReport(std::ostream *outputStream);	//communicates with a slave: gets the results back, then adds them to the output file.  Returns the number of the slave that gave the report
-	void reportThatIsDone(int slaveNumber);				//communicates with a slave: tells it thtat it is all done.  Does so by sending a GameTask with StrategyEnum::NOPLAYER strategies.
+	void informThatIsDone(int slaveNumber);				//communicates with a slave: tells it thtat it is all done.  Does so by sending a GameTask with StrategyEnum::NOPLAYER strategies.
 	#endif
 };
 

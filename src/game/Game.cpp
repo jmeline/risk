@@ -75,19 +75,17 @@ GameReport Game::runGame()
             {
                 numberDead++;
                 report.winners[numberOfPlayers - numberDead] = killedInConquest[i];
-                std::cout << "Player "<<killedInConquest[i]<<" died." << std::endl;
                 isDead[killedInConquest[i]] = true;
             }
             if (numberDead == (numberOfPlayers - 1))
             {
                 report.winners[0] = whoseTurn;
-                std::cout << "Player "<<whoseTurn<<" won." << std::endl;
                 break;
             }
             fortify(whoseTurn);
         }
-        /*whoseTurn = (whoseTurn + 1) % numberOfPlayers;
-                std::cout<<"Type any char to continue>";
+        whoseTurn = (whoseTurn + 1) % numberOfPlayers;
+        /*        std::cout<<"Type any char to continue>";
                 char ch;
                 std::cin >> ch;
          */
