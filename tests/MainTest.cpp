@@ -16,12 +16,12 @@ int main(int argc, char** argv) {
 	rng = std::default_random_engine(rand());
 	
 	StrategyEnum::StrategyEnum strategies[] = {
-		StrategyEnum::ObtainSmallestContinentsFirstStrategy,
-		StrategyEnum::ObtainSmallestContinentsFirstStrategy,	////StrategyEnum::ImmediateBestValueStrategy1,
-		StrategyEnum::ObtainSmallestContinentsFirstStrategy,
-		StrategyEnum::ObtainSmallestContinentsFirstStrategy,
-		StrategyEnum::ObtainSmallestContinentsFirstStrategy,
-		StrategyEnum::ObtainSmallestContinentsFirstStrategy
+		StrategyEnum::ImmediateBestValueStrategy1,
+		StrategyEnum::PacifistStrategy,	////StrategyEnum::ImmediateBestValueStrategy1,
+		StrategyEnum::NOPLAYER,
+		StrategyEnum::NOPLAYER,
+		StrategyEnum::NOPLAYER,
+		StrategyEnum::NOPLAYER
 	};
 	GameTask task(MapEnum::Earth, strategies);
 	Game game(task);
