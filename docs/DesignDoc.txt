@@ -3,6 +3,27 @@
 	  	MATT JOSEPH JACOB
 -----------------------------------------------------------------------
 
+Stuff for report:
+	each game runs faster than expected, so MPI overhead a bit pricy.  Oh well.
+		A more sensible division would have each one run the same game a few times and report averages, rather than doing that centrally
+			However, we don't just want the average, we want to be able to see the order of victory
+			We sacrifice speed to keep maximum amounts of data
+	Strategies much harder to develop than expected, SO
+		Make parameter-adjustable so can get lots of cheap strats
+
+Stats to get:
+	order advantage:
+		have games with all the same strategy (2-6 players), and see how often p1, p2, etc wins, to see if there's an advantage.
+	2-player total dominion graph:
+		have each one be the starting player 50% of the time
+			NOTE: do NOT allow pacifist vs pacifist
+				careful with bogostrategy, too.
+		go ahead and run with 2-6 players, since will need all the data anyhow.  We just will only dominion graph the 2p case
+			Don't actually go to 6.  Start with 2 and go up
+	Number of rounds it takes, as a function of players involved
+		use same data as was used for dominion graph
+
+
 STRATEGY LIST:
 	Human Controlled - DONE
 	Smallest Continent First - DONE
