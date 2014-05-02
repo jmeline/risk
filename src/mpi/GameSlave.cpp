@@ -65,6 +65,7 @@ void GameSlave::sendReport(GameReport report)
     std::cout << "REPORT AS SENT:" << std::endl;
     for (int i = 0; i < GameReport::encodedSize; i++)
         std::cout << dataOut[i] << " ";
+    std::cout << std::endl;
 
     MPI_Send(&dataOut, GameTask::encodedSize, MPI_INT, 0, MPI_REPORT, MPI_COMM_WORLD);
 #else

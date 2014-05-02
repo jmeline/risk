@@ -12,7 +12,6 @@ TARGET=risk_exec
 
 main: $(BUILD_DIR)
 	$(CC) $(C11) -I$(INCLUDE_PATH) $(BUILD_DIR)/*.o -o $(TARGET)
-	@echo "HelloWorld"
 
 #test: $(BUILD_DIR)
 #	$(CC) $(C11) tests/MainTest.cpp -I$(INCLUDE_PATH) $(BUILD_DIR)/*.o -o $(TARGET)
@@ -25,7 +24,8 @@ $(BUILD_DIR):
 	mkdir $(BUILD_DIR)/
 	for dir in $(LIBS); do \
 		cd $$dir; \
-		$(CC) $(VERBOSE) $(C11) -c *.cpp -I../; \
+		#$(CC) $(VERBOSE) $(C11) -c *.cpp -I../; \
+		$(CC) $(C11) -c *.cpp -I../; \
 		mv *.o ../../$(BUILD_DIR); \
 		cd -; \
 	done

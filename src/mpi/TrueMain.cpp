@@ -90,8 +90,12 @@ int main(int argc, char** argv)
         slave.runIt();
     }
 
+    std::cout << "My MPI Rank has finished: " << myMpiRank << std::endl;
+
     //clean up MPI stuff
 #ifndef DONTUSEMPI
+    MPI_Barrier(MPI_COMM_WORLD);
+    std::cout << "Leaving Barrier" << myMpiRank << std::endl;
     MPI_Finalize();
 #endif
 }
