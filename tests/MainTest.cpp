@@ -12,7 +12,7 @@ std::default_random_engine rng;
 
 int main(int argc, char** argv) {
 	//We must seed the random number generator.  This one is only used for testing; rng is used more.
-	srand((unsigned int)time(NULL));		
+	srand((unsigned int)time(NULL));
 	rng = std::default_random_engine(rand());
 	
 	StrategyEnum::StrategyEnum strategies[] = {
@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 		StrategyEnum::NOPLAYER,
 		StrategyEnum::NOPLAYER
 	};
-	GameTask task(MapEnum::Earth, strategies);
+	GameTask task(MapEnum::Earth, strategies); //ThreeContinent
 	Game game(task);
 	std::cout << "Ready to run." << std::endl;
 	GameReport report = game.runGame();

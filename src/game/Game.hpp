@@ -13,16 +13,23 @@
 #include "GameState.hpp"
 #include "GameReport.hpp"
 #include "Strategy.hpp"
+#include <array>
 
 class Game
 {
+public:
+	static const int PROBABILITYCACHESIZE = 30;
+	static bool probabilityCacheIsInitialized;
+//	static double probabilityCache[PROBABILITYCACHESIZE*PROBABILITYCACHESIZE];
+	static double* probabilityCache;
+
 private:
     GameMap* map;
     Strategy** player;
     GameState state;
     int numberOfPlayers;
-    ////	static int probabilityCache[20][20];
-    ////	static bool probabilityCacheSet[20][20];
+	
+	////static std::array<std::array<double,PROBABILITYCACHESIZE>,PROBABILITYCACHESIZE> probabilityCache;
 
 public:
     Game(GameTask task);
@@ -39,6 +46,9 @@ public:
     /* A useful method for strategies: Gives the probability of victory after repeated combat.
      * NOTE: "attacking" should refer to AVAILIABLE armies, which is occupyingArmies-1 (someone must stay to defend the land) */
     static double getProbabilityOfVictory(int attacking, int defending);
+
+	/* Initializes probabilityCache.  Called only by getProbabilityOfVictory, only once */
+	static void initializeProbabilityCache();
 
 private:
     /* Lets the players take turns choosing countries to claim until all are claimed */

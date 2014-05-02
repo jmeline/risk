@@ -14,11 +14,17 @@
 
 extern std::default_random_engine rng;
 
+
+bool Game::probabilityCacheIsInitialized = false;
+double* Game::probabilityCache = (double*)malloc(PROBABILITYCACHESIZE*PROBABILITYCACHESIZE*sizeof(double));
+
+
 GameReport Game::quickRun(GameTask task)
 {
     Game game(task);
     return game.runGame();
 }
+
 
 Game::Game(GameTask task)
 {
@@ -44,12 +50,14 @@ Game::Game(GameTask task)
         player[i] = NULL;
 }
 
+
 Game::~Game()
 {
     delete map;
     for (int i = numberOfPlayers; i < 6; i++)
         delete player[i];
 }
+
 
 GameReport Game::runGame()
 {
@@ -89,6 +97,7 @@ GameReport Game::runGame()
     return report;
 }
 
+
 void Game::claimCountries()
 {
     int whoseTurn = 0;
@@ -105,6 +114,7 @@ void Game::claimCountries()
         whoseTurn = (whoseTurn + 1) % numberOfPlayers;
     }
 }
+
 
 void Game::placeFirstTroops()
 {
@@ -133,6 +143,7 @@ void Game::placeFirstTroops()
         }
     }
 }
+
 
 void Game::getAndPlaceTroops(int whoseTurn)
 {
@@ -175,8 +186,7 @@ void Game::getAndPlaceTroops(int whoseTurn)
     }
 }
 
-/* Lets the current player do battle as much as desired for a turn
- * Returns a vector of all players defeated during these battles (if any), given in order of death */
+
 std::vector<int> Game::doATurnOfBattles(int whoseTurn)
 {
     std::vector<int> fallenPlayers;
@@ -250,7 +260,7 @@ std::vector<int> Game::doATurnOfBattles(int whoseTurn)
     return fallenPlayers;
 }
 
-/* Gives the current player a chance to fortify by moving troops around */
+
 void Game::fortify(int whoseTurn)
 {
     //get player input, then prepare vectors needed to ensure valid moves
@@ -294,8 +304,7 @@ void Game::fortify(int whoseTurn)
     }
 }
 
-/* Rolls dice (numToAttackWith vs numToDefendWith), and returns a number representing the outcome.
- * Meaning of 2,1,0,-1,-2: attacker won 2, attacker won 1, each won one, defender won 1, defender won 2 */
+
 int Game::rollToConquer(int numToAttackWith, int numToDefendWith)
 {
     std::uniform_real_distribution<double> distrubution(0, 1);
@@ -309,7 +318,7 @@ int Game::rollToConquer(int numToAttackWith, int numToDefendWith)
         return (randResult < probabilities.first) ? 2 : ((randResult - probabilities.first < probabilities.second) ? 0 : -2);
 }
 
-/* Returns true is there are no countries left owned by a given player. */
+
 bool Game::isTotallyDefeated(int playerNumber)
 {
     for (int i = 0; i < map->getNumberOfRegions(); i++)
@@ -319,6 +328,7 @@ bool Game::isTotallyDefeated(int playerNumber)
     }
     return true;
 }
+
 
 /* See the "dice probability notes.txt" doc for the calculations behind this. */
 std::pair<double, double> Game::getProbability(int attackingDice, int defendingDice)
@@ -343,26 +353,45 @@ std::pair<double, double> Game::getProbability(int attackingDice, int defendingD
     }
 }
 
+
 double Game::getProbabilityOfVictory(int attacking, int defending)
 {
-    ////	for (int i=0; i<20; i++) {
-    ////		for (int j=0; j<20; j++)
-    ////			std::cout<< (Game::probabilityCacheSet[i][j] ? "T " : "F ");
-    ////		std::cout<<std::endl;
-    ////	}
-    ////	std::cout<<"CLEAR"<<std::endl;
-
-    //Recursive method
-    if (attacking == 0)
-        return 0;
-    if (defending == 0)
-        return 1.0;
-    std::pair<double, double> probabilities = getProbability(attacking, defending);
+	if (!probabilityCacheIsInitialized)
+		initializeProbabilityCache();
+	if (attacking<PROBABILITYCACHESIZE && defending<PROBABILITYCACHESIZE)
+		return probabilityCache[attacking*PROBABILITYCACHESIZE+defending];
+    //if we made it this far, we have to work recursively
+	std::pair<double, double> probabilities = getProbability(attacking, defending);
     if (attacking == 1 || defending == 1)
         return probabilities.first * getProbabilityOfVictory(attacking, defending - 1)
-        + (1 - probabilities.first) * getProbabilityOfVictory(attacking - 1, defending);
+			+ (1 - probabilities.first) * getProbabilityOfVictory(attacking - 1, defending);
     else
         return probabilities.first * getProbabilityOfVictory(attacking, defending - 2)
-        + probabilities.second * getProbabilityOfVictory(attacking - 1, defending - 1)
-        + (1 - probabilities.first - probabilities.second) * getProbabilityOfVictory(attacking - 2, defending);
+			+ probabilities.second * getProbabilityOfVictory(attacking - 1, defending - 1)
+			+ (1 - probabilities.first - probabilities.second) * getProbabilityOfVictory(attacking - 2, defending);
+}
+
+
+void Game::initializeProbabilityCache() {
+	for (int attacking=0; attacking<PROBABILITYCACHESIZE; attacking++) {
+		for (int defending=0; defending<PROBABILITYCACHESIZE; defending++) {
+			if (attacking == 0)
+				probabilityCache[attacking*PROBABILITYCACHESIZE+defending] = 0;
+			else if (defending == 0)
+				probabilityCache[attacking*PROBABILITYCACHESIZE+defending] = 1.0;
+			else {
+				std::pair<double, double> probabilities = getProbability(attacking, defending);
+				if (attacking == 1 || defending == 1)
+					probabilityCache[attacking*PROBABILITYCACHESIZE+defending] =
+						probabilities.first * probabilityCache[attacking*PROBABILITYCACHESIZE+(defending-1)]
+						+ (1 - probabilities.first) * probabilityCache[(attacking-1)*PROBABILITYCACHESIZE+defending];
+				else
+					probabilityCache[attacking*PROBABILITYCACHESIZE+defending] =
+						probabilities.first * probabilityCache[attacking*PROBABILITYCACHESIZE+(defending-2)]
+						+ probabilities.second * probabilityCache[(attacking-1)*PROBABILITYCACHESIZE+(defending-1)]
+						+ (1 - probabilities.first - probabilities.second) * probabilityCache[(attacking-2)*PROBABILITYCACHESIZE+defending];
+			}
+		}
+	}
+	probabilityCacheIsInitialized = true;
 }

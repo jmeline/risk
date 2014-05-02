@@ -29,6 +29,7 @@ Stuff for report:
 		Update everything in the paper to match what we actually did
 		Mention tweakability
 	Focus on everything our program does; we can get all but the results in advance
+	Mention MainTest vs TrueMain (and delete the 3rd executable; we never used it).  Say where used each
 
 Data Needed/Stats to get/Reports to write:
 	order advantage:

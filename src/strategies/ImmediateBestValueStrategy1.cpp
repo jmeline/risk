@@ -159,13 +159,18 @@ std::pair<int, int> ImmediateBestValueStrategy1::attack(GameState state)
 	std::vector<int> myNeighbors = state.getAllNeighborsOfPlayer(myPlayerNumber, map);
 	for (int i=0; i<myNeighbors.size(); i++)
 	{
+		std::cout<<"going through neighbors "<<i;
 		double value = testValue(state,myNeighbors[i]);
+		std::cout<<"  testval done";
 		//we have the value, now we need the probability at the best attack-from location
 		double probability = 0;
 		int bestAttackFromSpot = -1;
 		std::vector<int> theirNeighbors = map->getNeighborsOfRegion(myNeighbors[i]);
+		std::cout<<"  theirNeighbors found (/"<<theirNeighbors.size()<<")"<<std::endl;
+		std::cout<<"    j=";
 		for (int j=0; j<theirNeighbors.size(); j++)
 		{
+			std::cout<<j<<"/"<<theirNeighbors.size();
 			if (state.getRegionInfo(theirNeighbors[j]).first == myPlayerNumber)
 			{
 				double currentProbability = Game::getProbabilityOfVictory(state.getRegionInfo(theirNeighbors[j]).second - 1, state.getRegionInfo(myNeighbors[i]).second);
@@ -175,14 +180,21 @@ std::pair<int, int> ImmediateBestValueStrategy1::attack(GameState state)
 					bestAttackFromSpot = theirNeighbors[j];
 				}
 			}
+			std::cout<<",";
 		}
-		if (beVerbose)  std::cout<<"Region "<<myNeighbors[i]<<" has weight "<<probability*value<<" when attacked from "<<bestAttackFromSpot<<std::endl;
-		weightedNeighborList.push_back(std::tuple<int,int,double>(myNeighbors[i],bestAttackFromSpot,probability*value));
+		std::cout<<std::endl;
+		if (bestAttackFromSpot >= 0)
+		{
+			if (beVerbose)  std::cout<<"Region "<<myNeighbors[i]<<" has weight "<<probability*value<<" when attacked from "<<bestAttackFromSpot<<std::endl;
+				weightedNeighborList.push_back(std::tuple<int,int,double>(myNeighbors[i],bestAttackFromSpot,probability*value));
+		}
 	}
+	std::cout<<"Sorting weighted neighbor list"<<std::endl;
 	std::sort(weightedNeighborList.begin(), weightedNeighborList.end(),
               [](const std::tuple<int,int,double> &lhs, const std::tuple<int,int,double> &rhs)
 					{ return std::get<2>(lhs) < std::get<2>(rhs); });
 
+	std::cout<<"going through chosen 1"<<std::endl;
 	//Now, we pick one to attack
 	int chosen = weightedNeighborList.size() - 1;
 	while (chosen >= 0)
@@ -201,6 +213,7 @@ std::pair<int, int> ImmediateBestValueStrategy1::attack(GameState state)
 		chosen--;
 	}
 
+	std::cout<<"prepping for actual attack"<<std::endl;
 	//And attack it
 	if (chosen >= 0)
 	{
@@ -262,6 +275,7 @@ std::vector<std::tuple<int, int, int>> ImmediateBestValueStrategy1::fortify(Game
 
 double ImmediateBestValueStrategy1::getValue(GameState state)
 {
+	std::cout<<"starting getVal";
 	// Find the troopBoost
 	double troopBoost = state.getNumberOccupiedBy(myPlayerNumber) / 3.0;
 	std::vector<Continent> continentList = map->getContinentList();
@@ -283,6 +297,7 @@ double ImmediateBestValueStrategy1::getValue(GameState state)
 	int borders = state.getAllExposedBorders(myPlayerNumber, map).size();
 	int neighborCount = state.getAllNeighborsOfPlayer(myPlayerNumber, map).size();
 
+	std::cout<<"ENDING getVal";
 	//Now compute the value
 	return stabilityFactor*troopBoost/borders + versatilityFactor*neighborCount;
 }
