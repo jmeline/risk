@@ -11,8 +11,16 @@ extern std::default_random_engine rng;
 /**************************************************
 
             COMPUTER CONTROLLED
-    Prey on Weak
+    Agressive
     Attack any time possible, starting with our strongest army
+
+Claim: Randomly
+
+Place: Evenly distribute, anywhere touching an enemy
+
+Attacking: Pick my region with most troops first, attack anyone.  ALWAYS attack if you can, never hold back
+
+Fortify: If not touching any enemy, move to random neighbor (code for this exists, recycle it)
 
 **************************************************/
 
@@ -28,8 +36,10 @@ int AggressiveStrategy::claim(GameState state)
 	std::uniform_int_distribution<int> distrubution(0, state.getNumRegions());
 	while (true) {
 		int chosen = distrubution(rng);
-		if(state.getRegionInfo(chosen).first == -1)
+		if(state.getRegionInfo(chosen).first == -1) {
+			if (beVerbose)  std::cout<<"Claiming "<<chosen<<std::endl;
 			return chosen;
+		}
 	}
 }
 
@@ -38,16 +48,20 @@ std::vector<std::pair<int,int>> AggressiveStrategy::place(GameState state, int n
 {
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
 	if (beVerbose)  std::cout << "AggressiveStrategy " << myPlayerNumber << " is placing " << numTroops << " troops." << std::endl;
+	if (beVerbose)  state.display();
 
 	std::vector<std::pair<int, int>> actions;
 
     // get all battlefront territories
 	std::vector<std::pair<int,int>> bordersOwned = state.getAllExposedBorders(myPlayerNumber, map);
-	std::shuffle(bordersOwned.begin(), bordersOwned.end());
+	std::shuffle(bordersOwned.begin(), bordersOwned.end(), rng);
 	int howManyPerPlace = numTroops / bordersOwned.size();
 	int remainder = numTroops % bordersOwned.size();
-    for (int i=0; i<bordersOwned.size(); i++)
-        actions.push_back(std::pair<int, int>(bordersOwned[i], howManyPerPlace+(i<remainder?1:0)));
+    for (int i=0; i<bordersOwned.size(); i++) {
+		int howManyHere = howManyPerPlace+(i<remainder?1:0);
+		if (beVerbose)  std::cout<<"Placing "<<howManyHere<<" troops at "<<bordersOwned[i].first<<std::endl;
+		actions.push_back(std::pair<int, int>(bordersOwned[i].first, howManyHere));
+	}
 
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
     return actions;
@@ -68,16 +82,21 @@ std::pair<int,int> AggressiveStrategy::attack(GameState state)
 
 	//see if we don't have enough troops anywhere to attack
 	int attackFrom = bordersOwned[bordersOwned.size()-1].first;
-	if (state.getRegionInfo(attackFrom).second<2)
+	if (beVerbose)  std::cout<<"Will attack from "<<attackFrom<<std::endl;
+	if (state.getRegionInfo(attackFrom).second<2) {
+		if (beVerbose)  std::cout<<"Not attacking"<<std::endl;
 		return std::pair<int,int>(-1,-1);
+	}
 
 	//then pick a place to attack
 	std::vector<int> targets = map->getNeighborsOfRegion(attackFrom);
 	std::uniform_int_distribution<int> distrubution(0, targets.size());
 	while (true) {
 		int chosen = distrubution(rng);
-		if(state.getRegionInfo(chosen).first != myPlayerNumber)
-			return return std::pair<int,int>(attackFrom, targets[chosen]);
+		if (state.getRegionInfo(targets[chosen]).first != myPlayerNumber) {
+			if (beVerbose)  std::cout<<"Attacking "<<targets[chosen]<<" from "<<attackFrom<<std::endl;
+			return std::pair<int,int>(attackFrom, targets[chosen]);
+		}
 	}
 }
 

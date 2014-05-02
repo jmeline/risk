@@ -50,6 +50,7 @@ std::vector<std::pair<int,int>> PreyOnWeakStrategy::place(GameState state, int n
 {
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
 	if (beVerbose)  std::cout << "PreyOnWeakStrategy " << myPlayerNumber << " is placing " << numTroops << " troops." << std::endl;
+	if (beVerbose)  state.display();
 
 	std::vector<std::pair<int, int>> actions;
 
@@ -88,8 +89,10 @@ std::pair<int,int> PreyOnWeakStrategy::attack(GameState state)
 		std::vector<int> theirNeighbors = map->getNeighborsOfRegion(neighborStrength[i].first);
 		for (int attackFromIndex = 0; attackFromIndex<theirNeighbors.size(); attackFromIndex++) {
 			std::pair<int,int> attackFromInfo = state.getRegionInfo(theirNeighbors[attackFromIndex]);
-			if (attackFromInfo.first==myPlayerNumber && attackFromInfo.second>3)
+			if (attackFromInfo.first==myPlayerNumber && attackFromInfo.second>3) {
+				if (beVerbose)  std::cout<<"Attacking "<<neighborStrength[i].first<<" from "<<attackFromIndex<<std::endl;
 				return std::pair<int,int>(attackFromIndex, neighborStrength[i].first);
+			}
 		}
 	}
 
