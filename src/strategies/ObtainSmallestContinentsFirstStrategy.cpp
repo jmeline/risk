@@ -36,7 +36,9 @@ NOTE: attackFavoringFactor should be kept constant, but is adjustable by child c
  **************************************************/
 
 
-ObtainSmallestContinentsFirstStrategy::ObtainSmallestContinentsFirstStrategy() {attackPlacementPreferenceFactor = 1.0;}
+ObtainSmallestContinentsFirstStrategy::ObtainSmallestContinentsFirstStrategy() {
+	attackPlacementPreferenceFactor = 1.0;
+}
 
 
 int ObtainSmallestContinentsFirstStrategy::claim(GameState state)
