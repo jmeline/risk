@@ -19,6 +19,7 @@ Stuff for report:
 	Strategies much harder to develop than expected, SO
 		Make parameter-adjustable so can get lots of cheap strats
 	Change "Type of Strategies" section
+		Use Jacob's funny discriptions of them from the comments
 		Rename "Immediate Best Value" as greedy
 		Kill Continents First and Territory First
 		Add to report (and make) Agressive strategy:  Attack from strongest place, EVERY time possible
