@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 		StrategyEnum::NOPLAYER,
 		StrategyEnum::NOPLAYER
 	};
-	GameTask task(MapEnum::Earth, strategies); //ThreeContinent
+	GameTask task(MapEnum::ThreeContinent, strategies); //ThreeContinent
 	Game game(task);
 	std::cout << "Ready to run." << std::endl;
 	GameReport report = game.runGame();
