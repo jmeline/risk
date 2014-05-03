@@ -3,9 +3,8 @@
 	  	MATT JOSEPH JACOB
 -----------------------------------------------------------------------
 TODO:
-	Joseph fix DP for prob of victory
-	Write last 3 strategies (see "STRATEGY LIST")
-	Joseph fix issues he has a note on
+	Joseph finish last strategy
+	Joseph get non-repeating permutations
 	Run experiments descibed under "data needed"
 	Crunch data - Joseph
 	Write Report - see notes here

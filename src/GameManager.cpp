@@ -12,7 +12,7 @@ GameManager::GameManager(int numberOfSlaves)
 	slaveTasks = std::vector<int>(numberOfSlaves);
 }
 
-std::vector<GameTask> GameManager::getRunsFor(std::vector<StrategyEnum::StrategyEnum> strategies, std::vector<MapEnum::MapEnum> maps, int numberOfPlayers, int timesToRepeatEachGame)
+std::vector<GameTask> GameManager::getAllPermutationsFor(std::vector<StrategyEnum::StrategyEnum> strategies, std::vector<MapEnum::MapEnum> maps, int numberOfPlayers, int timesToRepeatEachGame)
 {
 	//get relevent counts
 	int strategyPossibilities = strategies.size();
@@ -41,6 +41,51 @@ std::vector<GameTask> GameManager::getRunsFor(std::vector<StrategyEnum::Strategy
 			GameTask info(maps[map], strategiesThisRun);
 			for (int rep=0; rep<timesToRepeatEachGame; rep++)
 				gameTaskList[(map*strategyCombinations+currentCombo)*timesToRepeatEachGame+rep] = info;
+		}
+	}
+	return gameTaskList;
+}
+
+std::vector<GameTask> GameManager::getNonrepeatingPermutationsFor(std::vector<StrategyEnum::StrategyEnum> strategies, std::vector<MapEnum::MapEnum> maps, int numberOfPlayers, int timesToRepeatEachGame)
+{
+	int strategyPossibilities = strategies.size();
+	int strategyPermutations = 1;
+	for (int i=0; i<numberOfPlayers; i++)
+		strategyPermutations *= strategyPossibilities;
+
+	//set up all of the gamesInfos
+	std::vector<GameTask> gameTaskList;
+	for (int map=0; map<maps.size(); map++) {
+		//iterate through all strategy combinations
+		//"currentCombo" tracks the particular strategy combination.  Think of it as a number with "numberOfPlayers" many "digits", each of which can take on one of "strategyPossibilities" possible values
+		for (int currentCombo=0; currentCombo<strategyPermutations; currentCombo++) {
+			//get the set of strategies for this combination
+			bool thisRunIsBad = false;
+			StrategyEnum::StrategyEnum strategiesThisRun[] = { StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER, StrategyEnum::NOPLAYER };
+			for (int playerNum=0; playerNum<numberOfPlayers; playerNum++) {
+				//pick out the "digit" of currentCombo that corresponds to this player
+				int strategyIndex = currentCombo;
+				for (int j=0; j<playerNum; j++)
+					strategyIndex /= strategyPossibilities;	//"shift right" one digit
+				strategyIndex %= strategyPossibilities;		//keep the lowest surviving digit
+				//now, see if it was valid (so far)
+				for (int j=0; j<playerNum-1; j++) {
+					if (strategiesThisRun[j] == strategies[strategyIndex]) {
+						thisRunIsBad = true;
+						break;
+					}
+				}
+				if (thisRunIsBad)
+					break;
+				//if we made it this far, there are no problems (yet)
+				strategiesThisRun[playerNum] = strategies[strategyIndex];
+			}
+			if (!thisRunIsBad) {
+				//Set up the current GameTask
+				GameTask info(maps[map], strategiesThisRun);
+				for (int rep=0; rep<timesToRepeatEachGame; rep++)
+					gameTaskList.push_back(info);
+			}
 		}
 	}
 	return gameTaskList;

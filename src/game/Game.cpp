@@ -360,15 +360,8 @@ double Game::getProbabilityOfVictory(int attacking, int defending)
 		initializeProbabilityCache();
 	if (attacking<PROBABILITYCACHESIZE && defending<PROBABILITYCACHESIZE)
 		return probabilityCache[attacking*PROBABILITYCACHESIZE+defending];
-    //if we made it this far, we have to work recursively
-	std::pair<double, double> probabilities = getProbability(attacking, defending);
-    if (attacking == 1 || defending == 1)
-        return probabilities.first * getProbabilityOfVictory(attacking, defending - 1)
-			+ (1 - probabilities.first) * getProbabilityOfVictory(attacking - 1, defending);
-    else
-        return probabilities.first * getProbabilityOfVictory(attacking, defending - 2)
-			+ probabilities.second * getProbabilityOfVictory(attacking - 1, defending - 1)
-			+ (1 - probabilities.first - probabilities.second) * getProbabilityOfVictory(attacking - 2, defending);
+    //if we made it this far, we have to approximate
+	return attacking/(0.0+attacking+defending);
 }
 
 

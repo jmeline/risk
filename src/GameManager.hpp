@@ -17,7 +17,8 @@ private:
 
 public:
 	GameManager(int numberOfSlaves);
-	static std::vector<GameTask> getRunsFor(std::vector<StrategyEnum::StrategyEnum> strategies, std::vector<MapEnum::MapEnum> maps, int numberOfPlayers, int timesToRepeatEachGame);
+	static std::vector<GameTask> getAllPermutationsFor(std::vector<StrategyEnum::StrategyEnum> strategies, std::vector<MapEnum::MapEnum> maps, int numberOfPlayers, int timesToRepeatEachGame);
+	static std::vector<GameTask> getNonrepeatingPermutationsFor(std::vector<StrategyEnum::StrategyEnum> strategies, std::vector<MapEnum::MapEnum> maps, int numberOfPlayers, int timesToRepeatEachGame);
 	void setGamesToRun(std::vector<GameTask> gameInfoList);
 	void readInExistingReport(std::string reportLocation);	//allows us to resume unfinished work by reading an old report file
 	void runIt(std::string outputFileLocation);
