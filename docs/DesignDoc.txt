@@ -3,7 +3,6 @@
 	  	MATT JOSEPH JACOB
 -----------------------------------------------------------------------
 TODO:
-	Get non-repeating permutations
 	Run experiments descibed under "data needed"
 	Crunch data - Joseph
 	Write Report - see notes here
