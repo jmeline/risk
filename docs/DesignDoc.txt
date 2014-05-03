@@ -3,8 +3,7 @@
 	  	MATT JOSEPH JACOB
 -----------------------------------------------------------------------
 TODO:
-	Joseph finish last strategy
-	Joseph get non-repeating permutations
+	Get non-repeating permutations
 	Run experiments descibed under "data needed"
 	Crunch data - Joseph
 	Write Report - see notes here
@@ -44,39 +43,8 @@ Data Needed/Stats to get/Reports to write:
 		include standard deviation, or make a histogram
 		We'll just do a 2 player version, for now.
 
-
-STRATEGY LIST:
-	Human Controlled - DONE
-	Smallest Continent First - DONE
-		we can tweak parameters of this to make more strategie
-	ImmediateBestValueStrategy1 - DONE
-		we can tweak parameters of this to make more strategie
-	Pacifist Strategy - done?
-	
-	Aggressive
-		Claim: Randomly
-		Place: Evenly distribute, anywhere touching an enemy
-		Attacking: Pick my region with most troops first, attack anyone.  ALWAYS attack if you can, never hold back
-		Fortify: If not touching any enemy, move to random neighbor (code for this exists, recycle it)
-	Attack weak
-		Claim: Randomly
-		Place: On strongest myRegion that borders the weakest enemy region
-		Attack: Always go for best odds of immediate victory (inspects neighbors)
-			"The weak" can mean 1) a player almost to be illuminated or 2) a region easily conquered
-			There exists a funciton in Game.cpp that will get victory probability for you
-		Fortify: If not touching any enemy, move to random neighbor (code for this exists, recycle it)
-	Attack strong
-		Claim: Randomly
-		Place: On strongest myRegion that borders the the type of region that would be targeted by "attack"
-		Attack: Find out who's "most valuable" and attack them "where it hurts"
-			Value determined by continents owned (valued by their reinforcement value) and regions owned.  Come up with a function to weight those.
-			"Where it hurts the most": the most expensive continent they have complete, if possible.  If not, any region.
-		Fortify: If not touching any enemy, move to random neighbor (code for this exists, recycle it)
 		
-	
 PRESENTATION URL:
 	https://docs.google.com/a/aggiemail.usu.edu/presentation/d/12e0cRb4QVKHs59cHkWbolaBrv-Cnjo6du0B0kAVaOBE/edit?usp=sharing
 BRAINSTORM URL:
 	https://docs.google.com/a/aggiemail.usu.edu/document/d/13dFqcwhkxmEEDaJVCYgrZjwDOTfcNfbKyB_t3w2_2Kc/edit
-
-Nifty-looking site:  http://www.totaldiplomacy.com/RiskStrategyGuides/Tactics4ExchangeCountryIntersectionGround.aspx
