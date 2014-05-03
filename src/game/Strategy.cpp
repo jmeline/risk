@@ -16,6 +16,8 @@ Strategy* Strategy::make(StrategyEnum::StrategyEnum strategyType)
         return (Strategy*) (new AggressiveStrategy());
     case (StrategyEnum::PreyOnWeakStrategy):
         return (Strategy*) (new PreyOnWeakStrategy());
+	case (StrategyEnum::PacifistStrategy):
+        return (Strategy*) (new PacifistStrategy());
 	default:
         return (Strategy*) (new BadStrategy1());
     }

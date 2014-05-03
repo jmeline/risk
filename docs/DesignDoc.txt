@@ -43,6 +43,7 @@ Data Needed/Stats to get/Reports to write:
 	Number of rounds it takes, as a function of players involved
 		use same data as was used for dominion graph
 		include standard deviation, or make a histogram
+		We'll just do a 2 player version, for now.
 
 
 STRATEGY LIST:

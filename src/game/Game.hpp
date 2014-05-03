@@ -18,7 +18,7 @@
 class Game
 {
 public:
-	static const int PROBABILITYCACHESIZE = 30;
+	static const int PROBABILITYCACHESIZE = 50;
 	static bool probabilityCacheIsInitialized;
 //	static double probabilityCache[PROBABILITYCACHESIZE*PROBABILITYCACHESIZE];
 	static double* probabilityCache;
