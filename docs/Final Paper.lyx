@@ -643,8 +643,8 @@ This strategy will never win because it never attacks.
  For example, if strategy A is knocked out of the game frequently before
  the pacifist strategy, then strategy A is likely too aggressive to be an
  effective strategy.
- When placing, claiming, and reinforcing, the pacifist strategy is simply
- random.
+ When placing, claiming, and reinforcing, the pacifist strategy picks arbitraril
+y.
 \end_layout
 
 \begin_layout Subsection
@@ -857,7 +857,7 @@ For Prey on the Weak vs itself, the first player had the advantage every
 \end_layout
 
 \begin_layout Subsection
-Experiement 3: Number of Rounds
+Experiment 3: Number of Rounds
 \end_layout
 
 \begin_layout Standard
