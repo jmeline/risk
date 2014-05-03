@@ -33,7 +33,7 @@ int AggressiveStrategy::claim(GameState state)
     if (beVerbose)  std::cout << "AggressiveStrategy "<<myPlayerNumber<<" is claiming" << std::endl;
 	if (beVerbose)  state.display();
 
-	std::uniform_int_distribution<int> distrubution(0, state.getNumRegions());
+	std::uniform_int_distribution<int> distrubution(0, state.getNumRegions()-1);
 	while (true) {
 		int chosen = distrubution(rng);
 		if(state.getRegionInfo(chosen).first == -1) {
@@ -75,14 +75,20 @@ std::pair<int,int> AggressiveStrategy::attack(GameState state)
 	if (beVerbose)  state.display();
 
 	// get all battlefront territories, sorted by number of troops
-	std::vector<std::pair<int,int>> bordersOwned = state.getAllExposedBorders(myPlayerNumber, map);
+		// as it comes returned from GameState::getAllExposedBorders(), the second int in the pair re
+	std::vector<std::pair<int,int>> bordersOwned_secondIsEnemyCount = state.getAllExposedBorders(myPlayerNumber, map);
+	std::cout<<"Borders owned by enemy: "<<bordersOwned_secondIsEnemyCount.size()<<std::endl;
+	std::vector<std::pair<int,int>> bordersOwned;
+	for (int i=0; i<bordersOwned_secondIsEnemyCount.size(); i++)
+		bordersOwned.push_back(std::pair<int,int>(bordersOwned_secondIsEnemyCount[i].first,state.getRegionInfo(bordersOwned_secondIsEnemyCount[i].first).second));
+	std::cout<<"Borders owned: "<<bordersOwned.size()<<std::endl;
 	std::sort(bordersOwned.begin(), bordersOwned.end(),
 		[](const std::pair<int,int> &lhs, const std::pair<int,int> &rhs)
 			{ return lhs.second < rhs.second; });
 
 	//see if we don't have enough troops anywhere to attack
 	int attackFrom = bordersOwned[bordersOwned.size()-1].first;
-	if (beVerbose)  std::cout<<"Will attack from "<<attackFrom<<std::endl;
+	if (beVerbose)  std::cout<<"Attack from: "<<attackFrom<<std::endl;
 	if (state.getRegionInfo(attackFrom).second<2) {
 		if (beVerbose)  std::cout<<"Not attacking"<<std::endl;
 		return std::pair<int,int>(-1,-1);
@@ -90,7 +96,7 @@ std::pair<int,int> AggressiveStrategy::attack(GameState state)
 
 	//then pick a place to attack
 	std::vector<int> targets = map->getNeighborsOfRegion(attackFrom);
-	std::uniform_int_distribution<int> distrubution(0, targets.size());
+	std::uniform_int_distribution<int> distrubution(0, targets.size()-1);
 	while (true) {
 		int chosen = distrubution(rng);
 		if (state.getRegionInfo(targets[chosen]).first != myPlayerNumber) {

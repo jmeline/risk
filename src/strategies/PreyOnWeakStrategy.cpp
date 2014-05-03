@@ -38,7 +38,7 @@ int PreyOnWeakStrategy::claim(GameState state)
     if (beVerbose)  std::cout << "PreyOnWeakStrategy "<<myPlayerNumber<<" is claiming" << std::endl;
 	if (beVerbose)  state.display();
 
-	std::uniform_int_distribution<int> distrubution(0, state.getNumRegions());
+	std::uniform_int_distribution<int> distrubution(0, state.getNumRegions()-1);
 	while (true) {
 		int chosen = distrubution(rng);
 		if(state.getRegionInfo(chosen).first == -1)
