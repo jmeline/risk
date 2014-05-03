@@ -69,7 +69,7 @@ std::vector<GameTask> GameManager::getNonrepeatingPermutationsFor(std::vector<St
 					strategyIndex /= strategyPossibilities;	//"shift right" one digit
 				strategyIndex %= strategyPossibilities;		//keep the lowest surviving digit
 				//now, see if it was valid (so far)
-				for (int j=0; j<playerNum-1; j++) {
+				for (int j=0; j<playerNum; j++) {
 					if (strategiesThisRun[j] == strategies[strategyIndex]) {
 						thisRunIsBad = true;
 						break;

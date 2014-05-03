@@ -26,10 +26,7 @@ Fortify: If not touching any enemy, move to random neighbor (code for this exist
 
 **************************************************/
 
-PreyOnWeakStrategy::PreyOnWeakStrategy()
-{
-	movesDoneAttacking = 0;
-}
+PreyOnWeakStrategy::PreyOnWeakStrategy() {}
 
 
 int PreyOnWeakStrategy::claim(GameState state)
@@ -45,6 +42,7 @@ int PreyOnWeakStrategy::claim(GameState state)
 			return chosen;
 	}
 }
+
 
 std::vector<std::pair<int,int>> PreyOnWeakStrategy::place(GameState state, int numTroops)
 {
@@ -69,6 +67,7 @@ std::vector<std::pair<int,int>> PreyOnWeakStrategy::place(GameState state, int n
     return actions;
 }
 
+
 std::pair<int,int> PreyOnWeakStrategy::attack(GameState state)
 {
 	if (beVerbose)  std::cout << "________________________________" << std::endl;
@@ -76,8 +75,8 @@ std::pair<int,int> PreyOnWeakStrategy::attack(GameState state)
 	if (beVerbose)  state.display();
 
 	//sort neighbors by strength
-	std::vector<std::pair<int,int>> neighborStrength;		//first is where to attack, second is their strength
 	std::vector<int> myNeighbors = state.getAllNeighborsOfPlayer(myPlayerNumber, map);
+	std::vector<std::pair<int,int>> neighborStrength(myNeighbors.size());		//first is where to attack, second is their strength
 	for (int i=0; i<myNeighbors.size(); i++)
 		neighborStrength[i] = std::pair<int,int>(myNeighbors[i],state.getRegionInfo(myNeighbors[i]).second);
 	std::sort(neighborStrength.begin(), neighborStrength.end(),
@@ -90,15 +89,17 @@ std::pair<int,int> PreyOnWeakStrategy::attack(GameState state)
 		for (int attackFromIndex = 0; attackFromIndex<theirNeighbors.size(); attackFromIndex++) {
 			std::pair<int,int> attackFromInfo = state.getRegionInfo(theirNeighbors[attackFromIndex]);
 			if (attackFromInfo.first==myPlayerNumber && attackFromInfo.second>3) {
-				if (beVerbose)  std::cout<<"Attacking "<<neighborStrength[i].first<<" from "<<attackFromIndex<<std::endl;
-				return std::pair<int,int>(attackFromIndex, neighborStrength[i].first);
+				if (beVerbose)  std::cout<<"Attacking "<<neighborStrength[i].first<<" from "<<theirNeighbors[attackFromIndex]<<std::endl;
+				return std::pair<int,int>(theirNeighbors[attackFromIndex], neighborStrength[i].first);
 			}
 		}
 	}
 
 	//if we made it this far, there's no good place to attack.  Let the turn be over
+	if (beVerbose)  std::cout<<"Not attacking anywhere"<<std::endl;
 	return std::pair<int,int>(-1,-1);
 }
+
 
 std::vector<std::tuple<int,int,int> > PreyOnWeakStrategy::fortify(GameState state)
 {

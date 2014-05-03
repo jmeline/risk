@@ -61,6 +61,11 @@ int main(int argc, char** argv)
         //strategies.push_back(StrategyEnum::HumanControlledStrategy);
 		////strategies.push_back(StrategyEnum::PacifistStrategy);
 		////strategies.push_back(StrategyEnum::ImmediateBestValueStrategy1);
+		strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
+		strategies.push_back(StrategyEnum::AggressiveStrategy);
+		strategies.push_back(StrategyEnum::PreyOnWeakStrategy);
+		strategies.push_back(StrategyEnum::ImmediateBestValueStrategy1);
+		strategies.push_back(StrategyEnum::PacifistStrategy);
 		///strategies.push_back(StrategyEnum::BadStrategy1);
 
         std::cout << "Strategies being used: ";
@@ -85,15 +90,7 @@ int main(int argc, char** argv)
         //std::vector<GameTask> tasksToRun = GameManager::getNonrepeatingPermutationsFor(strategies, maps, numberOfPlayers, 1);//timesToRepeatEachGame);
         std::vector<GameTask> tasksToRun = GameManager::getAllPermutationsFor(strategies, maps, numberOfPlayers, timesToRepeatEachGame);
 
-		for (int i=0; i<tasksToRun.size(); i++) {
-			for (int j=0; j<6; j++)
-				std::cout<<tasksToRun[i].players[j]<<" ";
-			std::cout<<std::endl;
-		}
-
-		
-		
-        //start the manager
+		//start the manager
         GameManager manager(totalProcCount - 1);
         manager.setGamesToRun(tasksToRun);
         ////manager.readInExistingReport("reportLocation");
