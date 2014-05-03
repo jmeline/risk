@@ -63,7 +63,7 @@ int main(int argc, char** argv)
 		////strategies.push_back(StrategyEnum::ImmediateBestValueStrategy1);
 		strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
 		strategies.push_back(StrategyEnum::AggressiveStrategy);
-		strategies.push_back(StrategyEnum::PreyOnWeakStrategy);
+		//strategies.push_back(StrategyEnum::PreyOnWeakStrategy);
 		strategies.push_back(StrategyEnum::ImmediateBestValueStrategy1);
 		strategies.push_back(StrategyEnum::PacifistStrategy);
 		///strategies.push_back(StrategyEnum::BadStrategy1);
@@ -87,8 +87,8 @@ int main(int argc, char** argv)
         }
         std::cout << std::endl;
 
-        //std::vector<GameTask> tasksToRun = GameManager::getNonrepeatingPermutationsFor(strategies, maps, numberOfPlayers, 1);//timesToRepeatEachGame);
-        std::vector<GameTask> tasksToRun = GameManager::getAllPermutationsFor(strategies, maps, numberOfPlayers, timesToRepeatEachGame);
+        std::vector<GameTask> tasksToRun = GameManager::getNonrepeatingPermutationsFor(strategies, maps, numberOfPlayers, timesToRepeatEachGame);
+        //std::vector<GameTask> tasksToRun = GameManager::getAllPermutationsFor(strategies, maps, numberOfPlayers, timesToRepeatEachGame);
 
 		//start the manager
         GameManager manager(totalProcCount - 1);
