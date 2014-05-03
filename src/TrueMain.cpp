@@ -52,7 +52,7 @@ int main(int argc, char** argv)
         std::vector<StrategyEnum::StrategyEnum> strategies;
         ////strategies.push_back(StrategyEnum::HumanControlledStrategy);
         ////strategies.push_back(StrategyEnum::BadStrategy1);
-        strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
+        strategies.push_back(StrategyEnum::AggressiveStrategy);
 
         std::cout << "Strategies being used: ";
         for (StrategyEnum::StrategyEnum e : strategies)
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
         ////maps.push_back(MapEnum::ThreeContinent);
         ////maps.push_back(MapEnum::Earth);
         ////maps.push_back(MapEnum::Island);
-        maps.push_back(MapEnum::ThreeContinent);
+        maps.push_back(MapEnum::Earth);
 
         std::cout << "Maps being used: ";
         for (MapEnum::MapEnum e : maps)
