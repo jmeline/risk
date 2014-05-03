@@ -206,6 +206,126 @@ In most versions of Risk, there is some sort of card system.
 \end_layout
 
 \begin_layout Section
+Project Scope
+\end_layout
+
+\begin_layout Standard
+There are many, many strategies for risk.
+ What we have worked to do in this project is to compare several of those
+ strategies: Some strategies work exceptionally well in one circumstance
+ but perform poorly in another.
+ Which strategies work against which, and is there actually any absolute
+ winner? How likely are the 
+\begin_inset Quotes eld
+\end_inset
+
+best
+\begin_inset Quotes erd
+\end_inset
+
+ algorithms to actually win? Are there loops in the 
+\begin_inset Quotes eld
+\end_inset
+
+dominion graph
+\begin_inset Quotes erd
+\end_inset
+
+? These are some of the questions that we seek to answer.
+\end_layout
+
+\begin_layout Standard
+In order to achieve all of this, we're going to need a LOT of data--thousands
+ of runs for every condition-identical game we wish to assess--and each
+ game may take a while to run.
+ Since there are so many possible combinations of strategies, which can
+ be permutated for many different turn-orders, and since there can be anywhere
+ between two and six players, this project demands parallel processing.
+\end_layout
+
+\begin_layout Standard
+While we have said what our project goals are, it is also worth mentioning
+ what they are NOT.
+ We do not intend to develop any novel strategies, but rather we will stick
+ to those we read about or have heard about (though our interpretation of
+ known strategies may be a bit distinct).
+ We will not be doing brute-force 
+\begin_inset Quotes eld
+\end_inset
+
+look ahead
+\begin_inset Quotes erd
+\end_inset
+
+.
+ We will not be considering alternate versions of the game rules.
+ Finnally, we are not considering the psychologocal aspects of Risk--even
+ though, in 3+ player risk, politics is a large part of strategy.
+ However, much of the code in our project could obviously be re-cycled for
+ such purposes.
+\end_layout
+
+\begin_layout Section
+Organization
+\end_layout
+
+\begin_layout Subsection
+Game Organization
+\end_layout
+
+\begin_layout Standard
+To test the strategies we had to generate them.
+ They were made by creating a class that conforms to the strategy interface
+ described in the 
+\begin_inset Quotes eld
+\end_inset
+
+Intracacies
+\begin_inset Quotes erd
+\end_inset
+
+ section.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename images/layout2.bmp
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Simulation
+\end_layout
+
+\begin_layout Standard
+Using MPI, we made a master-slave model with the master issuing matchups
+ and the slaves simulating those games and reporting the results back to
+ the master.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename images/layout.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Statistics 
+\end_layout
+
+\begin_layout Standard
+These are our results
+\end_layout
+
+\begin_layout Section
 Intricacies
 \end_layout
 
@@ -279,8 +399,12 @@ player
  so that we could discover at least a win/loss rate for each strategy.
  And we could not come to any conclusions with any desirable degree of confidenc
 e without getting a large enough dataset.
- With more time both things could have been implemented, but as it stands,
- we ran many games in parallel.
+ The large number of permutations of strategies (permutated, not merely
+ combined, because player order can make a difference), as well as the large
+ number of runs over which we must average to obtain reasonable results,
+ is enough to demand parallelism even if each individual game is ran atomically.
+ With more time, we may have further considered implementing both things,
+ but as it stands this should suffice.
 \end_layout
 
 \begin_layout Standard
@@ -484,52 +608,6 @@ This would be a great place to add Joseph's calculations.
 
 \begin_layout Section
 Strategy Assessment 
-\end_layout
-
-\begin_layout Subsection
-Generation 
-\end_layout
-
-\begin_layout Standard
-To test the strategies we had to generate them.
- They were made by creating a class that conforms to the strategy interface
- described in the 
-\begin_inset Quotes eld
-\end_inset
-
-Intracacies
-\begin_inset Quotes erd
-\end_inset
-
- section.
-\end_layout
-
-\begin_layout Subsection
-Simulation
-\end_layout
-
-\begin_layout Standard
-Using MPI, we made a master-slave model with the master issuing matchups
- and the slaves simulating those games and reporting the results back to
- the master.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename images/layout.png
-	scale 40
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Statistics 
-\end_layout
-
-\begin_layout Standard
-These are our results
 \end_layout
 
 \begin_layout Standard
