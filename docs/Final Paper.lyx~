@@ -1165,7 +1165,22 @@ ImmediateBest
 
 \begin_layout Standard
 1) As should surprise no one, Aggressive finished the most quickly across
- the board and with a standard deviation of only ~35%
+ the board and with a standard deviation of only ~35%.
+ SmallestContinent.
+\end_layout
+
+\begin_layout Standard
+2) Prey on the Weak and ImmediateBest took a LOT longer than other strategies
+ to finish, and had a higher standard deviation percent.
+ But in the latter's case, the percent deviation decreases with the nuber
+ of players.
+ In each case, 3-player games take a lot longer than 2-player ones, and
+ 4 takes longer than 3, but after that it's relatively stable.
+\end_layout
+
+\begin_layout Standard
+In summary, the number of players playing didn't make as much of a difference
+ as expected, but which strategy is used sure makes a big difference.
 \end_layout
 
 \begin_layout Section
