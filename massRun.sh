@@ -1,6 +1,6 @@
 #/usr/bin/bash
 
-FILE="smallestContinentFirst"
+FILE="PreyOnWeak"
 
 mpiexec -np 3 risk_exec data/orderAdvantage/${FILE}2_10000.txt 10000 2 > /dev/null;
 echo done 2
