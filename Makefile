@@ -13,6 +13,9 @@ TARGET=risk_exec
 main: $(BUILD_DIR)
 	$(CC) $(C11) src/GameManager.cpp src/GameSlave.cpp src/TrueMain.cpp -I$(INCLUDE_PATH) $(BUILD_DIR)/*.o -o $(TARGET)
 
+mainNOMPI: $(BUILD_DIR)
+	$(CC) -DDONTUSEMPI $(C11) src/GameManager.cpp src/GameSlave.cpp src/TrueMain.cpp -I$(INCLUDE_PATH) $(BUILD_DIR)/*.o -o $(TARGET)
+
 test: $(BUILD_DIR)
 	$(CC) $(C11) tests/MainTest.cpp -I$(INCLUDE_PATH) $(BUILD_DIR)/*.o -o $(TARGET)
 

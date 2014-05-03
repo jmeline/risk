@@ -50,9 +50,13 @@ int main(int argc, char** argv)
 
         //prepare tasks to run
         std::vector<StrategyEnum::StrategyEnum> strategies;
-        ////strategies.push_back(StrategyEnum::HumanControlledStrategy);
-        ////strategies.push_back(StrategyEnum::BadStrategy1);
-        strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
+        strategies.push_back(StrategyEnum::HumanControlledStrategy);
+        strategies.push_back(StrategyEnum::AggressiveStrategy);
+		strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
+		////strategies.push_back(StrategyEnum::PacifistStrategy);
+		////strategies.push_back(StrategyEnum::ImmediateBestValueStrategy1);
+		////strategies.push_back(StrategyEnum::PreyOnWeakStrategy);
+		///strategies.push_back(StrategyEnum::BadStrategy1);
 
         std::cout << "Strategies being used: ";
         for (StrategyEnum::StrategyEnum e : strategies)
@@ -62,10 +66,9 @@ int main(int argc, char** argv)
         std::cout << std::endl;
 
         std::vector<MapEnum::MapEnum> maps;
-        ////maps.push_back(MapEnum::ThreeContinent);
-        ////maps.push_back(MapEnum::Earth);
+        maps.push_back(MapEnum::Earth);
+		////maps.push_back(MapEnum::ThreeContinent);
         ////maps.push_back(MapEnum::Island);
-        maps.push_back(MapEnum::ThreeContinent);
 
         std::cout << "Maps being used: ";
         for (MapEnum::MapEnum e : maps)
@@ -74,7 +77,16 @@ int main(int argc, char** argv)
         }
         std::cout << std::endl;
 
-        std::vector<GameTask> tasksToRun = GameManager::getRunsFor(strategies, maps, numberOfPlayers, timesToRepeatEachGame);
+        std::vector<GameTask> tasksToRun = GameManager::getNonrepeatingPermutationsFor(strategies, maps, numberOfPlayers, 1);//timesToRepeatEachGame);
+
+		for (int i=0; i<tasksToRun.size(); i++) {
+			for (int j=0; j<6; j++)
+				std::cout<<tasksToRun[i].players[j]<<" ";
+			std::cout<<std::endl;
+		}
+
+
+
         //start the manager
         GameManager manager(totalProcCount - 1);
         manager.setGamesToRun(tasksToRun);
