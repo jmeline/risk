@@ -643,8 +643,8 @@ This strategy will never win because it never attacks.
  For example, if strategy A is knocked out of the game frequently before
  the pacifist strategy, then strategy A is likely too aggressive to be an
  effective strategy.
- When placing, claiming, and reinforcing, the pacifist strategy is simply
- random.
+ When placing, claiming, and reinforcing, the pacifist strategy picks arbitraril
+y.
 \end_layout
 
 \begin_layout Subsection
@@ -800,6 +800,19 @@ Experiment 1: Dominion Graph
 \end_layout
 
 \begin_layout Standard
+Tragically, a simple mistake excluded the 
+\begin_inset Quotes eld
+\end_inset
+
+Immediate Best Value
+\begin_inset Quotes erd
+\end_inset
+
+ strategy from our results, leaving only four strategies, one of which was
+ trivial.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Graphics
 	filename images/dominion graph.bmp
 	width 90col%
@@ -807,6 +820,18 @@ Experiment 1: Dominion Graph
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+That pacifist always looses is to be expected.
+ What is surprising, however, is that other strategies are fairly close
+ to 50%; this is much less interesting than expected.
+ More surprisingly still, the aggressive strategy ended up totally dominating,
+ and there were no cycles: The order of expected victory is Aggressive,
+ Smallest Continent First, Prey on the Weak, and Pacifist, but the the distincti
+on between the first 3 is not very large.
+ As we will see below, player order actually made a bigger difference than
+ strategy in many cases.
 \end_layout
 
 \begin_layout Subsection
@@ -856,6 +881,33 @@ For Prey on the Weak vs itself, the first player had the advantage every
 -by-probability-of-victory makes this stratigy similarly cowardly.
 \end_layout
 
+\begin_layout Enumerate
+When differing strategies competed in two player games, the first player
+ always seems to usually have the advantage.
+ This pattern was most apperant for aggressive vs Smallest Continent First,
+ and least aperant for Smallest Continent First vs Prey on the Weak.
+ It makes sense that the phenomena is less observed when 
+\begin_inset Quotes eld
+\end_inset
+
+Prey on the Weak
+\begin_inset Quotes erd
+\end_inset
+
+ is involved, because that strategy actually takes advantage of opponents'
+ armies being reduced at the end of their turn.
+ It also makes sense that 
+\begin_inset Quotes eld
+\end_inset
+
+Aggressive
+\begin_inset Quotes erd
+\end_inset
+
+ tends to increase the phenomena, as a head start makes a big difference
+ in that mindless strategy.
+\end_layout
+
 \begin_layout Subsection
 Experiment 3: Number of Rounds
 \end_layout
@@ -876,21 +928,56 @@ Order Advantage study.xlsx
 \begin_layout Enumerate
 As should surprise no one, Aggressive finished the most quickly across the
  board and with a standard deviation of only ~35%.
- SmallestContinent.
 \end_layout
 
 \begin_layout Enumerate
 Prey on the Weak and ImmediateBest took a LOT longer than other strategies
- to finish, and had a higher standard deviation percent.
+ to finish in 
+\begin_inset Quotes eld
+\end_inset
+
+vs itself
+\begin_inset Quotes erd
+\end_inset
+
+ matches, and had a higher standard deviation percent.
  But in the latter's case, the percent deviation decreases with the nuber
  of players.
  In each case, 3-player games take a lot longer than 2-player ones, and
  4 takes longer than 3, but after that it's relatively stable.
 \end_layout
 
+\begin_layout Enumerate
+In mixed-strategy matches, Prey On the Weak continued to hugely inflate
+ the number of rounds, while Aggressive reduced it; when the two were combined
+ the game still took a very long time.
+ The reason for the slowdown is likely because that combination of strategies
+ would lead to the frequent changing of ownership of territories (and, unlike
+ pure Aggressive vs Aggressive (where conquering is random), the conquering
+ here tends to be of the same regions over an over as the weak are targeted,
+ leaving only the strong to fight for the same territory again.
+\end_layout
+
 \begin_layout Standard
 In summary, the number of players playing didn't make as much of a difference
- as expected, but which strategy is used sure makes a big difference.
+ as expected in a 
+\begin_inset Quotes eld
+\end_inset
+
+vs itself
+\begin_inset Quotes erd
+\end_inset
+
+ match, but which strategy is used sure makes a big difference, and the
+ patterns observed in 
+\begin_inset Quotes eld
+\end_inset
+
+vs itself
+\begin_inset Quotes erd
+\end_inset
+
+ matches carried over mor or less unchanged into mixed-strategy matches.
 \end_layout
 
 \begin_layout Section
