@@ -20,7 +20,7 @@ COMMENT1
 SIZE=1000000000000
 ROUNDS=250
 
-for (( i=0; i<$SIZE; i++))
+for (( i=$SIZE/1000000; i<$SIZE; i++))
 do
 	mpiexec -np 3 risk_exec data/2playerPermutations/output_${i}.txt ${ROUNDS} 2 > /dev/null
 	echo "output $i completed!"
