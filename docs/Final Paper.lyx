@@ -90,7 +90,7 @@ May 3, 2014
 \end_layout
 
 \begin_layout Section
-Background 
+Background
 \end_layout
 
 \begin_layout Quotation
@@ -206,44 +206,163 @@ In most versions of Risk, there is some sort of card system.
 \end_layout
 
 \begin_layout Section
-Intricacies
+Project Scope
+\end_layout
+
+\begin_layout Standard
+There are many, many strategies for risk.
+ What we have worked to do in this project is to compare several of those
+ strategies: Some strategies work exceptionally well in one circumstance
+ but perform poorly in another.
+ Which strategies work against which, and is there actually any absolute
+ winner? How likely are the 
+\begin_inset Quotes eld
+\end_inset
+
+best
+\begin_inset Quotes erd
+\end_inset
+
+ algorithms to actually win? Are there loops in the 
+\begin_inset Quotes eld
+\end_inset
+
+dominion graph
+\begin_inset Quotes erd
+\end_inset
+
+? Does it matter who gets the first move? These are some of the questions
+ that we seek to answer.
+\end_layout
+
+\begin_layout Standard
+In order to achieve all of this, we're going to need a LOT of data--thousands
+ of runs for every condition-identical game we wish to assess--and each
+ game may take a while to run.
+ Since there are so many possible combinations of strategies, which can
+ be permutated for many different turn-orders, and since there can be anywhere
+ between two and six players, this project demands parallel processing.
+\end_layout
+
+\begin_layout Standard
+While we have said what our project goals are, it is also worth mentioning
+ what they are NOT.
+ We do not intend to develop any novel strategies, but rather we will stick
+ to those we read about or have heard about (though our interpretation of
+ known strategies may be a bit distinct).
+ We will not be doing brute-force 
+\begin_inset Quotes eld
+\end_inset
+
+look ahead
+\begin_inset Quotes erd
+\end_inset
+
+.
+ We will not be considering alternate versions of the game rules.
+ Finnally, we are not considering the psychologocal aspects of Risk--even
+ though, in 3+ player risk, politics is a large part of strategy.
+ However, much of the code in our project could obviously be re-cycled for
+ such purposes.
+\end_layout
+
+\begin_layout Section
+Organization and Design
 \end_layout
 
 \begin_layout Subsection
-In theory
+Game Organization
 \end_layout
 
 \begin_layout Standard
-The start of the game can set you up for success or failure.
- The player must not underestimate the importance of their choices while
- claiming territories.
+We treat each match/game as an atomic event.
+ The basic structure of a single game is shown here.
 \end_layout
 
 \begin_layout Standard
-Strategies are numerous.
- Watching your opponents' moves and attempting to understand what their
- intent is can be the key to victory.
- The AI that we implemented in our assessment of strategies was not advanced
- enough to emulate this kind of behavior.
- Given more time, this may have been possible through exhaustive searching.
- However, human intuition is more powerful than machinery when it comes
- to identifying deceit.
-\end_layout
-
-\begin_layout Subsection
-In practice
+In order to allow remote initilization of games, we provided factory methods
+ to generate the appropriate map and strategies based on the identifiers
+ found in a GameTask object.
 \end_layout
 
 \begin_layout Standard
-Representing the board internally was not too difficult.
- It ends up being an undirected graph.
- 
+\begin_inset Graphics
+	filename images/layout2.bmp
+	width 90col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A game, once initiliazed, runs by repeatedly quiring the players' strategies
+ to select actions and then by carrying out the requested action (for example,
+ by using precalculated probabilities to simulate dice rolls and handle
+ combat between regions).
+ We took a simple object-oriented approach to designing what a strategy
+ would be.
+ We designed an interface that each strategy would inherit from.
+ All strategies would have to implement four functions:
+\end_layout
+
+\begin_layout Standard
+1.
+ claim() -- used at the start of the game to claim land
+\end_layout
+
+\begin_layout Standard
+2.
+ place() -- used at the start of a player's turn to handle reinforcements
+\end_layout
+
+\begin_layout Standard
+3.
+ attack() -- used repeatedly during a player's turn (until they player indicates
+ that he/she is finished) to tell the Game which regions to make fight
+\end_layout
+
+\begin_layout Standard
+4.
+ fortify() -- used at the end of a player's turn to move troops around
+\end_layout
+
+\begin_layout Standard
+By implementing those four functions, each of which receives a copy of the
+ game's current state, countless unique strategies may be formed.
+ It is perfectly acceptable for each strategy to maintain an internal state,
+ in order to track objectives, save time, or monitor trends.
+ However, the strategies we implemented utilized only a very basic internal
+ state.
+ In several cases, our strategies included adjustable parameters that could
+ be tweaked before launch (or by an inheriting class) in order to quickly
+ form many new strategies based on one.
+ While we provided this feature, we did not include it in our results graphs,
+ as there were enough strategies implemented already.
+ A discription of each strategy will be given below.
+\end_layout
+
+\begin_layout Standard
+Besides a GameState (which gives the ownership and troopcount of each region),
+ both the strategies and the Game itself require a GameMap that defines
+ connectivity between regions, as well as continents.
+ This was easy to represent as a list of edges forming an undirected graph,
+ plus a list of 
+\begin_inset Quotes eld
+\end_inset
+
+continents
+\begin_inset Quotes erd
+\end_inset
+
+, each of which is a list of included nodes plus a value to be gained by
+ owning all of those nodes.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Graphics
 	filename images/earth-graph.png
-	scale 35
+	width 90col%
 
 \end_inset
 
@@ -258,84 +377,145 @@ key "key-4"
 \end_layout
 
 \begin_layout Standard
-However, other parts of our design did end up taking a lot of time to conceptual
-ize.
- We knew that we wanted to utilize the resources at our disposal and design
- a parallel algorithm.
- At first we thought that perhaps there was some parallelism that we could
- utilize within each simulated game.
- In fact, there is.
- Each 
+In addition to the primary map of earth, we used two others in testing,
+ one of which is the 
 \begin_inset Quotes eld
 \end_inset
 
-player
+ThreeContinents
 \begin_inset Quotes erd
 \end_inset
 
- or strategy could enumerate all of its possible moves and then make a decision.
- Nevertheless, we decided against implementing this since our primary desire
- was to treat a game as an atomic event and simulate each game in parallel
- so that we could discover at least a win/loss rate for each strategy.
- And we could not come to any conclusions with any desirable degree of confidenc
-e without getting a large enough dataset.
- With more time both things could have been implemented, but as it stands,
- we ran many games in parallel.
+ map shown here.
+ Such maps are useful not only for testing, but for alternate analysis of
+ strategies: Do those strategies that work well on the 
+\begin_inset Quotes eld
+\end_inset
+
+Earth
+\begin_inset Quotes erd
+\end_inset
+
+ map work well in general? However, while our program is fully equipped
+ to answer this question, there was not time to re-gather all of the data
+ for additional maps such as this.
 \end_layout
 
 \begin_layout Standard
-We took a simple object-oriented approach to designing what a strategy would
- be.
- We designed an interface that each strategy would inherit from.
- All strategies would have to implement five functions:
+\align center
+\begin_inset Graphics
+	filename images/test map.png
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Overall Organization
 \end_layout
 
 \begin_layout Standard
-1.
- claim()
+We could not come to any conclusions with any desirable degree of confidence
+ without obtaining a sizeable dataset.
+ The large number of permutations of strategies (permutated, not merely
+ combined, because player order can make a difference), as well as the large
+ number of runs over which we must average to obtain reasonable results,
+ demands that we employ parallelism.
 \end_layout
 
 \begin_layout Standard
-2.
- place()
+We settled on a master-slave model, with the master (GameManager) issuing
+ GameTasks to the GameSlaves and the slaves returning GameReports to the
+ GameManager.
+ In order to accomplish this, we serialized both the GameTask and the GameReport.
+ The processor running the GameManager maintains a list of slaves (working
+ and idle) and a list of incomplete tasks.
+ After sending the initial GameTasks, the GameManager waits for reports
+ and issues a new task each time one is received.
+ Once all tasks are complete, a special GameTask consisting entirely of
+ NOPLAYER strategies is used to signal to a slave that no additional work
+ is required.
+ By this means, the master and its slaves can all terminate.
 \end_layout
 
 \begin_layout Standard
-3.
- attack()
+The contents of each GameReport are the ID of the map used that round, the
+ IDs of the strategies used, an ordered list indicating which player won,
+ which came in second, etc., and finnally a count of the number of rounds
+ the game took to complete.
+ This arrangement allows for maximum flexibility when doing analysis; the
+ same data gathered can easily be used for multiply studies.
+ The GameManager does not do any direct analysis, but rather aggregates
+ all reports into a single output file.
+ We are then free to analyze it by any means desired.
+ Genearlly, a spreadsheet is quick and sufficiently powerful for our needs.
 \end_layout
 
 \begin_layout Standard
-4.
- defend()
+\begin_inset Graphics
+	filename images/layout.png
+	width 90col%
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-5.
- fortify()
+After our first few strategies, we observed that each game ran considerably
+ faster than expected, meaning that the overhead of MPI may have made our
+ decision to task out each game an unprofitable one.
+ It seems a more sensible division would be to let each slave run many games
+ of a type and report back the 
+\begin_inset Quotes eld
+\end_inset
+
+average
+\begin_inset Quotes erd
+\end_inset
+
+ to spare the GameManager the effort.
+ However, the meaning of 
+\begin_inset Quotes eld
+\end_inset
+
+average
+\begin_inset Quotes erd
+\end_inset
+
+ depends on the experiment being performed--information such as the order
+ in which the players were illiminated may be useful, for example, but would
+ be lost in such a scheme.
+ We were willing to sacrifice some speed for the increased data.
+ However, as more sophistocated strategies were written, we soon found that
+ this debate was not actually important: Games with advanced strategies
+ do indeed take a lot longer to run (and games with particularly foolish
+ strategies may experience the same effect), and we soon saw the overhead
+ and work involved in MPI paying off.
 \end_layout
 
 \begin_layout Standard
-Each function mirrors one of the stages of the game.
-\end_layout
-
-\begin_layout Standard
-We would then run a game loop containing several strategies and we would
- pit them against each other to see which ones win out.
- In order for a strategy to make good decisions, we had to give it information
- about the board.
- We would have the game loop send a GameState object to each strategy when
- it called each of their functions.
- One option we had here was to add internal state to each of the strategies.
- Such state would be used for watching other players' tactics to try to
- counter them or to keep track of previous moves.
- To some degree or another, we did utilize this internal state.
- However, such use was perfunctory since getting a strategy to make intelligent
- decisions based on the game state alone was a significant challenge.
+pricy
 \end_layout
 
 \begin_layout Section
-Type of Strategies 
+Type of Strategies
+\end_layout
+
+\begin_layout Standard
+There are countless possible strategies.
+ However, we found that writing each one took much longer than anticipated,
+ being something of a project in and of itself.
+ However, a sufficient number were made as to be interesting, and several
+ of those are adjustable, quickly allowing us to multiply the types of strategie
+s.
+\end_layout
+
+\begin_layout Standard
+These discriptions are not complete, and the .cpp file for each should be
+ inspected.
 \end_layout
 
 \begin_layout Subsection
@@ -348,7 +528,10 @@ In order to test our code and make sure everything was working, of course
  This strategy takes the first available location it finds while claiming,
  always attacks a set number of times per turn (or less), and generally
  does other mindless things.
- This strategy should lose to every other strategy except maybe the pacifist.
+ This strategy will likely lose to every other strategy except the Pacifist.
+ In order to keep runtimes reasonable (since BadStrategy makes no concious
+ attempt to win or end the game), BadStrategy was not included in the final
+ all-vs-all, but initial testing indices that does indeed perform horendously.
 \end_layout
 
 \begin_layout Subsection
@@ -356,9 +539,9 @@ Immediate Best Value
 \end_layout
 
 \begin_layout Standard
-This strategy weighs its decisions locally and chooses what it deems to
- be of the highest value.
- When considering where to attack, it uses this equation:
+This is a greedy algorithm that assigns a score to its property and always
+ takes the move that immediately maximizes that score.
+ When assigning value, it uses this equation:
 \end_layout
 
 \begin_layout Standard
@@ -373,11 +556,35 @@ V=x_{1}T/B+x_{2}N\text{ }
 \end_layout
 
 \begin_layout Standard
-T represents the troop bonus.
- B is the number of exposed borders.
- N is the number of neighboring regions.
- X is a scaling factor that determines how stable/expansive the strategy
- will be.
+T represents the troop bonus (due to number of regions owned and due to
+ owned continents).
+ B is the number of exposed borders, something that is usually sought to
+ be minimized.
+ However, there is also a merit in the opportunity to expant, which is represent
+ed by N, the number of neighboring regions.
+ X1 and X2 are scaling factors that reflect the strategies desire for stability
+ vs opporunity; these two values are left adjustable.
+\end_layout
+
+\begin_layout Standard
+When attacking, the strategies does not consider only the value, but also
+ the probability of victory; after multiplying V by this probability it
+ may be found that it is better to attack a slightly less valuable location
+ at which victory is more assured.
+ Probabilities of victory are obtained via a static method of the Game class,
+ which uses a cache to determine exact probabilities at low army counts,
+ and approximations at higher army counts.
+ It also considers an adjustable 
+\begin_inset Quotes eld
+\end_inset
+
+dangerThreshold
+\begin_inset Quotes erd
+\end_inset
+
+ to avoid leaving its borders unprotected.
+ Reinforcements are placed near valuable-to-conquer locations in order to
+ prepare for battle.
 \end_layout
 
 \begin_layout Subsection
@@ -387,33 +594,21 @@ Smallest Continent first
 \begin_layout Standard
 A popular strategy where the player looks to claim either Australia or South
  America since they are easier to defend due to the limited number of paths
- into and out of them.
- It is easy to build up forces as there are only four territories to maintain
- and the troop bonus is advantageous.
- This strategy places troops on edges of its continents or near continents
- desired for conquering.
-\end_layout
+ into and out of them and due to the quick troop boost they can provide;
+ perhaps more than any other this is a strategy whose success we are interested
+ in guaging.
+ It will attack rival on the smallest continent that it can reach.
+ When placing reinforcements, is devides them (unequally, as determined
+ by a formula involving the adjustable 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Subsection
-Continents First
-\end_layout
+attackPlacementPreferenceFactor
+\begin_inset Quotes erd
+\end_inset
 
-\begin_layout Standard
-This player strategically seeks to claim each continent and doesn’t branch
- out unless a continent can be claimed.
- This playstyle is defensive.
- 
-\end_layout
-
-\begin_layout Subsection
-Territory First 
-\end_layout
-
-\begin_layout Standard
-This player aims to prevent others from claiming continents by securing
- territories.
- This playstyle is aggressive.
- 
+) between regions bordering the continent it wishes to conquer and the exposed
+ borders of any continent already aquired, to keep its hold.
 \end_layout
 
 \begin_layout Subsection
@@ -421,21 +616,19 @@ Prey on the weak
 \end_layout
 
 \begin_layout Standard
-Prey on the weak does what you'd expect.
- It targets the weakest bordering country.
- When placing, it always prefers the least-claimed continent.
-\end_layout
+Prey on the weak does what you'd expect: It targets the weakest bordering
+ country to get a quick kill (or a seriese of them).
+ It will attack as long as its foes are sufficiently weak and it is attacking
+ with no fewer than three armies.
+ Reinforcements are placed by the weakest opponents, in an attempt to 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Subsection
-Prey on the strong 
-\end_layout
+sweet
+\begin_inset Quotes erd
+\end_inset
 
-\begin_layout Standard
-Always attacks the owner of a continent, if possible, so that no extra points
- are gained.
- Chooses the strongest territory owned by the strongest opponent to attack,
- so long as two dice can still be used.
- 
+ through as much enemy territory as possible.
 \end_layout
 
 \begin_layout Subsection
@@ -443,12 +636,29 @@ Pacifist
 \end_layout
 
 \begin_layout Standard
-This strategy will never win, but it may perhaps outlive other strategies.
+This strategy will never win because it never attacks.
+ But it may perhaps outlive other strategies.
  It will be easy to determine if a strategy is far too aggressive by comparing
  it against this strategy.
  For example, if strategy A is knocked out of the game frequently before
- the pacifist strategy, then strategy A is too aggressive to be an effective
- strategy.
+ the pacifist strategy, then strategy A is likely too aggressive to be an
+ effective strategy.
+ When placing, claiming, and reinforcing, the pacifist strategy is simply
+ random.
+\end_layout
+
+\begin_layout Subsection
+Aggressive
+\end_layout
+
+\begin_layout Standard
+We have a character profile on this type: This player lost his job, failed
+ his classes, and lost his girlfriend to his roommate.
+ He is out for vengenance and is full out rage.
+ Lacking any moral compass, he selects anyone to attack and will fight to
+ the death, never turning down a fight, no matter how foolish.
+ While this is a genearlly aimless strategy, it can overwhelm many strategies,
+ and can be expected to shorten games in which it is involved.
 \end_layout
 
 \begin_layout Subsection
@@ -458,66 +668,141 @@ Human Controlled
 \begin_layout Standard
 For debugging purposes and getting a real feel for how certain strategies
  will play out.
- Matt played a quick game on a condensed map vs the smallest continents
- first strategy and lost.
- This provides evidence that the smallest continent first strategy works.
-\end_layout
-
-\begin_layout Section
-Probability of outcomes 
-\end_layout
-
-\begin_layout Standard
-Your understanding of probabilities can greatly help your chances of not
- dying early on.
- 
-\end_layout
-
-\begin_layout Standard
-Best probability is having the attacker attack a defender with only one
- dice.
-\end_layout
-
-\begin_layout Standard
-This would be a great place to add Joseph's calculations.
-\end_layout
-
-\begin_layout Section
-Strategy Assessment 
-\end_layout
-
-\begin_layout Subsection
-Generation 
-\end_layout
-
-\begin_layout Standard
-To test the strategies we had to generate them.
- They were made by creating a class that conforms to the strategy interface
- described in the 
+ This strategy uses a very simple textual user interface to display state
+ and request user input.
+ This strategy cannot, of course, be used in our final all-vs-all, but it
+ provides a strong subjective measure of other strategies' values.
+ For example, Matt played a quick game on a condensed map vs the 
 \begin_inset Quotes eld
 \end_inset
 
-Intracacies
+Smallest Continents First
 \begin_inset Quotes erd
 \end_inset
 
- section.
+ strategy and lost.
+ This provides evidence that the smallest continent first strategy can actually
+ work in a 
+\begin_inset Quotes eld
+\end_inset
+
+real
+\begin_inset Quotes erd
+\end_inset
+
+ game against people.
+ The Human Controlled Strategy is also fun.
+\end_layout
+
+\begin_layout Section
+Data Aquisition
 \end_layout
 
 \begin_layout Subsection
-Simulation
+Our chosen experiments
 \end_layout
 
 \begin_layout Standard
-Using MPI, we made a master-slave model with the master issuing matchups
- and the slaves simulating those games and reporting the results back to
- the master.
+We decided on three primary experiments for this project.
+\end_layout
+
+\begin_layout Standard
+First, we wished to run a simple two-player all-vs-all set of matches in
+ order to form a 
+\begin_inset Quotes eld
+\end_inset
+
+dominion graph
+\begin_inset Quotes erd
+\end_inset
+
+.
+ By analyzing the dominion graph, we could determine whether there were
+ any obvious winner or whether there were cycles.
+ While a traditional dominion graph is binary and simply has an arrow on
+ each edge, that does not accurately describe the situation here, so we
+ include a probability alongside the arrow to indicate with what probabity
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+better
+\begin_inset Quotes erd
+\end_inset
+
+ of two strategies would win, since we cannot make binary sta
+\end_layout
+
+\begin_layout Standard
+Second, we wished to determine if player order has an effect on triumph.
+ For each strategy, we pitted between 2 and 6 copies against itself and
+ saw how often the first player won vs the second, third, etc.
+ We also use the all-vs-all data to see whether the results between two
+ distinct strategies were affected by which played first.
+\end_layout
+
+\begin_layout Standard
+Finnally, we wished to analize the number of rounds required for victory.
+ As with experiment #2, we conisder the 
+\begin_inset Quotes eld
+\end_inset
+
+vs itself
+\begin_inset Quotes erd
+\end_inset
+
+ data for 2-6 players and the 
+\begin_inset Quotes eld
+\end_inset
+
+vs others
+\begin_inset Quotes erd
+\end_inset
+
+ data for two players.
+ We are interested to know if all strategies prefer preemption or not, and
+ whether a strategy that runs fast or slow vs itself does the same against
+ others.
+\end_layout
+
+\begin_layout Subsection
+Gathering the data
+\end_layout
+
+\begin_layout Standard
+Initially, we relied mostly on a test main() program to run games individually.
+ As we became ready to use the GameManager, we needed a way to place orders
+ for lists of tasks.
+ To accomplish this, we wrote two generators that would take lists of strategies
+ and maps and permutate them (with or without repetition) according to a
+ number of players.
+ We also used a bash script to split output between several files for merging
+ later, in order to safely obtain large datasets without the need to precisely
+ estimate runtime.
+ Yet another bash script was responsible for launching the 
+\begin_inset Quotes eld
+\end_inset
+
+vs self
+\begin_inset Quotes erd
+\end_inset
+
+ games with every desired number of players.
+ Data, once ready, was fed into pre-made Excel sheets for quick analysis.
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+Experiment 1: Dominion Graph
 \end_layout
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename images/layout.png
-	scale 40
+	filename images/dominion graph.bmp
+	width 90col%
 
 \end_inset
 
@@ -525,11 +810,389 @@ Using MPI, we made a master-slave model with the master issuing matchups
 \end_layout
 
 \begin_layout Subsection
-Statistics 
+Experiment 2: Order Advantage
 \end_layout
 
 \begin_layout Standard
-These are our results
+For details, see 
+\begin_inset Quotes eld
+\end_inset
+
+Order Advantage study.xlsx
+\begin_inset Quotes erd
+\end_inset
+
+.
+ There were several interesting trends:
+\end_layout
+
+\begin_layout Standard
+1) For Smallest Continent First vs itself, being the first player is actually
+ the very worst outcome, unless there are only two players (in which case
+ the first player wins 66% of the time.
+ Beyond that, it was hard to recognize a pattern.
+\end_layout
+
+\begin_layout Standard
+2) For Agressive vs itself, for every number of players, the later you got
+ your first turn the more likely you were to win, monatomically.
+ This is very interesting, and is likely due to the fact that the agressive
+ style spreads itself thin and as such is most vulnerable to attack right
+ after its turn.
+\end_layout
+
+\begin_layout Standard
+3) For Prey on the Weak vs itself, the first player had the advantage every
+ time, but the advantage very quickly became negligible as the number of
+ players increased.
+ This is likely due to the fact that a computer can easlity get trapped
+ in a bad pattern: Those players who did not go first will tend not to bother
+ the first player, who got the first reinforcements, and so they will distribute
+ their forces around other players, leaving themselves open for attack.
+ Indeed, it seems to make no difference whether one is second player or
+ fifth; only the first player has an advantage.
+ Prey on the Weak is intimidated by any show of muscle.
+ Immediate Best exhibits the very same pattern; apperantly the multiplying-value
+-by-probability-of-victory makes this stratigy similarly cowardly.
+\end_layout
+
+\begin_layout Subsection
+Experiement 3: Number of Rounds
+\end_layout
+
+\begin_layout Standard
+There were several interesting trends:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="6">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Rounds 
+\backslash
+ Players
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SmallestContinent
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+13.46+-4.56
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16.1+-5.45
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+22.56+-8.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+32.94+-16.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+46.56+-23.55
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Aggressive
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7.41+-2.74
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10.91+-3.95
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14.53+-5.48
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+18.56+-6.9
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+22.09+-8.05
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+PreyOnWeak
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+101.64+-89.97
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+137.36+-99.15
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+154.38+-96.95
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+159.6+-96.96
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+158.41+-96.32
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ImmediateBest
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+104.28+-92.93
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+141.09+-99.67
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+159.07+-104.8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+161.7+-99.96
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+154.59+-96.64
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+1) As should surprise no one, Aggressive finished the most quickly across
+ the board and with a standard deviation of only ~35%.
+ SmallestContinent.
+\end_layout
+
+\begin_layout Standard
+2) Prey on the Weak and ImmediateBest took a LOT longer than other strategies
+ to finish, and had a higher standard deviation percent.
+ But in the latter's case, the percent deviation decreases with the nuber
+ of players.
+ In each case, 3-player games take a lot longer than 2-player ones, and
+ 4 takes longer than 3, but after that it's relatively stable.
+\end_layout
+
+\begin_layout Standard
+In summary, the number of players playing didn't make as much of a difference
+ as expected, but which strategy is used sure makes a big difference.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+Writing strategies, it seems, is much harder than anticipated.
+ However, we found our program to be very useful and interesting.
+ Thanks to it, we are able a qualitatively measure the fitness of strategies
+ in comparison to one another, which reveals interesting trends that one
+ would normally never have enough data to detect.
 \end_layout
 
 \begin_layout Standard

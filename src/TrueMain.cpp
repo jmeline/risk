@@ -50,20 +50,10 @@ int main(int argc, char** argv)
 
         //prepare tasks to run
         std::vector<StrategyEnum::StrategyEnum> strategies;
-        ////strategies.push_back(StrategyEnum::HumanControlledStrategy);
-        ////strategies.push_back(StrategyEnum::BadStrategy1);
-        ////strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
-        //strategies.push_back(StrategyEnum::ImmediateBestValueStrategy1);
-        //strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
-        //strategies.push_back(StrategyEnum::AggressiveStrategy);
-        strategies.push_back(StrategyEnum::PreyOnWeakStrategy);
-
         //strategies.push_back(StrategyEnum::HumanControlledStrategy);
-		////strategies.push_back(StrategyEnum::PacifistStrategy);
-		////strategies.push_back(StrategyEnum::ImmediateBestValueStrategy1);
 		strategies.push_back(StrategyEnum::ObtainSmallestContinentsFirstStrategy);
 		strategies.push_back(StrategyEnum::AggressiveStrategy);
-		//strategies.push_back(StrategyEnum::PreyOnWeakStrategy);
+		strategies.push_back(StrategyEnum::PreyOnWeakStrategy);
 		strategies.push_back(StrategyEnum::ImmediateBestValueStrategy1);
 		strategies.push_back(StrategyEnum::PacifistStrategy);
 		///strategies.push_back(StrategyEnum::BadStrategy1);
