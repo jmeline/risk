@@ -85,8 +85,8 @@ int main(int argc, char** argv)
 			std::cout<<std::endl;
 		}
 
-
-
+		
+		
         //start the manager
         GameManager manager(totalProcCount - 1);
         manager.setGamesToRun(tasksToRun);
