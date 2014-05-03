@@ -2,16 +2,7 @@
   		       RISK
 	  	MATT JOSEPH JACOB
 -----------------------------------------------------------------------
-TODO:
-	Run experiments, Crunch data, Write Report
 
-	Mention MainTest vs TrueMain (and delete the 3rd executable; we never used it).
-		Say where used each
-	Mention the GameTask generators
-
-	
-	
-	
 Data Needed/Stats to get/Reports to write:
 	order advantage:
 		have games with all the same strategy (2-6 players), and see how often p1, p2, etc wins, to see if there's an advantage.
